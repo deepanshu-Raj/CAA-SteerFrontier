@@ -1,14 +1,13 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-
 DEFAULT_MODEL = "meta-llama/Llama-2-7b-chat-hf"
 
 
 def load_model(
     model_name: str = DEFAULT_MODEL,
     device: str = "cuda",
-    dtype: torch.dtype = torch.float16,
+    dtype: torch.dtype = torch.float32,
 ):
     """Load tokenizer and causal language model for steering experiments."""
 
