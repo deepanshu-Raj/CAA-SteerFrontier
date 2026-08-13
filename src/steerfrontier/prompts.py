@@ -65,3 +65,40 @@ def get_answer_token_position(
         )
 
     return answer_position
+
+
+def find_last_subsequence(tokens, subsequence) -> int:
+    """Return the starting index of the last occurrence of subsequence."""
+    n = len(tokens)
+    m = len(subsequence)
+
+    for i in range(n - m, -1, -1):
+        if tokens[i:i + m] == subsequence:
+            return i
+
+    raise ValueError("Subsequence not found in token sequence.")
+
+
+def get_instruction_end_position(
+    tokenizer: PreTrainedTokenizer,
+    input_ids,
+) -> int:
+    """
+    Return the position of the final token in the last [/INST] marker.
+
+    Steering begins at this position to match the original CAA setup.
+    """
+
+    end_tokens = tokenizer.encode(
+        E_INST,
+        add_special_tokens=False,
+    )
+
+    tokens = input_ids.tolist()
+
+    start = find_last_subsequence(
+        tokens,
+        end_tokens,
+    )
+
+    return start + len(end_tokens) - 1
