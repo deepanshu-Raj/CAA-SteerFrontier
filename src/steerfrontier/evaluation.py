@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 import torch
 from tqdm import tqdm
 
@@ -14,12 +12,12 @@ from steerfrontier.steering import SteeringIntervention
 def evaluate_ab(
     model,
     tokenizer,
-    dataset: List[Dict[str, str]],
+    dataset: list[dict[str, str]],
     layer_idx: int,
     vector: torch.Tensor,
     coefficient: float,
     device: str = "cuda",
-) -> Dict[str, float]:
+) -> dict[str, float]:
     """
     Evaluate behavioral probability on held-out A/B questions.
     """
