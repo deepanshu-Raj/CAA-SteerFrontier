@@ -1,35 +1,61 @@
+import argparse
 import csv
-from pathlib import Path
 
 import torch
 
 from steerfrontier.data import load_ab_test_data
 from steerfrontier.evaluation import evaluate_ab
+from steerfrontier.experiment import (
+    normalized_vectors_path,
+    results_dir,
+    test_ab_path,
+)
 from steerfrontier.models import load_model
 
-DATA_PATH = "data/sycophancy/test_ab.json"
-VECTOR_PATH = "vectors/sycophancy/normalized_vectors.pt"
-OUTPUT_PATH = Path("results/sycophancy/layer_sweep.csv")
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--behavior",
+        required=True,
+    )
+
+    return parser.parse_args()
 
 
 def main():
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    args = parse_args()
+    behavior = args.behavior
 
+    data_path = test_ab_path(behavior)
+    vector_path = normalized_vectors_path(behavior)
+    output_path = results_dir(behavior) / "layer_sweep.csv"
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    print("Behavior:", behavior)
     print("Loading model...")
-    model, tokenizer = load_model(dtype=torch.float32)
 
-    dataset = load_ab_test_data(DATA_PATH)
+    model, tokenizer = load_model(
+        dtype=torch.float32,
+    )
+
+    dataset = load_ab_test_data(data_path)
 
     vectors = torch.load(
-        VECTOR_PATH,
+        vector_path,
         map_location="cpu",
     ).float()
 
-    print("Vectors:", vectors.shape)
     print("Test examples:", len(dataset))
+    print("Vectors:", vectors.shape)
 
     # ------------------------------------------------------------
-    # Baseline: alpha = 0 is independent of layer.
+    # alpha=0 is independent of intervention layer.
     # ------------------------------------------------------------
     print("\nEvaluating baseline...")
 
@@ -44,15 +70,15 @@ def main():
 
     baseline = baseline_result["behavior_score"]
 
-    print(f"\nBaseline P(behavior) = {baseline:.4f}")
+    print(f"Baseline P(behavior) = {baseline:.4f}")
 
     rows = []
 
     # ------------------------------------------------------------
-    # Layer sweep
+    # Full layer sweep at alpha = +/-1.
     # ------------------------------------------------------------
     for layer in range(vectors.shape[0]):
-        layer_scores = {}
+        scores = {}
 
         for alpha in [-1.0, 1.0]:
             result = evaluate_ab(
@@ -65,38 +91,37 @@ def main():
             )
 
             score = result["behavior_score"]
-            layer_scores[alpha] = score
+            scores[alpha] = score
 
             rows.append(
                 {
+                    "behavior": behavior,
                     "layer": layer,
                     "alpha": alpha,
                     "behavior_score": score,
                     "baseline": baseline,
-                    "delta_from_baseline": score - baseline,
+                    "delta_from_baseline": (score - baseline),
                 }
             )
 
-        negative_score = layer_scores[-1.0]
-        positive_score = layer_scores[1.0]
-
-        span = positive_score - negative_score
+        span = scores[1.0] - scores[-1.0]
 
         print(
             f"L{layer:02d} | "
-            f"-1={negative_score:.4f} | "
+            f"-1={scores[-1.0]:.4f} | "
             f"0={baseline:.4f} | "
-            f"+1={positive_score:.4f} | "
+            f"+1={scores[1.0]:.4f} | "
             f"span={span:+.4f}"
         )
 
-    # ------------------------------------------------------------
-    # Save results
-    # ------------------------------------------------------------
-    with OUTPUT_PATH.open("w", newline="") as f:
+    with output_path.open(
+        "w",
+        newline="",
+    ) as f:
         writer = csv.DictWriter(
             f,
             fieldnames=[
+                "behavior",
                 "layer",
                 "alpha",
                 "behavior_score",
@@ -108,21 +133,16 @@ def main():
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f"\nSaved results to {OUTPUT_PATH}")
-
     # ------------------------------------------------------------
-    # Rank layers by -1 / +1 separation.
+    # Rank by +/- separation.
     # ------------------------------------------------------------
-    summary = {}
-
-    for row in rows:
-        layer = row["layer"]
-        summary.setdefault(layer, {})
-        summary[layer][row["alpha"]] = row["behavior_score"]
-
     ranked = []
 
-    for layer, scores in summary.items():
+    for layer in range(vectors.shape[0]):
+        layer_rows = [row for row in rows if row["layer"] == layer]
+
+        scores = {row["alpha"]: row["behavior_score"] for row in layer_rows}
+
         span = scores[1.0] - scores[-1.0]
 
         ranked.append(
@@ -140,6 +160,8 @@ def main():
 
     for span, layer, neg, pos in ranked[:10]:
         print(f"L{layer:02d} | span={span:+.4f} | -1={neg:.4f} | +1={pos:.4f}")
+
+    print("\nSaved:", output_path)
 
 
 if __name__ == "__main__":

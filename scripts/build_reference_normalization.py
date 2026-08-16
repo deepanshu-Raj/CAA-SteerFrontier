@@ -1,23 +1,32 @@
+import argparse
 from pathlib import Path
 
 import torch
 
+from steerfrontier.experiment import (
+    BEHAVIORS,
+    normalized_vectors_path,
+    raw_vectors_path,
+)
 from steerfrontier.normalization import (
     compute_mean_layer_norms,
     normalize_to_layer_norms,
 )
 
-UPSTREAM_BEHAVIORS = [
-    "coordinate-other-ais",
-    "corrigible-neutral-HHH",
-    "hallucination",
-    "myopic-reward",
-    "refusal",
-    "survival-instinct",
-]
-
 CAA_ROOT = Path("../CAA")
 MODEL_SUFFIX = "Llama-2-7b-chat-hf"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--behavior",
+        required=True,
+        choices=BEHAVIORS,
+    )
+
+    return parser.parse_args()
 
 
 def load_upstream_behavior(behavior):
@@ -26,26 +35,34 @@ def load_upstream_behavior(behavior):
     for layer in range(32):
         path = CAA_ROOT / "vectors" / behavior / f"vec_layer_{layer}_{MODEL_SUFFIX}.pt"
 
-        vectors.append(torch.load(path, map_location="cpu").float())
+        vectors.append(
+            torch.load(
+                path,
+                map_location="cpu",
+            ).float()
+        )
 
     return torch.stack(vectors)
 
 
 def main():
-    # Six non-sycophancy behaviors from upstream CAA.
-    behavior_vectors = {
-        behavior: load_upstream_behavior(behavior) for behavior in UPSTREAM_BEHAVIORS
-    }
+    args = parse_args()
 
-    # Our independently extracted sycophancy vectors.
+    target_behavior = args.behavior
+
     ours = torch.load(
-        "vectors/sycophancy/raw_vectors.pt",
+        raw_vectors_path(target_behavior),
         map_location="cpu",
     ).float()
 
-    behavior_vectors["sycophancy"] = ours
+    behavior_vectors = {}
 
-    # Mean norm across the seven behaviors at each layer.
+    for behavior in BEHAVIORS:
+        if behavior == target_behavior:
+            behavior_vectors[behavior] = ours
+        else:
+            behavior_vectors[behavior] = load_upstream_behavior(behavior)
+
     target_norms = compute_mean_layer_norms(behavior_vectors)
 
     normalized = normalize_to_layer_norms(
@@ -53,23 +70,32 @@ def main():
         target_norms,
     )
 
-    torch.save(
-        target_norms,
-        "vectors/reference_layer_norms.pt",
+    output = normalized_vectors_path(target_behavior)
+
+    output.parent.mkdir(
+        parents=True,
+        exist_ok=True,
     )
 
     torch.save(
         normalized,
-        "vectors/sycophancy/normalized_vectors.pt",
+        output,
     )
 
-    print("Saved normalized sycophancy vectors.")
+    torch.save(
+        target_norms,
+        output.parent / "reference_layer_norms.pt",
+    )
+
+    print("Behavior:", target_behavior)
+    print("Saved:", output)
     print("Shape:", normalized.shape)
 
     print("\nSelected norms:")
-    for layer in [0, 5, 10, 13, 20, 31]:
+
+    for layer in [0, 5, 10, 13, 16, 20, 31]:
         print(
-            f"Layer {layer:2d} | "
+            f"L{layer:02d} | "
             f"raw={ours[layer].norm().item():.6f} | "
             f"target={target_norms[layer].item():.6f} | "
             f"normalized={normalized[layer].norm().item():.6f}"

@@ -1,78 +1,96 @@
+import argparse
 import csv
-from pathlib import Path
 
 import torch
 
 from steerfrontier.data import load_ab_test_data
 from steerfrontier.evaluation import evaluate_ab
+from steerfrontier.experiment import (
+    DEFAULT_ALPHAS,
+    normalized_vectors_path,
+    results_dir,
+    test_ab_path,
+)
 from steerfrontier.models import load_model
 
-DATA_PATH = "data/sycophancy/test_ab.json"
-VECTOR_PATH = "vectors/sycophancy/normalized_vectors.pt"
 
-OUTPUT_PATH = Path("results/sycophancy/coefficient_layer_sweep.csv")
+def parse_args():
+    parser = argparse.ArgumentParser()
 
-LAYERS = list(range(10, 19))
+    parser.add_argument(
+        "--behavior",
+        required=True,
+    )
 
-ALPHAS = [
-    -2.0,
-    -1.5,
-    -1.0,
-    -0.5,
-    0.0,
-    0.5,
-    1.0,
-    1.5,
-    2.0,
-]
+    parser.add_argument(
+        "--layers",
+        nargs="+",
+        type=int,
+        required=True,
+    )
+
+    parser.add_argument(
+        "--alphas",
+        nargs="+",
+        type=float,
+        default=DEFAULT_ALPHAS,
+    )
+
+    return parser.parse_args()
 
 
 def main():
-    OUTPUT_PATH.parent.mkdir(
+    args = parse_args()
+
+    behavior = args.behavior
+    layers = args.layers
+    alphas = args.alphas
+
+    output_path = results_dir(behavior) / "coefficient_layer_sweep.csv"
+
+    output_path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    print("Loading model...")
+    print("Behavior:", behavior)
+    print("Layers:", layers)
+    print("Alphas:", alphas)
 
+    print("\nLoading model...")
     model, tokenizer = load_model(
         dtype=torch.float32,
     )
 
-    dataset = load_ab_test_data(DATA_PATH)
+    dataset = load_ab_test_data(test_ab_path(behavior))
 
     vectors = torch.load(
-        VECTOR_PATH,
+        normalized_vectors_path(behavior),
         map_location="cpu",
     ).float()
 
     # ------------------------------------------------------------
-    # Compute alpha=0 once.
+    # Baseline only needs to be calculated once.
     # ------------------------------------------------------------
-    print("\nEvaluating baseline...")
-
     baseline_result = evaluate_ab(
         model=model,
         tokenizer=tokenizer,
         dataset=dataset,
-        layer_idx=10,
-        vector=vectors[10],
+        layer_idx=layers[0],
+        vector=vectors[layers[0]],
         coefficient=0.0,
     )
 
     baseline = baseline_result["behavior_score"]
 
-    print(f"Baseline P(behavior) = {baseline:.6f}")
+    print(f"\nBaseline P(behavior) = {baseline:.6f}")
 
     rows = []
 
-    # ------------------------------------------------------------
-    # Layer x coefficient sweep
-    # ------------------------------------------------------------
-    for layer in LAYERS:
+    for layer in layers:
         print(f"\n=== Layer {layer} ===")
 
-        for alpha in ALPHAS:
+        for alpha in alphas:
             if alpha == 0.0:
                 score = baseline
 
@@ -92,6 +110,7 @@ def main():
 
             rows.append(
                 {
+                    "behavior": behavior,
                     "layer": layer,
                     "alpha": alpha,
                     "behavior_score": score,
@@ -107,16 +126,14 @@ def main():
                 f"delta={delta:+.4f}"
             )
 
-    # ------------------------------------------------------------
-    # Save CSV
-    # ------------------------------------------------------------
-    with OUTPUT_PATH.open(
+    with output_path.open(
         "w",
         newline="",
     ) as f:
         writer = csv.DictWriter(
             f,
             fieldnames=[
+                "behavior",
                 "layer",
                 "alpha",
                 "behavior_score",
@@ -128,7 +145,7 @@ def main():
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f"\nSaved results to {OUTPUT_PATH}")
+    print("\nSaved:", output_path)
 
 
 if __name__ == "__main__":
