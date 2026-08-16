@@ -1,25 +1,38 @@
-from pathlib import Path
+import argparse
 
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
+from steerfrontier.experiment import results_dir
 
-INPUT = "results/sycophancy/coefficient_layer_sweep.csv"
-OUTPUT = Path("results/sycophancy/layer_selection_metrics.csv")
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--behavior",
+        required=True,
+    )
+
+    return parser.parse_args()
 
 
 def main():
-    df = pd.read_csv(INPUT)
+    args = parse_args()
+
+    behavior = args.behavior
+
+    input_path = results_dir(behavior) / "coefficient_layer_sweep.csv"
+
+    output_path = results_dir(behavior) / "layer_selection_metrics.csv"
+
+    df = pd.read_csv(input_path)
 
     rows = []
 
     for layer in sorted(df["layer"].unique()):
-        sub = (
-            df[df["layer"] == layer]
-            .sort_values("alpha")
-            .reset_index(drop=True)
-        )
+        sub = df[df["layer"] == layer].sort_values("alpha").reset_index(drop=True)
 
         baseline = sub["baseline"].iloc[0]
 
@@ -27,48 +40,30 @@ def main():
         pos = sub[sub["alpha"] > 0]
 
         # --------------------------------------------------------
-        # Maximum achievable directional gains.
+        # Maximum directional gains
         # --------------------------------------------------------
-        negative_gain = (
-            baseline - neg["behavior_score"].min()
-        )
+        negative_gain = baseline - neg["behavior_score"].min()
 
-        positive_gain = (
-            pos["behavior_score"].max() - baseline
-        )
+        positive_gain = pos["behavior_score"].max() - baseline
 
-        bidirectional_gain = (
-            negative_gain + positive_gain
-        )
+        bidirectional_gain = negative_gain + positive_gain
 
         # --------------------------------------------------------
-        # Average gain over each side of the coefficient sweep.
-        #
-        # This rewards layers whose steering works consistently,
-        # rather than only at one lucky alpha.
+        # Average directional gain over the sweep
         # --------------------------------------------------------
-        mean_negative_gain = (
-            baseline - neg["behavior_score"]
-        ).mean()
+        mean_negative_gain = (baseline - neg["behavior_score"]).mean()
 
-        mean_positive_gain = (
-            pos["behavior_score"] - baseline
-        ).mean()
+        mean_positive_gain = (pos["behavior_score"] - baseline).mean()
 
         # --------------------------------------------------------
-        # Fraction of coefficients steering in expected direction.
+        # Fraction of coefficients that steer correctly
         # --------------------------------------------------------
-        negative_direction_fraction = (
-            neg["behavior_score"] < baseline
-        ).mean()
+        negative_direction_fraction = (neg["behavior_score"] < baseline).mean()
 
-        positive_direction_fraction = (
-            pos["behavior_score"] > baseline
-        ).mean()
+        positive_direction_fraction = (pos["behavior_score"] > baseline).mean()
 
         # --------------------------------------------------------
-        # Monotonicity:
-        # ideal behavior is B(alpha) increasing with alpha.
+        # Global monotonicity
         # --------------------------------------------------------
         rho, _ = spearmanr(
             sub["alpha"],
@@ -77,41 +72,34 @@ def main():
 
         scores = sub["behavior_score"].to_numpy()
 
-        monotonic_violations = int(
-            np.sum(np.diff(scores) < -1e-6)
-        )
+        monotonic_violations = int(np.sum(np.diff(scores) < -1e-6))
 
         # --------------------------------------------------------
-        # Full observed behavior range.
+        # Observed total behavior range
         # --------------------------------------------------------
-        total_range = (
-            sub["behavior_score"].max()
-            - sub["behavior_score"].min()
-        )
+        total_range = sub["behavior_score"].max() - sub["behavior_score"].min()
 
-        rows.append({
-            "layer": layer,
-            "spearman_rho": rho,
-            "monotonic_violations": monotonic_violations,
-            "negative_gain": negative_gain,
-            "positive_gain": positive_gain,
-            "bidirectional_gain": bidirectional_gain,
-            "mean_negative_gain": mean_negative_gain,
-            "mean_positive_gain": mean_positive_gain,
-            "negative_direction_fraction": negative_direction_fraction,
-            "positive_direction_fraction": positive_direction_fraction,
-            "total_range": total_range,
-        })
+        rows.append(
+            {
+                "behavior": behavior,
+                "layer": layer,
+                "spearman_rho": rho,
+                "monotonic_violations": monotonic_violations,
+                "negative_gain": negative_gain,
+                "positive_gain": positive_gain,
+                "bidirectional_gain": bidirectional_gain,
+                "mean_negative_gain": mean_negative_gain,
+                "mean_positive_gain": mean_positive_gain,
+                "negative_direction_fraction": (negative_direction_fraction),
+                "positive_direction_fraction": (positive_direction_fraction),
+                "total_range": total_range,
+            }
+        )
 
     result = pd.DataFrame(rows)
 
-    OUTPUT.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
     result.to_csv(
-        OUTPUT,
+        output_path,
         index=False,
     )
 
@@ -126,6 +114,7 @@ def main():
         "mean_positive_gain",
         "negative_direction_fraction",
         "positive_direction_fraction",
+        "total_range",
     ]
 
     print(
@@ -135,7 +124,8 @@ def main():
         )
     )
 
-    print(f"\nSaved {OUTPUT}")
+    print()
+    print("Saved:", output_path)
 
 
 if __name__ == "__main__":
