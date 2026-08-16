@@ -1,0 +1,26 @@
+{
+  "behavior": "hallucination",
+  "selected_layer": 13,
+  "baseline_behavior": 0.81317559105882,
+  "baseline_capability": 0.6534992608764115,
+  "alphas": [
+    -2.0,
+    -1.5,
+    -1.0,
+    -0.5,
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "layer_selection": {
+    "spearman_rho": 1.0,
+    "monotonic_violations": 0,
+    "negative_gain": 0.5859142814392178,
+    "positive_gain": 0.1104096939399624,
+    "bidirectional_gain": 0.6963239753791802,
+    "negative_direction_fraction": 1.0,
+    "positive_direction_fraction": 1.0
+  }
+}
