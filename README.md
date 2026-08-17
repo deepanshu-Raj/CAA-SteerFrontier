@@ -109,6 +109,8 @@ On a cluster, optionally place the Hugging Face cache on persistent storage:
 export HF_HOME=/path/to/persistent/huggingface
 ```
 
+**Compute environment:** Experiments were run on the University of Chicago CS research cluster using a single NVIDIA L40S GPU (48 GB VRAM) with 128 GB host memory. Models were evaluated in FP32 using CUDA 11.8 and Python 3.9.21; all experiments were inference-only and required no model training or fine-tuning.
+
 ### 1. Adapter smoke test
 
 **Llama2-7B Chat**:
