@@ -1,5 +1,9 @@
 {
-  "model": "meta-llama/Llama-2-7b-chat-hf",
+  "behavior": "sycophancy",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "model_label": "Llama 3.1 8B Instruct",
+  "model_slug": "llama3.1-8b-instruct",
+  "prompt_family": "llama3-instruct",
   "dataset": "data/sycophancy/generate.json",
   "num_examples": 1000,
   "num_layers": 32,

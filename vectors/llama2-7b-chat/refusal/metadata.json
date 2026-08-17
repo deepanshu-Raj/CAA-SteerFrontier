@@ -1,6 +1,9 @@
 {
   "behavior": "refusal",
-  "model": "meta-llama/Llama-2-7b-chat-hf",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "prompt_family": "llama2-chat",
   "dataset": "data/refusal/generate.json",
   "num_examples": 408,
   "num_layers": 32,
