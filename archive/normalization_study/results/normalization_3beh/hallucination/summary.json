@@ -1,0 +1,40 @@
+{
+  "behavior": "hallucination",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "normalization": "3beh",
+  "selected_layer": 13,
+  "candidate_layers": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "baseline_behavior": 0.81317559105882,
+  "baseline_capability": 0.6534992608764115,
+  "alphas": [
+    -2.0,
+    -1.5,
+    -1.0,
+    -0.5,
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "layer_selection": {
+    "spearman_rho": 1.0,
+    "monotonic_violations": 0,
+    "negative_gain": 0.5666933448005191,
+    "positive_gain": 0.1098784494060098,
+    "bidirectional_gain": 0.676571794206529,
+    "mean_negative_gain": 0.3415716672064636,
+    "mean_positive_gain": 0.0710048129318034,
+    "negative_direction_fraction": 1.0,
+    "positive_direction_fraction": 1.0,
+    "total_range": 0.676571794206529
+  }
+}

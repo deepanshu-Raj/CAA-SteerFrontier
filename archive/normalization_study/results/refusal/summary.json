@@ -1,0 +1,26 @@
+{
+  "behavior": "refusal",
+  "selected_layer": 13,
+  "baseline_behavior": 0.7437384437564151,
+  "baseline_capability": 0.6534992608764115,
+  "alphas": [
+    -2.0,
+    -1.5,
+    -1.0,
+    -0.5,
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "layer_selection": {
+    "spearman_rho": 0.95,
+    "monotonic_violations": 1,
+    "negative_gain": 0.4480073292416732,
+    "positive_gain": 0.1511517577090895,
+    "bidirectional_gain": 0.5991590869507628,
+    "negative_direction_fraction": 1.0,
+    "positive_direction_fraction": 1.0
+  }
+}

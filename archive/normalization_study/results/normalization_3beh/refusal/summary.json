@@ -1,0 +1,42 @@
+{
+  "behavior": "refusal",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "normalization": "3beh",
+  "selected_layer": 13,
+  "candidate_layers": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "baseline_behavior": 0.7437384437564151,
+  "baseline_capability": 0.6534992608764115,
+  "alphas": [
+    -2.0,
+    -1.5,
+    -1.0,
+    -0.5,
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "layer_selection": {
+    "spearman_rho": 0.9833333333333332,
+    "monotonic_violations": 1,
+    "negative_gain": 0.4250006705088252,
+    "positive_gain": 0.1491934479113884,
+    "bidirectional_gain": 0.5741941184202137,
+    "mean_negative_gain": 0.2903412746351703,
+    "mean_positive_gain": 0.1241249567666991,
+    "negative_direction_fraction": 1.0,
+    "positive_direction_fraction": 1.0,
+    "total_range": 0.5741941184202137
+  }
+}
