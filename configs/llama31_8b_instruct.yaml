@@ -1,0 +1,20 @@
+model_name: meta-llama/Llama-3.1-8B-Instruct
+model_label: Llama 3.1 8B Instruct
+model_slug: llama3.1-8b-instruct
+prompt_family: auto
+dtype: float32
+
+behaviors:
+  - sycophancy
+  - refusal
+  - hallucination
+
+data_root: data
+vector_root: vectors/llama3.1-8b-instruct
+results_root: results/llama3.1-8b-instruct
+plots_root: plots/llama3.1-8b-instruct
+
+normalization_tag: 3beh
+candidate_width: 9
+layer_sweep_alphas: [-1.0, 1.0]
+alphas: [-2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0]

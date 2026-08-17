@@ -1,0 +1,21 @@
+model_name: meta-llama/Llama-2-7b-chat-hf
+model_label: Llama 2 7B Chat
+model_slug: llama2-7b-chat
+prompt_family: auto
+dtype: float32
+
+behaviors:
+  - sycophancy
+  - refusal
+  - hallucination
+
+data_root: data
+# These roots point to the existing 3-behavior-normalization robustness run.
+vector_root: vectors/llama2-7b-chat
+results_root: results/llama2-7b-chat
+plots_root: plots/llama2-7b-chat
+
+normalization_tag: 3beh
+candidate_width: 9
+layer_sweep_alphas: [-1.0, 1.0]
+alphas: [-2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0]
