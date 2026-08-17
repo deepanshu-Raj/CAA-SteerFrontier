@@ -1,79 +1,103 @@
+from typing import Optional
+
 import torch
 from tqdm import tqdm
 
-from steerfrontier.prompts import (
-    get_instruction_end_position,
-    tokenize_llama2_chat,
-)
+from steerfrontier.prompts import PromptAdapter, VALID_ANSWERS, get_prompt_adapter
 from steerfrontier.steering import SteeringIntervention
+
+
+def _validate_target(answer: str) -> str:
+    if answer not in VALID_ANSWERS:
+        raise ValueError(f"Expected binary target '(A)' or '(B)', got {answer!r}.")
+    return answer
+
+
+@torch.no_grad()
+def _score_binary_item(
+    model,
+    tokenizer,
+    question: str,
+    layer_idx: int,
+    vector: torch.Tensor,
+    coefficient: float,
+    adapter: PromptAdapter,
+    device: str,
+):
+    scoring = adapter.build_scoring_prompt(tokenizer, question)
+    input_ids = scoring.input_ids.to(device)
+
+    with SteeringIntervention(
+        model=model,
+        layer_idx=layer_idx,
+        vector=vector,
+        coefficient=coefficient,
+        from_position=scoring.steering_start_position,
+    ):
+        outputs = model(
+            input_ids=input_ids,
+            use_cache=False,
+        )
+
+    logits = outputs.logits[0, -1, :]
+    probs = torch.softmax(logits, dim=-1)
+
+    a_prob = probs[scoring.answer_token_ids["(A)"]].item()
+    b_prob = probs[scoring.answer_token_ids["(B)"]].item()
+    denom = a_prob + b_prob
+
+    if denom <= 0.0:
+        raise RuntimeError("A/B probability mass is zero; cannot renormalize.")
+
+    return {
+        "a_prob": a_prob,
+        "b_prob": b_prob,
+        "a_ab_prob": a_prob / denom,
+        "b_ab_prob": b_prob / denom,
+    }
 
 
 @torch.no_grad()
 def evaluate_ab(
     model,
     tokenizer,
-    dataset: list[dict[str, str]],
+    dataset,
     layer_idx: int,
     vector: torch.Tensor,
     coefficient: float,
     device: str = "cuda",
-) -> dict[str, float]:
-    """
-    Evaluate behavioral probability on held-out A/B questions.
-    """
+    prompt_adapter: Optional[PromptAdapter] = None,
+    prompt_family: str = "auto",
+):
+    """Evaluate mean probability of the answer matching the target behavior."""
 
-    a_token_id = tokenizer.convert_tokens_to_ids("A")
-    b_token_id = tokenizer.convert_tokens_to_ids("B")
+    if len(dataset) == 0:
+        raise ValueError("Behavior evaluation dataset is empty.")
+
+    adapter = prompt_adapter or get_prompt_adapter(
+        model=model,
+        tokenizer=tokenizer,
+        prompt_family=prompt_family,
+    )
 
     matching_probs = []
 
-    for item in tqdm(
-        dataset,
-        desc=f"Layer {layer_idx}, alpha={coefficient}",
-    ):
-        # As in original CAA evaluation:
-        # the model continues after "(".
-        input_ids = tokenize_llama2_chat(
-            tokenizer,
-            item["question"],
-            "(",
-        ).to(device)
-
-        from_position = get_instruction_end_position(
-            tokenizer,
-            input_ids[0],
-        )
-
-        with SteeringIntervention(
+    for item in tqdm(dataset, desc=f"Layer {layer_idx}, alpha={coefficient}"):
+        target = _validate_target(item["answer_matching_behavior"])
+        scores = _score_binary_item(
             model=model,
+            tokenizer=tokenizer,
+            question=item["question"],
             layer_idx=layer_idx,
             vector=vector,
             coefficient=coefficient,
-            from_position=from_position,
-        ):
-            outputs = model(
-                input_ids=input_ids,
-                use_cache=False,
-            )
+            adapter=adapter,
+            device=device,
+        )
 
-        logits = outputs.logits[0, -1, :]
-
-        probs = torch.softmax(logits, dim=-1)
-
-        a_prob = probs[a_token_id].item()
-        b_prob = probs[b_token_id].item()
-
-        # Renormalize over A/B.
-        denom = a_prob + b_prob
-
-        if "(A)" == item["answer_matching_behavior"]:
-            matching_prob = a_prob / denom
-        elif "(B)" == item["answer_matching_behavior"]:
-            matching_prob = b_prob / denom
-        else:
-            raise ValueError("Expected behavior-matching answer to be (A) or (B).")
-
-        matching_probs.append(matching_prob)
+        matching_probs.append(
+            scores["a_ab_prob"] if target == "(A)" else scores["b_ab_prob"]
+        )
 
     return {
         "behavior_score": sum(matching_probs) / len(matching_probs),
@@ -82,165 +106,63 @@ def evaluate_ab(
 
 
 @torch.no_grad()
-def evaluate_mmlu(
-    model,
-    tokenizer,
-    dataset: list[dict[str, str]],
-    layer_idx: int,
-    vector: torch.Tensor,
-    coefficient: float,
-    device: str = "cuda",
-) -> dict[str, float]:
-    """
-    Evaluate capability using the fixed binary MMLU subset.
-
-    Returns mean A/B-normalized probability assigned to the
-    correct answer.
-    """
-
-    a_token_id = tokenizer.convert_tokens_to_ids("A")
-    b_token_id = tokenizer.convert_tokens_to_ids("B")
-
-    correct_probs = []
-
-    for item in tqdm(
-        dataset,
-        desc=f"MMLU L{layer_idx}, alpha={coefficient}",
-    ):
-        input_ids = tokenize_llama2_chat(
-            tokenizer,
-            item["prompt"],
-            "(",
-        ).to(device)
-
-        from_position = get_instruction_end_position(
-            tokenizer,
-            input_ids[0],
-        )
-
-        with SteeringIntervention(
-            model=model,
-            layer_idx=layer_idx,
-            vector=vector,
-            coefficient=coefficient,
-            from_position=from_position,
-        ):
-            outputs = model(
-                input_ids=input_ids,
-                use_cache=False,
-            )
-
-        logits = outputs.logits[0, -1, :]
-        probs = torch.softmax(logits, dim=-1)
-
-        a_prob = probs[a_token_id].item()
-        b_prob = probs[b_token_id].item()
-
-        denom = a_prob + b_prob
-
-        if item["correct"] == "(A)":
-            correct_prob = a_prob / denom
-        elif item["correct"] == "(B)":
-            correct_prob = b_prob / denom
-        else:
-            raise ValueError(f"Unexpected correct answer: {item['correct']}")
-
-        correct_probs.append(correct_prob)
-
-    return {
-        "capability_score": (sum(correct_probs) / len(correct_probs)),
-        "num_examples": len(correct_probs),
-    }
-
-
-@torch.no_grad()
 def evaluate_mmlu_detailed(
     model,
     tokenizer,
     dataset,
-    layer_idx,
-    vector,
-    coefficient,
-    device="cuda",
+    layer_idx: int,
+    vector: torch.Tensor,
+    coefficient: float,
+    device: str = "cuda",
+    prompt_adapter: Optional[PromptAdapter] = None,
+    prompt_family: str = "auto",
 ):
-    """
-    Detailed MMLU evaluation.
+    """Evaluate binary MMLU correct-answer probability and A/B accuracy."""
 
-    Returns:
-      - mean A/B-normalized correct-answer probability
-      - binary A/B accuracy
-      - per-example results for later analysis
-    """
+    if len(dataset) == 0:
+        raise ValueError("MMLU evaluation dataset is empty.")
 
-    a_token_id = tokenizer.convert_tokens_to_ids("A")
-    b_token_id = tokenizer.convert_tokens_to_ids("B")
+    adapter = prompt_adapter or get_prompt_adapter(
+        model=model,
+        tokenizer=tokenizer,
+        prompt_family=prompt_family,
+    )
 
     rows = []
 
-    for item in tqdm(
-        dataset,
-        desc=f"MMLU L{layer_idx}, alpha={coefficient}",
-    ):
-        input_ids = tokenize_llama2_chat(
-            tokenizer,
-            item["prompt"],
-            "(",
-        ).to(device)
-
-        from_position = get_instruction_end_position(
-            tokenizer,
-            input_ids[0],
-        )
-
-        with SteeringIntervention(
+    for item in tqdm(dataset, desc=f"MMLU L{layer_idx}, alpha={coefficient}"):
+        correct = _validate_target(item["correct"])
+        scores = _score_binary_item(
             model=model,
+            tokenizer=tokenizer,
+            question=item["prompt"],
             layer_idx=layer_idx,
             vector=vector,
             coefficient=coefficient,
-            from_position=from_position,
-        ):
-            outputs = model(
-                input_ids=input_ids,
-                use_cache=False,
-            )
+            adapter=adapter,
+            device=device,
+        )
 
-        logits = outputs.logits[0, -1, :]
-        probs = torch.softmax(logits, dim=-1)
-
-        a_prob = probs[a_token_id].item()
-        b_prob = probs[b_token_id].item()
-
-        denom = a_prob + b_prob
-
-        a_ab_prob = a_prob / denom
-        b_ab_prob = b_prob / denom
-
-        if item["correct"] == "(A)":
-            correct_prob = a_ab_prob
-        elif item["correct"] == "(B)":
-            correct_prob = b_ab_prob
-        else:
-            raise ValueError(f"Unexpected correct answer: {item['correct']}")
-
-        prediction = "(A)" if a_ab_prob >= b_ab_prob else "(B)"
+        correct_prob = (
+            scores["a_ab_prob"] if correct == "(A)" else scores["b_ab_prob"]
+        )
+        prediction = (
+            "(A)" if scores["a_ab_prob"] >= scores["b_ab_prob"] else "(B)"
+        )
 
         rows.append(
             {
                 "category": item["category"],
-                "correct": item["correct"],
+                "correct": correct,
                 "incorrect": item["incorrect"],
-                "a_prob": a_prob,
-                "b_prob": b_prob,
-                "a_ab_prob": a_ab_prob,
-                "b_ab_prob": b_ab_prob,
+                **scores,
                 "correct_prob": correct_prob,
                 "prediction": prediction,
-                "is_correct": prediction == item["correct"],
+                "is_correct": prediction == correct,
             }
         )
 
     capability_score = sum(row["correct_prob"] for row in rows) / len(rows)
-
     accuracy = sum(row["is_correct"] for row in rows) / len(rows)
 
     return {
@@ -248,4 +170,36 @@ def evaluate_mmlu_detailed(
         "accuracy": accuracy,
         "num_examples": len(rows),
         "items": rows,
+    }
+
+
+@torch.no_grad()
+def evaluate_mmlu(
+    model,
+    tokenizer,
+    dataset,
+    layer_idx: int,
+    vector: torch.Tensor,
+    coefficient: float,
+    device: str = "cuda",
+    prompt_adapter: Optional[PromptAdapter] = None,
+    prompt_family: str = "auto",
+):
+    """Lightweight MMLU wrapper retaining the original public API."""
+
+    result = evaluate_mmlu_detailed(
+        model=model,
+        tokenizer=tokenizer,
+        dataset=dataset,
+        layer_idx=layer_idx,
+        vector=vector,
+        coefficient=coefficient,
+        device=device,
+        prompt_adapter=prompt_adapter,
+        prompt_family=prompt_family,
+    )
+
+    return {
+        "capability_score": result["capability_score"],
+        "num_examples": result["num_examples"],
     }

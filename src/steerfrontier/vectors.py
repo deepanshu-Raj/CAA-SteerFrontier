@@ -1,38 +1,43 @@
+from typing import Optional
+
 import torch
 from tqdm import tqdm
 
 from steerfrontier.activations import LayerActivationCapture
-from steerfrontier.prompts import (
-    get_answer_token_position,
-    tokenize_llama2_chat,
-)
+from steerfrontier.models import get_decoder_layers
+from steerfrontier.prompts import PromptAdapter, get_prompt_adapter
 
 
 @torch.no_grad()
 def extract_all_layer_vectors(
     model,
     tokenizer,
-    dataset: list[dict[str, str]],
+    dataset,
     device: str = "cuda",
+    prompt_adapter: Optional[PromptAdapter] = None,
+    prompt_family: str = "auto",
 ) -> torch.Tensor:
-    """
-    Extract raw CAA steering vectors for all transformer layers.
+    """Extract raw CAA steering vectors for every decoder layer.
 
-    For each contrastive example:
+    For each example and layer ``l``::
 
-        delta_l = h_l(behavior_matching) - h_l(behavior_not_matching)
+        delta_l = h_l(answer_matching_behavior) - h_l(answer_not_matching_behavior)
 
-    The final steering vector for each layer is the mean delta over
-    all examples.
-
-    Returns
-    -------
-    torch.Tensor
-        Shape [num_layers, hidden_size], stored on CPU in float32.
+    The returned tensor has shape ``[num_layers, hidden_size]`` and is stored on
+    CPU in float32.
     """
 
-    num_layers = model.config.num_hidden_layers
-    hidden_size = model.config.hidden_size
+    if len(dataset) == 0:
+        raise ValueError("Cannot extract a steering vector from an empty dataset.")
+
+    adapter = prompt_adapter or get_prompt_adapter(
+        model=model,
+        tokenizer=tokenizer,
+        prompt_family=prompt_family,
+    )
+
+    num_layers = len(get_decoder_layers(model))
+    hidden_size = int(model.config.hidden_size)
 
     running_sum = torch.zeros(
         num_layers,
@@ -45,58 +50,31 @@ def extract_all_layer_vectors(
         for item in tqdm(dataset, desc="Extracting steering vectors"):
             question = item["question"]
 
-            positive_answer = item["answer_matching_behavior"]
-            negative_answer = item["answer_not_matching_behavior"]
-
-            # ---------------------------------------------------------
-            # Positive / behavior-matching activation
-            # ---------------------------------------------------------
-            positive_tokens = tokenize_llama2_chat(
+            positive = adapter.build_contrastive_prompt(
                 tokenizer,
                 question,
-                positive_answer,
-            ).to(device)
-
-            positive_position = get_answer_token_position(
+                item["answer_matching_behavior"],
+            )
+            negative = adapter.build_contrastive_prompt(
                 tokenizer,
                 question,
-                positive_answer,
+                item["answer_not_matching_behavior"],
             )
 
             capture.clear()
-
             model(
-                input_ids=positive_tokens,
+                input_ids=positive.input_ids.to(device),
                 use_cache=False,
             )
-
-            positive_activations = capture.at_position(positive_position)
-
-            # ---------------------------------------------------------
-            # Negative / behavior-not-matching activation
-            # ---------------------------------------------------------
-            negative_tokens = tokenize_llama2_chat(
-                tokenizer,
-                question,
-                negative_answer,
-            ).to(device)
-
-            negative_position = get_answer_token_position(
-                tokenizer,
-                question,
-                negative_answer,
-            )
+            positive_activations = capture.at_position(positive.answer_position)
 
             capture.clear()
-
             model(
-                input_ids=negative_tokens,
+                input_ids=negative.input_ids.to(device),
                 use_cache=False,
             )
+            negative_activations = capture.at_position(negative.answer_position)
 
-            negative_activations = capture.at_position(negative_position)
-
-            # [num_layers, hidden_size]
             running_sum += positive_activations - negative_activations
 
-    return running_sum / len(dataset)
+    return running_sum / float(len(dataset))
