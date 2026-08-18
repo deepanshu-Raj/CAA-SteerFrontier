@@ -19,3 +19,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Third-party datasets, models, and derived resources remain subject to their
+respective licenses and terms. In particular:
+
+- Contrastive Activation Addition (CAA) reference implementation: MIT License.
+- Anthropic model-written evaluation datasets used for sycophancy: CC BY 4.0.
+- MMLU benchmark materials: MIT License.
+- Meta Llama models are not distributed by this repository and remain subject
+  to the applicable Meta Llama license and access terms.
+
+See the cited source repositories and papers for attribution and licensing
+details.
