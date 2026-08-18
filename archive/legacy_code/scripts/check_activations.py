@@ -14,7 +14,6 @@ DATA_PATH = "data/sycophancy/generate.json"
 def main():
     print("Loading model...")
 
-    # FP32 matches the original CAA 7B implementation.
     model, tokenizer = load_model()
 
     item = load_generation_data(DATA_PATH)[0]

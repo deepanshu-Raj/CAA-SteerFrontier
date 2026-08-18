@@ -33,11 +33,6 @@ DEFAULT_ALPHAS = [
 ]
 
 
-# ---------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------
-
-
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
@@ -190,9 +185,7 @@ def parse_args():
     return parser.parse_args()
 
 
-# ---------------------------------------------------------------------
 # Path helpers
-# ---------------------------------------------------------------------
 
 
 def generation_path(data_root: Path, behavior: str) -> Path:
@@ -219,9 +212,7 @@ def behavior_result_dir(results_root: Path, behavior: str) -> Path:
     return results_root / behavior
 
 
-# ---------------------------------------------------------------------
 # Parsing helpers
-# ---------------------------------------------------------------------
 
 
 def parse_candidate_specs(specs: List[str]) -> Dict[str, List[int]]:
@@ -267,9 +258,7 @@ def parse_selected_specs(specs: List[str]) -> Dict[str, int]:
     return parsed
 
 
-# ---------------------------------------------------------------------
 # Extraction
-# ---------------------------------------------------------------------
 
 
 def ensure_raw_vectors(
@@ -342,9 +331,7 @@ def ensure_raw_vectors(
     return raw_vectors
 
 
-# ---------------------------------------------------------------------
 # Shared behavior-space normalization
-# ---------------------------------------------------------------------
 
 
 def build_shared_normalization(
@@ -401,9 +388,7 @@ def build_shared_normalization(
     return reference_norms, normalized
 
 
-# ---------------------------------------------------------------------
 # Layer sweep
-# ---------------------------------------------------------------------
 
 
 def run_layer_sweep(
@@ -472,9 +457,7 @@ def run_layer_sweep(
     return df
 
 
-# ---------------------------------------------------------------------
 # Candidate-layer inference
-# ---------------------------------------------------------------------
 
 
 def infer_candidate_layers(
@@ -509,9 +492,7 @@ def infer_candidate_layers(
     return list(range(start, end))
 
 
-# ---------------------------------------------------------------------
 # Coefficient sweep
-# ---------------------------------------------------------------------
 
 
 def run_coefficient_sweep(
@@ -583,9 +564,7 @@ def run_coefficient_sweep(
     return df
 
 
-# ---------------------------------------------------------------------
 # Layer-selection metrics
-# ---------------------------------------------------------------------
 
 
 def compute_layer_selection_metrics(
@@ -654,9 +633,7 @@ def compute_layer_selection_metrics(
     return metrics
 
 
-# ---------------------------------------------------------------------
 # Auto layer selection
-# ---------------------------------------------------------------------
 
 
 def auto_select_layer(
@@ -691,9 +668,7 @@ def auto_select_layer(
     return selected_layer, eligible
 
 
-# ---------------------------------------------------------------------
 # MMLU
-# ---------------------------------------------------------------------
 
 
 def run_mmlu_sweep(
@@ -785,9 +760,7 @@ def run_mmlu_sweep(
     return summary_df
 
 
-# ---------------------------------------------------------------------
 # Summary
-# ---------------------------------------------------------------------
 
 
 def write_behavior_summary(
@@ -846,9 +819,7 @@ def write_behavior_summary(
         json.dump(summary, f, indent=2)
 
 
-# ---------------------------------------------------------------------
 # Main
-# ---------------------------------------------------------------------
 
 
 def main():
@@ -887,18 +858,14 @@ def main():
     print("Alphas:", args.alphas)
     print()
 
-    # -------------------------------------------------------------
-    # Load model once. Even a resume run needs it for MMLU.
-    # -------------------------------------------------------------
+    # Load model once.
     print("Loading model...")
     model, tokenizer = load_model(
         model_name=args.model_name,
         dtype=torch.float32,
     )
 
-    # -------------------------------------------------------------
     # Stage 1: raw-vector extraction / reuse.
-    # -------------------------------------------------------------
     raw_vectors = ensure_raw_vectors(
         model=model,
         tokenizer=tokenizer,
@@ -909,9 +876,7 @@ def main():
         extract_mode=args.extract_mode,
     )
 
-    # -------------------------------------------------------------
     # Stage 2: shared N-behavior normalization.
-    # -------------------------------------------------------------
     reference_norms, normalized_vectors = build_shared_normalization(
         raw_vectors=raw_vectors,
         behaviors=args.behaviors,
@@ -925,13 +890,7 @@ def main():
         if layer < len(reference_norms):
             print(f"L{layer:02d}: {reference_norms[layer].item():.6f}")
 
-    # -------------------------------------------------------------
     # Phase A: behavior analysis for ALL behaviors.
-    #
-    # We intentionally finish layer/coefficient analysis for every
-    # behavior before deciding whether to proceed to MMLU. This lets
-    # manual selection happen once, after reviewing the full set.
-    # -------------------------------------------------------------
     analysis = {}
 
     for behavior in args.behaviors:
@@ -1037,9 +996,7 @@ def main():
             "behavior_dir": behavior_dir,
         }
 
-    # -------------------------------------------------------------
     # Stage 5b: resolve layer choices.
-    # -------------------------------------------------------------
     selected_layers = {}
     missing_manual = []
 
@@ -1089,11 +1046,9 @@ def main():
 
         selected_layers[behavior] = selected_layer
 
-    # -------------------------------------------------------------
     # Manual mode deliberately stops here until all layer choices
     # have been supplied. No MMLU compute is spent on an accidental
     # auto-selected layer.
-    # -------------------------------------------------------------
     if missing_manual:
         print("\n" + "=" * 72)
         print("ANALYSIS COMPLETE — MANUAL LAYER SELECTION REQUIRED")
@@ -1115,9 +1070,7 @@ def main():
         print()
         return
 
-    # -------------------------------------------------------------
     # Phase B: MMLU + summary after layer choices are resolved.
-    # -------------------------------------------------------------
     with mmlu_path.open() as f:
         mmlu_dataset = json.load(f)
 
@@ -1167,9 +1120,7 @@ def main():
         print(f"\nCompleted behavior: {behavior}")
         print("Results:", behavior_dir)
 
-    # -------------------------------------------------------------
     # Run-level manifest.
-    # -------------------------------------------------------------
     manifest = {
         "model_name": args.model_name,
         "model_label": args.model_label,

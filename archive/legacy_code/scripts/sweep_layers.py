@@ -54,9 +54,7 @@ def main():
     print("Test examples:", len(dataset))
     print("Vectors:", vectors.shape)
 
-    # ------------------------------------------------------------
     # alpha=0 is independent of intervention layer.
-    # ------------------------------------------------------------
     print("\nEvaluating baseline...")
 
     baseline_result = evaluate_ab(
@@ -74,9 +72,7 @@ def main():
 
     rows = []
 
-    # ------------------------------------------------------------
     # Full layer sweep at alpha = +/-1.
-    # ------------------------------------------------------------
     for layer in range(vectors.shape[0]):
         scores = {}
 
@@ -133,9 +129,7 @@ def main():
         writer.writeheader()
         writer.writerows(rows)
 
-    # ------------------------------------------------------------
     # Rank by +/- separation.
-    # ------------------------------------------------------------
     ranked = []
 
     for layer in range(vectors.shape[0]):

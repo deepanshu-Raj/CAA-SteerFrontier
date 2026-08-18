@@ -59,10 +59,6 @@ def main():
 
     items_path = output_dir / f"mmlu_layer{layer}_items.csv"
 
-    # ------------------------------------------------------------
-    # Print experiment configuration BEFORE loading model.
-    # This makes accidental hardcoding obvious immediately.
-    # ------------------------------------------------------------
     print("Behavior:", behavior)
     print("Layer:", layer)
     print("MMLU dataset:", MMLU_PATH)
@@ -72,17 +68,13 @@ def main():
     print("Alphas:", alphas)
     print()
 
-    # ------------------------------------------------------------
     # Load MMLU
-    # ------------------------------------------------------------
     with MMLU_PATH.open() as f:
         dataset = json.load(f)
 
     print("MMLU examples:", len(dataset))
 
-    # ------------------------------------------------------------
     # Load behavior vectors
-    # ------------------------------------------------------------
     vectors = torch.load(
         vector_path,
         map_location="cpu",
@@ -97,9 +89,7 @@ def main():
 
     print(f"Vector norm: {vector.norm().item():.6f}")
 
-    # ------------------------------------------------------------
     # Load model
-    # ------------------------------------------------------------
     print("\nLoading model...")
 
     model, tokenizer = load_model(
@@ -109,9 +99,7 @@ def main():
     summary_rows = []
     item_rows = []
 
-    # ------------------------------------------------------------
     # Run MMLU sweep
-    # ------------------------------------------------------------
     for alpha in alphas:
         result = evaluate_mmlu_detailed(
             model=model,
@@ -125,8 +113,6 @@ def main():
         capability = result["capability_score"]
         accuracy = result["accuracy"]
 
-        # Support either key name in case evaluation.py uses
-        # "records" or "items".
         records = result.get("records")
 
         if records is None:
@@ -164,9 +150,7 @@ def main():
                 }
             )
 
-    # ------------------------------------------------------------
     # Calculate capability degradation relative to alpha=0.
-    # ------------------------------------------------------------
     baseline_rows = [row for row in summary_rows if row["alpha"] == 0.0]
 
     if len(baseline_rows) != 1:
@@ -183,9 +167,7 @@ def main():
         row["absolute_drop"] = absolute_drop
         row["relative_drop"] = relative_drop
 
-    # ------------------------------------------------------------
     # Save summary CSV
-    # ------------------------------------------------------------
     with summary_path.open(
         "w",
         newline="",
@@ -209,9 +191,7 @@ def main():
         writer.writeheader()
         writer.writerows(summary_rows)
 
-    # ------------------------------------------------------------
     # Save per-example CSV
-    # ------------------------------------------------------------
     if item_rows:
         fieldnames = []
 
@@ -232,9 +212,7 @@ def main():
             writer.writeheader()
             writer.writerows(item_rows)
 
-    # ------------------------------------------------------------
     # Final summary
-    # ------------------------------------------------------------
     print("\nSaved:", summary_path)
     print("Saved:", items_path)
 

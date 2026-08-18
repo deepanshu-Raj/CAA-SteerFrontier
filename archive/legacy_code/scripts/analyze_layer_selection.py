@@ -39,32 +39,24 @@ def main():
         neg = sub[sub["alpha"] < 0]
         pos = sub[sub["alpha"] > 0]
 
-        # --------------------------------------------------------
         # Maximum directional gains
-        # --------------------------------------------------------
         negative_gain = baseline - neg["behavior_score"].min()
 
         positive_gain = pos["behavior_score"].max() - baseline
 
         bidirectional_gain = negative_gain + positive_gain
 
-        # --------------------------------------------------------
         # Average directional gain over the sweep
-        # --------------------------------------------------------
         mean_negative_gain = (baseline - neg["behavior_score"]).mean()
 
         mean_positive_gain = (pos["behavior_score"] - baseline).mean()
 
-        # --------------------------------------------------------
         # Fraction of coefficients that steer correctly
-        # --------------------------------------------------------
         negative_direction_fraction = (neg["behavior_score"] < baseline).mean()
 
         positive_direction_fraction = (pos["behavior_score"] > baseline).mean()
 
-        # --------------------------------------------------------
         # Global monotonicity
-        # --------------------------------------------------------
         rho, _ = spearmanr(
             sub["alpha"],
             sub["behavior_score"],
@@ -74,9 +66,7 @@ def main():
 
         monotonic_violations = int(np.sum(np.diff(scores) < -1e-6))
 
-        # --------------------------------------------------------
         # Observed total behavior range
-        # --------------------------------------------------------
         total_range = sub["behavior_score"].max() - sub["behavior_score"].min()
 
         rows.append(

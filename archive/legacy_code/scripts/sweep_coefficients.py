@@ -69,9 +69,7 @@ def main():
         map_location="cpu",
     ).float()
 
-    # ------------------------------------------------------------
     # Baseline only needs to be calculated once.
-    # ------------------------------------------------------------
     baseline_result = evaluate_ab(
         model=model,
         tokenizer=tokenizer,

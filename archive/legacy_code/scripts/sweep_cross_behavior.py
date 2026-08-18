@@ -57,9 +57,7 @@ def main():
     print("Common layer:", layer)
     print("Alphas:", alphas)
 
-    # ------------------------------------------------------------
     # Load vectors
-    # ------------------------------------------------------------
     vectors = {}
 
     for behavior in behaviors:
@@ -72,9 +70,7 @@ def main():
 
         print(f"{behavior:15s} | L{layer} norm={vectors[behavior].norm().item():.6f}")
 
-    # ------------------------------------------------------------
     # Load target behavior datasets
-    # ------------------------------------------------------------
     datasets = {
         behavior: load_ab_test_data(test_ab_path(behavior)) for behavior in behaviors
     }
@@ -85,10 +81,8 @@ def main():
         dtype=torch.float32,
     )
 
-    # ------------------------------------------------------------
     # Compute one alpha=0 baseline per TARGET behavior.
     # Baseline is independent of source vector.
-    # ------------------------------------------------------------
     baselines = {}
 
     reference_vector = vectors[behaviors[0]]
@@ -109,9 +103,7 @@ def main():
 
         print(f"{target:15s} | B(0)={baselines[target]:.4f}")
 
-    # ------------------------------------------------------------
     # Source-vector × target-behavior sweep
-    # ------------------------------------------------------------
     rows = []
 
     for source in behaviors:
@@ -174,9 +166,7 @@ def main():
         index=False,
     )
 
-    # ------------------------------------------------------------
     # Compact +/-1 delta matrices
-    # ------------------------------------------------------------
     for alpha in [-1.0, 1.0]:
         sub = df[df["alpha"] == alpha]
 

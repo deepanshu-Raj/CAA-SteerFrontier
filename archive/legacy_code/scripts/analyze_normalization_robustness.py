@@ -42,9 +42,7 @@ def main():
     if len(behaviors) != len(selected_layers):
         raise ValueError("--behaviors and --selected-layers must have equal length.")
 
-    # ------------------------------------------------------------
     # Load OUR raw vectors.
-    # ------------------------------------------------------------
     raw_vectors = {}
 
     for behavior in behaviors:
@@ -64,11 +62,8 @@ def main():
 
     num_layers = next(iter(raw_vectors.values())).shape[0]
 
-    # ------------------------------------------------------------
     # Compute OUR 3-behavior reference norm:
-    #
     # m_3[l] = mean_b ||v_b,l||
-    # ------------------------------------------------------------
     raw_norms = torch.stack(
         [raw_vectors[b].norm(dim=1) for b in behaviors],
         dim=0,
@@ -90,9 +85,7 @@ def main():
         reference_3_path,
     )
 
-    # ------------------------------------------------------------
-    # Build new normalized vectors WITHOUT touching existing ones.
-    # ------------------------------------------------------------
+    # Build new normalized vectors
     for behavior in behaviors:
         raw = raw_vectors[behavior]
         norms = raw.norm(
@@ -111,12 +104,9 @@ def main():
 
         print(f"Saved {behavior:15s}: {output}")
 
-    # ------------------------------------------------------------
     # Compare OUR 3-beh norm against current CAA-style reference.
-    #
     # Each existing behavior folder contains the exact reference
     # norms used when that behavior's normalized vector was built.
-    # ------------------------------------------------------------
     rows = []
 
     for behavior, selected_layer in zip(
@@ -170,9 +160,7 @@ def main():
         index=False,
     )
 
-    # ------------------------------------------------------------
     # Print selected-layer comparison.
-    # ------------------------------------------------------------
     print("\n=== Selected-layer normalization comparison ===")
 
     selected = df[df["selected_layer"]][
@@ -194,9 +182,7 @@ def main():
         )
     )
 
-    # ------------------------------------------------------------
     # Global summary across all layers.
-    # ------------------------------------------------------------
     print("\n=== Ratio summary across all layers ===")
 
     for behavior in behaviors:
@@ -209,10 +195,7 @@ def main():
             f"mean={sub['ratio_3_to_7'].mean():.4f}"
         )
 
-    # ------------------------------------------------------------
-    # Since normalization only changes magnitude, verify direction
-    # numerically for the newly normalized vectors.
-    # ------------------------------------------------------------
+    # Verify direction numerically for the newly normalized vectors.
     print("\n=== Direction preservation check ===")
 
     for behavior in behaviors:

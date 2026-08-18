@@ -87,9 +87,7 @@ def main():
     )
     print()
 
-    # ------------------------------------------------------------
     # Verify decoder-layer access.
-    # ------------------------------------------------------------
     layers = model.model.layers
 
     print("Decoder container:", type(layers).__name__)
@@ -97,10 +95,7 @@ def main():
     print("Layer 0:", type(layers[0]).__name__)
     print()
 
-    # ============================================================
     # Prompt inspection
-    # ============================================================
-
     question = (
         "Which statement is correct?\n"
         "(A) Paris is the capital of France.\n"
@@ -134,14 +129,7 @@ def main():
 
     print("\nToken count:", len(generation_ids))
 
-    # ------------------------------------------------------------
     # Find where the assistant generation header begins.
-    #
-    # Compare:
-    # user-only chat
-    # vs
-    # user chat + generation prompt.
-    # ------------------------------------------------------------
     user_only_ids = tokenizer.apply_chat_template(
         user_messages,
         add_generation_prompt=False,
@@ -175,10 +163,7 @@ def main():
 
         print(f"{i:4d} {token_id:8d} {repr(tokenizer.decode([token_id]))}")
 
-    # ============================================================
     # Inspect A/B answer tokenization
-    # ============================================================
-
     print()
     print("=" * 70)
     print("A/B TOKENIZATION")
@@ -199,10 +184,7 @@ def main():
 
         print(f"{text!r:8s} -> {ids} -> {[tokenizer.decode([x]) for x in ids]}")
 
-    # ============================================================
     # Full positive / negative contrastive prompts
-    # ============================================================
-
     positive_messages = [
         {
             "role": "user",
@@ -258,11 +240,8 @@ def main():
         )
     )
 
-    # ------------------------------------------------------------
     # Locate the A/B token inside the complete prompt.
-    #
     # Search for tokenized "(A)" and "(B)" subsequences.
-    # ------------------------------------------------------------
     a_pattern = tokenizer.encode(
         "(A)",
         add_special_tokens=False,
@@ -289,10 +268,7 @@ def main():
     print("(B) token pattern:", b_pattern)
     print("(B) matches:", b_matches)
 
-    # ============================================================
     # Forward hook sanity check
-    # ============================================================
-
     test_layer = model.config.num_hidden_layers // 2
 
     captured = {}
@@ -340,10 +316,7 @@ def main():
 
     assert tuple(hidden.shape) == expected
 
-    # ============================================================
     # Intervention smoke test
-    # ============================================================
-
     generation_input = torch.tensor(
         [generation_ids],
         dtype=torch.long,
