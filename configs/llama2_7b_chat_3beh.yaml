@@ -10,7 +10,6 @@ behaviors:
   - hallucination
 
 data_root: data
-# These roots point to the existing 3-behavior-normalization robustness run.
 vector_root: vectors/llama2-7b-chat
 results_root: results/llama2-7b-chat
 plots_root: plots/llama2-7b-chat
