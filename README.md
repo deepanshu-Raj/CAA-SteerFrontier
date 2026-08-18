@@ -1,6 +1,6 @@
 # CAA-SteerFrontier
 
-**How Far Can You Steer? — Mapping Behavior–Capability Tradeoffs in Contrastive Activation Addition**
+**How Far Can You Steer? Behavior–Capability Tradeoffs in Contrastive Activation Addition**
 
 This repository implements a model-aware evaluation harness for **Contrastive Activation Addition (CAA)**. It extracts steering vectors directly from contrastive behavioral examples, sweeps intervention layers and coefficients, measures behavioral control and MMLU capability, and compares steering geometry across behaviors and models.
 
@@ -109,7 +109,7 @@ On a cluster, optionally place the Hugging Face cache on persistent storage:
 export HF_HOME=/path/to/persistent/huggingface
 ```
 
-**Compute environment:** Experiments were run on the University of Chicago CS research cluster using a single NVIDIA L40S GPU (48 GB VRAM) with 128 GB host memory. Models were evaluated in FP32 using CUDA 11.8 and Python 3.9.21; all experiments were inference-only and required no model training or fine-tuning.
+**Compute environment:** All reported experiments are inference-only; no model training or fine-tuning is performed. Experiments were run on the University of Chicago SSCS research cluster using one NVIDIA L40S GPU with 48 GB of device memory and 128 GB of host memory. Models were evaluated in FP32 with CUDA 11.8 and Python 3.9.21. The released experiment harness independently extracts all three steering-vector families, so reproducing the canonical results does not require downloading precomputed vectors from the original CAA repository.
 
 ### 1. Adapter smoke test
 
@@ -334,9 +334,7 @@ This generates the cross-model behavioral response, behavioral shift, capability
 
 ## Data
 
-`data/` contains the processed contrastive generation/test examples for sycophancy, refusal, and hallucination, plus the fixed binary MMLU subset used by the experiments.
-
-Steering vectors are always extracted from these local examples. Reproducing the canonical experiment therefore does **not** require cloning the original CAA repository or downloading its precomputed vectors.
+`data/` contains the processed contrastive generation/test examples for sycophancy, refusal, and hallucination, plus the fixed binary MMLU subset used by the experiments. Steering vectors are always extracted from these local examples. 
 
 ## Reference
 
