@@ -9,7 +9,6 @@ def test_reproduction_dependencies_import():
     import transformers
     import yaml
 
-    # Import smoke test only: no model creation, network access, or GPU use.
     assert torch is not None
     assert transformers is not None
     assert datasets is not None

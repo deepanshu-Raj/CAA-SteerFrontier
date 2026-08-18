@@ -98,11 +98,7 @@ def find_last_subsequence(tokens, subsequence) -> int:
     raise ValueError("Subsequence not found in token sequence.")
 
 
-# -----------------------------------------------------------------------------
 # Llama-2 Chat: exact legacy formatting used by the verified reproduction.
-# -----------------------------------------------------------------------------
-
-
 def format_llama2_chat(
     question: str,
     answer: Optional[str] = None,
@@ -190,11 +186,7 @@ class Llama2ChatAdapter(PromptAdapter):
         )
 
 
-# -----------------------------------------------------------------------------
 # Llama-3-family Instruct: native Hugging Face chat template.
-# -----------------------------------------------------------------------------
-
-
 class Llama3InstructAdapter(PromptAdapter):
     family = "llama3-instruct"
 
@@ -304,7 +296,9 @@ _ADAPTERS = {
 }
 
 
-def infer_prompt_family(model=None, tokenizer=None, model_name: Optional[str] = None) -> str:
+def infer_prompt_family(
+    model=None, tokenizer=None, model_name: Optional[str] = None
+) -> str:
     """Infer the supported chat family from model/tokenizer metadata."""
 
     name = model_name or model_name_from_objects(model=model, tokenizer=tokenizer) or ""

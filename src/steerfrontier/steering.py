@@ -43,7 +43,7 @@ class SteeringIntervention:
                 cache_position = cache_position.unsqueeze(0)
             return cache_position
 
-        # Safe fallback for our evaluation/extraction path, which always performs a
+        # Fallback for evaluation/extraction path, which always performs a
         # full forward pass with use_cache=False.
         seq_len = hidden_states.shape[1]
         return torch.arange(
