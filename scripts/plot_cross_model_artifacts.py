@@ -410,8 +410,6 @@ def plot_vector_geometry(configs, output_dir):
         for j in range(i + 1, len(behaviors))
     ]
 
-    # Pair identity is encoded by the default color cycle; model identity by
-    # linestyle/marker. This keeps the figure legible with multiple models.
     colors = plt.rcParams["axes.prop_cycle"].by_key().get("color", [])
     pair_colors = {
         pair: colors[i % len(colors)] if colors else None
@@ -442,7 +440,6 @@ def plot_vector_geometry(configs, output_dir):
             )
 
             if sub.empty:
-                # Be robust to reversed pair ordering.
                 sub = df[(df["behavior_a"] == b) & (df["behavior_b"] == a)].sort_values(
                     "layer"
                 )

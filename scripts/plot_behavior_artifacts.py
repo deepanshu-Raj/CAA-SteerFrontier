@@ -55,7 +55,6 @@ def save(fig, path):
 
 
 def blue_green_cmap():
-    # Explicitly requested blue/green palette while retaining a white zero point.
     return LinearSegmentedColormap.from_list(
         "blue_white_green",
         ["#2166ac", "#f7f7f7", "#1b7837"],
