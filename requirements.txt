@@ -14,7 +14,7 @@ scipy==1.14.1
 scikit-learn==1.5.2
 matplotlib==3.9.2
 
-sentencepiece==0.2.0
+sentencepiece==0.2.1
 safetensors
 huggingface-hub
 protobuf
