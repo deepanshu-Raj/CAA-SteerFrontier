@@ -3,7 +3,7 @@
 # Tested publication environment:
 # Python 3.11.11 + CUDA 11.8
 
-torch==2.5.1+cu118
+torch==2.13.0
 transformers==4.46.3
 datasets==3.1.0
 accelerate==1.1.1
