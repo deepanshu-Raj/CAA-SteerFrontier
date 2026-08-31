@@ -1,22 +1,25 @@
 --extra-index-url https://download.pytorch.org/whl/cu118
 
-# Tested reproduction environment: Python 3.9 + CUDA 11.8
-torch==2.0.1+cu118
-transformers==4.43.3
-datasets==2.14.5
-huggingface-hub==0.24.5
+# Tested publication environment:
+# Python 3.11.11 + CUDA 11.8
 
-numpy==1.24.4
-pandas==2.0.3
-scipy==1.11.3
-pyarrow==12.0.1
+torch==2.5.1+cu118
+transformers==4.46.3
+datasets==3.1.0
+accelerate==1.1.1
 
-tqdm==4.66.1
-PyYAML==6.0.1
-matplotlib==3.7.3
-scikit-learn==1.3.1
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.14.1
+scikit-learn==1.5.2
+matplotlib==3.9.2
 
-safetensors==0.4.4
 sentencepiece==0.2.0
+safetensors
+huggingface-hub
+protobuf
+tqdm
+PyYAML
+pyarrow
 
-pytest==7.4.2
+pytest
