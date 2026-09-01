@@ -235,7 +235,7 @@ traitlets==5.15.1
     #   jupyter-client
     #   jupyter-core
     #   matplotlib-inline
-transformers==4.33.2
+transformers==5.10.1
     # via caa-steer-frontier (pyproject.toml)
 triton==2.0.0
     # via torch
