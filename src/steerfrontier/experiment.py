@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Union
-
-PathLike = Union[str, Path]
 
 DEFAULT_ALPHAS = [
     -2.0,
@@ -32,11 +29,14 @@ class ExperimentLayout:
     results_root: Path = Path("results")
     plots_root: Path = Path("plots")
 
-    def generation_path(self, behavior: str) -> Path:
-        return self.data_root / behavior / "generate.json"
+    def vector_data_path(self, behavior: str) -> Path:
+        return self.data_root / behavior / "vector.json"
 
-    def test_ab_path(self, behavior: str) -> Path:
-        return self.data_root / behavior / "test_ab.json"
+    def validation_data_path(self, behavior: str) -> Path:
+        return self.data_root / behavior / "validation.json"
+
+    def test_data_path(self, behavior: str) -> Path:
+        return self.data_root / behavior / "test.json"
 
     def mmlu_path(self) -> Path:
         return self.data_root / "mmlu" / "test.json"
@@ -47,23 +47,14 @@ class ExperimentLayout:
     def raw_vectors_path(self, behavior: str) -> Path:
         return self.vector_dir(behavior) / "raw_vectors.pt"
 
-    def normalized_vectors_path(
-        self,
-        behavior: str,
-        tag: Optional[str] = None,
-    ) -> Path:
-        filename = (
-            "normalized_vectors.pt"
-            if tag is None
-            else f"normalized_vectors_{tag}.pt"
-        )
-        return self.vector_dir(behavior) / filename
+    def normalized_vectors_path(self, behavior: str) -> Path:
+        return self.vector_dir(behavior) / "normalized_vectors.pt"
 
     def normalization_dir(self) -> Path:
         return self.vector_root / "normalization"
 
-    def reference_norms_path(self, tag: str) -> Path:
-        return self.normalization_dir() / f"{tag}_reference_layer_norms.pt"
+    def reference_norms_path(self) -> Path:
+        return self.normalization_dir() / "reference_layer_norms.pt"
 
     def results_dir(self, behavior: str) -> Path:
         return self.results_root / behavior
@@ -76,37 +67,3 @@ class ExperimentLayout:
 
     def comparison_plots_dir(self) -> Path:
         return self.plots_root / "comparison"
-
-
-# Backward-compatible helpers.
-def generation_path(behavior: str, data_root: PathLike = "data") -> Path:
-    return Path(data_root) / behavior / "generate.json"
-
-
-def test_ab_path(behavior: str, data_root: PathLike = "data") -> Path:
-    return Path(data_root) / behavior / "test_ab.json"
-
-
-def raw_vectors_path(behavior: str, vector_root: PathLike = "vectors") -> Path:
-    return Path(vector_root) / behavior / "raw_vectors.pt"
-
-
-def normalized_vectors_path(
-    behavior: str,
-    vector_root: PathLike = "vectors",
-    tag: Optional[str] = None,
-) -> Path:
-    filename = (
-        "normalized_vectors.pt"
-        if tag is None
-        else f"normalized_vectors_{tag}.pt"
-    )
-    return Path(vector_root) / behavior / filename
-
-
-def results_dir(behavior: str, results_root: PathLike = "results") -> Path:
-    return Path(results_root) / behavior
-
-
-def plots_dir(behavior: str, plots_root: PathLike = "plots") -> Path:
-    return Path(plots_root) / behavior
