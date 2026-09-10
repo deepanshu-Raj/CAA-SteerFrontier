@@ -7,13 +7,15 @@ import pandas as pd
 import torch
 from scipy.stats import spearmanr
 
+from steerfrontier.calibration import steering_calibration
 from steerfrontier.config import ExperimentConfig
 from steerfrontier.data import (
-    load_ab_test_data,
-    load_generation_data,
     load_mmlu_data,
+    load_test_data,
+    load_validation_data,
+    load_vector_data,
 )
-from steerfrontier.evaluation import evaluate_ab, evaluate_mmlu_detailed
+from steerfrontier.evaluation import evaluate_behavior, evaluate_mmlu_detailed
 from steerfrontier.models import model_summary
 from steerfrontier.normalization import normalize_behavior_vectors
 from steerfrontier.prompts import PromptAdapter
@@ -77,7 +79,7 @@ def write_run_manifest(
         "model_summary": model_summary(model),
         "prompt_family": prompt_family,
         "behaviors": config.behaviors,
-        "normalization_tag": config.normalization_tag,
+        "normalization": "shared_mean_layer_norm",
         "alphas": config.alphas,
         "layer_sweep_alphas": config.layer_sweep_alphas,
         "candidate_width": config.candidate_width,
@@ -122,8 +124,8 @@ def extract_or_load_raw_vectors(
             raise FileNotFoundError(f"Missing raw vector for {behavior}: {output_path}")
 
         if should_extract:
-            dataset_path = layout.generation_path(behavior)
-            dataset = load_generation_data(dataset_path)
+            dataset_path = layout.vector_data_path(behavior)
+            dataset = load_vector_data(dataset_path)
 
             print("\n" + "=" * 76)
             print(f"EXTRACTION — {behavior}")
@@ -183,15 +185,12 @@ def build_shared_normalization(
     normalized, reference_norms = normalize_behavior_vectors(raw_vectors)
     layout = config.layout
 
-    reference_path = layout.reference_norms_path(config.normalization_tag)
+    reference_path = layout.reference_norms_path()
     reference_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(reference_norms, reference_path)
 
     for behavior, vectors in normalized.items():
-        output_path = layout.normalized_vectors_path(
-            behavior,
-            tag=config.normalization_tag,
-        )
+        output_path = layout.normalized_vectors_path(behavior)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(vectors, output_path)
         print(f"Normalized {behavior:15s} -> {output_path}")
@@ -204,10 +203,7 @@ def load_normalized_vectors(config: ExperimentConfig) -> Dict[str, torch.Tensor]
     layout = config.layout
     vectors = {}
     for behavior in config.behaviors:
-        path = layout.normalized_vectors_path(
-            behavior,
-            tag=config.normalization_tag,
-        )
+        path = layout.normalized_vectors_path(behavior)
         if not path.exists():
             raise FileNotFoundError(
                 f"Missing normalized vector for {behavior}: {path}. "
@@ -217,6 +213,28 @@ def load_normalized_vectors(config: ExperimentConfig) -> Dict[str, torch.Tensor]
     return vectors
 
 
+def _write_behavior_items(
+    output_path: Path,
+    rows,
+):
+    """
+    Write item-level behavior results alongside an aggregate sweep CSV.
+
+    Example:
+        layer_sweep.csv
+        -> layer_sweep_items.csv
+    """
+
+    items_path = output_path.with_name(f"{output_path.stem}_items.csv")
+
+    pd.DataFrame(rows).to_csv(
+        items_path,
+        index=False,
+    )
+
+    return items_path
+
+
 def run_layer_sweep(
     model,
     tokenizer,
@@ -224,13 +242,20 @@ def run_layer_sweep(
     behavior: str,
     dataset,
     vectors: torch.Tensor,
+    residual_scale: torch.Tensor,
     alphas: List[float],
     output_path: Path,
     device: str = "cuda",
 ) -> pd.DataFrame:
-    """Evaluate the two coarse steering coefficients at every decoder layer."""
+    """
+    Evaluate coarse steering coefficients at every decoder layer.
 
-    baseline = evaluate_ab(
+    Saves:
+        layer_sweep.csv
+        layer_sweep_items.csv
+    """
+
+    baseline_result = evaluate_behavior(
         model=model,
         tokenizer=tokenizer,
         dataset=dataset,
@@ -239,9 +264,17 @@ def run_layer_sweep(
         coefficient=0.0,
         device=device,
         prompt_adapter=adapter,
-    )["behavior_score"]
+    )
+
+    baseline = float(baseline_result["behavior_score"])
+
+    baseline_items = {
+        int(item["item_index"]): item for item in baseline_result["items"]
+    }
 
     rows = []
+    item_rows = []
+
     print("\n" + "=" * 76)
     print(f"LAYER SWEEP — {behavior}")
     print("=" * 76)
@@ -249,40 +282,129 @@ def run_layer_sweep(
 
     for layer in range(vectors.shape[0]):
         scores = []
+
         for alpha in alphas:
-            result = evaluate_ab(
+            alpha = float(alpha)
+
+            result = evaluate_behavior(
                 model=model,
                 tokenizer=tokenizer,
                 dataset=dataset,
                 layer_idx=layer,
                 vector=vectors[layer],
-                coefficient=float(alpha),
+                coefficient=alpha,
                 device=device,
                 prompt_adapter=adapter,
             )
+
             score = float(result["behavior_score"])
+
+            calibration = steering_calibration(
+                alpha=alpha,
+                layer=layer,
+                vectors=vectors,
+                residual_scale=residual_scale,
+            )
+
             scores.append(score)
+
             rows.append(
                 {
                     "behavior": behavior,
-                    "layer": layer,
-                    "alpha": float(alpha),
+                    "layer": int(layer),
+                    "fractional_depth": calibration["fractional_depth"],
+                    "alpha": alpha,
+                    "eta": calibration["eta"],
+                    "signed_eta": calibration["signed_eta"],
+                    "vector_norm": calibration["vector_norm"],
+                    "residual_scale": calibration["residual_scale"],
+                    "perturbation_ratio": calibration["perturbation_ratio"],
                     "behavior_score": score,
-                    "baseline": float(baseline),
-                    "delta_from_baseline": score - float(baseline),
+                    "baseline": baseline,
+                    "delta_from_baseline": (score - baseline),
+                    "num_examples": int(result["num_examples"]),
                 }
             )
 
+            for item in result["items"]:
+                item_index = int(item["item_index"])
+
+                baseline_item = baseline_items[item_index]
+
+                if (
+                    item["matching_answer"] != baseline_item["matching_answer"]
+                    or item["nonmatching_answer"] != baseline_item["nonmatching_answer"]
+                ):
+                    raise RuntimeError(
+                        "Baseline and steered behavior items are misaligned."
+                    )
+
+                matching_prob = float(item["matching_prob"])
+
+                baseline_prob = float(baseline_item["matching_prob"])
+
+                item_rows.append(
+                    {
+                        "behavior": behavior,
+                        "layer": int(layer),
+                        "fractional_depth": calibration["fractional_depth"],
+                        "alpha": alpha,
+                        "eta": calibration["eta"],
+                        "signed_eta": calibration["signed_eta"],
+                        "item_index": item_index,
+                        "matching_answer": item["matching_answer"],
+                        "nonmatching_answer": item["nonmatching_answer"],
+                        "matching_prob": (matching_prob),
+                        "baseline_matching_prob": (baseline_prob),
+                        "delta_from_baseline": (matching_prob - baseline_prob),
+                    }
+                )
+
         effect_span = max(scores) - min(scores)
+
+        ratio = steering_calibration(
+            alpha=1.0,
+            layer=layer,
+            vectors=vectors,
+            residual_scale=residual_scale,
+        )["perturbation_ratio"]
+
         print(
-            f"L{layer:02d} | "
-            + " | ".join(f"alpha={a:+g}: {s:.4f}" for a, s in zip(alphas, scores))
+            f"L{layer:02d} "
+            f"(d={layer / (vectors.shape[0] - 1):.3f}, "
+            f"eta@1={ratio:.4f}) | "
+            + " | ".join(
+                f"alpha={a:+g}: {s:.4f}"
+                for a, s in zip(
+                    alphas,
+                    scores,
+                )
+            )
             + f" | span={effect_span:.4f}"
         )
 
     df = pd.DataFrame(rows)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    df.to_csv(
+        output_path,
+        index=False,
+    )
+
+    items_path = _write_behavior_items(
+        output_path,
+        item_rows,
+    )
+
+    print(
+        "Item-level results ->",
+        items_path,
+    )
+
     return df
 
 
@@ -321,65 +443,162 @@ def run_coefficient_sweep(
     behavior: str,
     dataset,
     vectors: torch.Tensor,
+    residual_scale: torch.Tensor,
     candidate_layers: List[int],
     alphas: List[float],
     output_path: Path,
     device: str = "cuda",
 ) -> pd.DataFrame:
+    """
+    Run the dense coefficient sweep over candidate layers.
+
+    Saves:
+        coefficient_layer_sweep.csv
+        coefficient_layer_sweep_items.csv
+    """
+
     if not candidate_layers:
         raise ValueError("candidate_layers cannot be empty.")
 
-    baseline = evaluate_ab(
+    baseline_layer = int(candidate_layers[0])
+
+    baseline_result = evaluate_behavior(
         model=model,
         tokenizer=tokenizer,
         dataset=dataset,
-        layer_idx=candidate_layers[0],
-        vector=vectors[candidate_layers[0]],
+        layer_idx=baseline_layer,
+        vector=vectors[baseline_layer],
         coefficient=0.0,
         device=device,
         prompt_adapter=adapter,
-    )["behavior_score"]
+    )
+
+    baseline = float(baseline_result["behavior_score"])
+
+    baseline_items = {
+        int(item["item_index"]): item for item in baseline_result["items"]
+    }
 
     rows = []
+    item_rows = []
+
     print("\n" + "=" * 76)
     print(f"COEFFICIENT SWEEP — {behavior}")
     print("=" * 76)
-    print("Candidate layers:", candidate_layers)
-    print("Alphas:", alphas)
+    print(
+        "Candidate layers:",
+        candidate_layers,
+    )
+    print(
+        "Alphas:",
+        alphas,
+    )
     print(f"B_b(0) = {baseline:.6f}")
 
     for layer in candidate_layers:
         for alpha in alphas:
-            if float(alpha) == 0.0:
-                score = float(baseline)
+            alpha = float(alpha)
+
+            # Alpha=0 is identical across layers,
+            # so reuse the already computed baseline.
+            if alpha == 0.0:
+                result = baseline_result
+
             else:
-                score = float(
-                    evaluate_ab(
-                        model=model,
-                        tokenizer=tokenizer,
-                        dataset=dataset,
-                        layer_idx=layer,
-                        vector=vectors[layer],
-                        coefficient=float(alpha),
-                        device=device,
-                        prompt_adapter=adapter,
-                    )["behavior_score"]
+                result = evaluate_behavior(
+                    model=model,
+                    tokenizer=tokenizer,
+                    dataset=dataset,
+                    layer_idx=layer,
+                    vector=vectors[layer],
+                    coefficient=alpha,
+                    device=device,
+                    prompt_adapter=adapter,
                 )
+
+            score = float(result["behavior_score"])
+
+            calibration = steering_calibration(
+                alpha=alpha,
+                layer=layer,
+                vectors=vectors,
+                residual_scale=residual_scale,
+            )
 
             rows.append(
                 {
                     "behavior": behavior,
                     "layer": int(layer),
-                    "alpha": float(alpha),
+                    "fractional_depth": calibration["fractional_depth"],
+                    "alpha": alpha,
+                    "eta": calibration["eta"],
+                    "signed_eta": calibration["signed_eta"],
+                    "vector_norm": calibration["vector_norm"],
+                    "residual_scale": calibration["residual_scale"],
+                    "perturbation_ratio": calibration["perturbation_ratio"],
                     "behavior_score": score,
-                    "baseline": float(baseline),
-                    "delta_from_baseline": score - float(baseline),
+                    "baseline": baseline,
+                    "delta_from_baseline": (score - baseline),
+                    "num_examples": int(result["num_examples"]),
                 }
             )
 
+            for item in result["items"]:
+                item_index = int(item["item_index"])
+
+                baseline_item = baseline_items[item_index]
+
+                if (
+                    item["matching_answer"] != baseline_item["matching_answer"]
+                    or item["nonmatching_answer"] != baseline_item["nonmatching_answer"]
+                ):
+                    raise RuntimeError(
+                        "Baseline and steered behavior items are misaligned."
+                    )
+
+                matching_prob = float(item["matching_prob"])
+
+                baseline_prob = float(baseline_item["matching_prob"])
+
+                item_rows.append(
+                    {
+                        "behavior": behavior,
+                        "layer": int(layer),
+                        "fractional_depth": calibration["fractional_depth"],
+                        "alpha": alpha,
+                        "eta": calibration["eta"],
+                        "signed_eta": calibration["signed_eta"],
+                        "item_index": item_index,
+                        "matching_answer": item["matching_answer"],
+                        "nonmatching_answer": item["nonmatching_answer"],
+                        "matching_prob": (matching_prob),
+                        "baseline_matching_prob": (baseline_prob),
+                        "delta_from_baseline": (matching_prob - baseline_prob),
+                    }
+                )
+
     df = pd.DataFrame(rows)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    df.to_csv(
+        output_path,
+        index=False,
+    )
+
+    items_path = _write_behavior_items(
+        output_path,
+        item_rows,
+    )
+
+    print(
+        "Item-level results ->",
+        items_path,
+    )
+
     return df
 
 
@@ -388,9 +607,44 @@ def compute_layer_selection_metrics(
     coefficient_df: pd.DataFrame,
     output_path: Path,
 ) -> pd.DataFrame:
-    """Compute descriptive layer-selection metrics without selecting a layer."""
+    """
+    Compute directional layer-selection diagnostics.
+
+    Negative and positive steering are analyzed separately because
+    CAA response can be strongly sign-asymmetric.
+
+    For each direction:
+
+        gain:
+            Maximum behavior shift in the expected direction.
+
+        mean_gain:
+            Average shift in the expected direction.
+
+        direction_fraction:
+            Fraction of coefficients that move behavior in the
+            expected direction.
+
+        rho:
+            Spearman correlation between steering magnitude and gain.
+            +1 means gain increases monotonically with intervention
+            strength.
+
+        monotonic_violations:
+            Number of times gain decreases as steering magnitude grows.
+
+        significant_fraction:
+            Fraction of coefficients whose paired-bootstrap 95% CI
+            excludes zero in the expected direction, when CI columns
+            are available.
+    """
 
     rows = []
+
+    has_cis = {
+        "delta_ci_low",
+        "delta_ci_high",
+    }.issubset(coefficient_df.columns)
 
     for layer in sorted(coefficient_df["layer"].unique()):
         sub = (
@@ -399,49 +653,138 @@ def compute_layer_selection_metrics(
             .reset_index(drop=True)
         )
 
-        baseline = float(sub["baseline"].iloc[0])
-        neg = sub[sub["alpha"] < 0]
-        pos = sub[sub["alpha"] > 0]
+        baseline_rows = sub[sub["alpha"] == 0.0]
+
+        if len(baseline_rows) != 1:
+            raise ValueError(
+                f"Layer {layer} must contain exactly one alpha=0 baseline."
+            )
+
+        baseline = float(baseline_rows["behavior_score"].iloc[0])
+
+        neg = sub[sub["alpha"] < 0].copy()
+
+        pos = sub[sub["alpha"] > 0].copy()
+
         if neg.empty or pos.empty:
             raise ValueError(
                 "Coefficient sweep must contain both negative and positive alphas."
             )
 
-        negative_gain = baseline - float(neg["behavior_score"].min())
-        positive_gain = float(pos["behavior_score"].max()) - baseline
+        # ------------------------------------------------------------
+        # Negative direction
+        #
+        # Larger |alpha| should produce a larger decrease in B.
+        # ------------------------------------------------------------
+
+        neg["strength"] = neg["alpha"].abs()
+
+        neg["directional_gain"] = baseline - neg["behavior_score"]
+
+        neg = neg.sort_values("strength").reset_index(drop=True)
+
+        negative_gain = float(neg["directional_gain"].max())
+
+        mean_negative_gain = float(neg["directional_gain"].mean())
+
+        negative_direction_fraction = float((neg["directional_gain"] > 0.0).mean())
+
+        negative_rho, _ = spearmanr(
+            neg["strength"],
+            neg["directional_gain"],
+        )
+
+        negative_monotonic_violations = int(
+            np.sum(np.diff(neg["directional_gain"].to_numpy()) < -1e-6)
+        )
+
+        negative_peak_row = neg.loc[neg["directional_gain"].idxmax()]
+
+        # ------------------------------------------------------------
+        # Positive direction
+        #
+        # Larger alpha should produce a larger increase in B.
+        # ------------------------------------------------------------
+
+        pos["strength"] = pos["alpha"]
+
+        pos["directional_gain"] = pos["behavior_score"] - baseline
+
+        pos = pos.sort_values("strength").reset_index(drop=True)
+
+        positive_gain = float(pos["directional_gain"].max())
+
+        mean_positive_gain = float(pos["directional_gain"].mean())
+
+        positive_direction_fraction = float((pos["directional_gain"] > 0.0).mean())
+
+        positive_rho, _ = spearmanr(
+            pos["strength"],
+            pos["directional_gain"],
+        )
+
+        positive_monotonic_violations = int(
+            np.sum(np.diff(pos["directional_gain"].to_numpy()) < -1e-6)
+        )
+
+        positive_peak_row = pos.loc[pos["directional_gain"].idxmax()]
+
+        # ------------------------------------------------------------
+        # Bootstrap-supported directional consistency
+        # ------------------------------------------------------------
+
+        if has_cis:
+            negative_significant_fraction = float((neg["delta_ci_high"] < 0.0).mean())
+
+            positive_significant_fraction = float((pos["delta_ci_low"] > 0.0).mean())
+
+        else:
+            negative_significant_fraction = float("nan")
+
+            positive_significant_fraction = float("nan")
+
+        # Headline descriptive quantities.
         bidirectional_gain = negative_gain + positive_gain
 
-        mean_negative_gain = float((baseline - neg["behavior_score"]).mean())
-        mean_positive_gain = float((pos["behavior_score"] - baseline).mean())
-
-        negative_direction_fraction = float((neg["behavior_score"] < baseline).mean())
-        positive_direction_fraction = float((pos["behavior_score"] > baseline).mean())
-
-        rho, _ = spearmanr(sub["alpha"], sub["behavior_score"])
-        scores = sub["behavior_score"].to_numpy()
-        monotonic_violations = int(np.sum(np.diff(scores) < -1e-6))
         total_range = float(sub["behavior_score"].max() - sub["behavior_score"].min())
 
         rows.append(
             {
                 "behavior": behavior,
                 "layer": int(layer),
-                "spearman_rho": float(rho),
-                "monotonic_violations": monotonic_violations,
-                "negative_gain": negative_gain,
-                "positive_gain": positive_gain,
-                "bidirectional_gain": bidirectional_gain,
-                "mean_negative_gain": mean_negative_gain,
-                "mean_positive_gain": mean_positive_gain,
-                "negative_direction_fraction": negative_direction_fraction,
-                "positive_direction_fraction": positive_direction_fraction,
-                "total_range": total_range,
+                "negative_rho": float(negative_rho),
+                "negative_monotonic_violations": (negative_monotonic_violations),
+                "negative_gain": (negative_gain),
+                "mean_negative_gain": (mean_negative_gain),
+                "negative_direction_fraction": (negative_direction_fraction),
+                "negative_significant_fraction": (negative_significant_fraction),
+                "negative_peak_alpha": float(negative_peak_row["alpha"]),
+                "negative_peak_eta": float(negative_peak_row["eta"]),
+                "positive_rho": float(positive_rho),
+                "positive_monotonic_violations": (positive_monotonic_violations),
+                "positive_gain": (positive_gain),
+                "mean_positive_gain": (mean_positive_gain),
+                "positive_direction_fraction": (positive_direction_fraction),
+                "positive_significant_fraction": (positive_significant_fraction),
+                "positive_peak_alpha": float(positive_peak_row["alpha"]),
+                "positive_peak_eta": float(positive_peak_row["eta"]),
+                "bidirectional_gain": (bidirectional_gain),
+                "total_range": (total_range),
             }
         )
 
     metrics = pd.DataFrame(rows)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    metrics.to_csv(output_path, index=False)
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    metrics.to_csv(
+        output_path,
+        index=False,
+    )
+
     return metrics
 
 
@@ -562,7 +905,7 @@ def write_behavior_summary(
         "model_name": config.model_name,
         "model_label": config.model_label,
         "model_slug": config.model_slug,
-        "normalization": config.normalization_tag,
+        "normalization": "shared_mean_layer_norm",
         "selected_layer": int(selected_layer),
         "candidate_layers": [int(x) for x in candidate_layers],
         "baseline_behavior": float(
@@ -636,8 +979,12 @@ def load_saved_analysis(
     return layer_df, coefficient_df, metrics_df, candidate_layers
 
 
+def load_behavior_validation(config: ExperimentConfig, behavior: str):
+    return load_validation_data(config.layout.validation_data_path(behavior))
+
+
 def load_behavior_test(config: ExperimentConfig, behavior: str):
-    return load_ab_test_data(config.layout.test_ab_path(behavior))
+    return load_test_data(config.layout.test_data_path(behavior))
 
 
 def load_mmlu(config: ExperimentConfig):
