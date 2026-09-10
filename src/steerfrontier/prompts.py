@@ -9,7 +9,8 @@ from steerfrontier.models import model_name_from_objects
 
 B_INST = "[INST]"
 E_INST = "[/INST]"
-VALID_ANSWERS = {"(A)", "(B)"}
+
+VALID_ANSWERS = {f"({chr(code)})" for code in range(ord("A"), ord("Z") + 1)}
 
 
 @dataclass(frozen=True)
@@ -22,7 +23,7 @@ class ContrastivePrompt:
 
 @dataclass(frozen=True)
 class ScoringPrompt:
-    """Tokenized partial-answer prompt used for binary A/B scoring."""
+    """Prompt state from which answer-choice tokens are scored."""
 
     input_ids: torch.Tensor
     steering_start_position: int
@@ -30,11 +31,7 @@ class ScoringPrompt:
 
 
 class PromptAdapter(ABC):
-    """Model-family-specific prompt/tokenization behavior.
-
-    CAA extraction/evaluation code should depend on this interface rather than on
-    concrete chat-template syntax.
-    """
+    """Model-family-specific prompt/tokenization behavior."""
 
     family: str
 
@@ -58,9 +55,17 @@ class PromptAdapter(ABC):
 
 def _validate_answer(answer: str) -> str:
     answer = answer.strip()
+
     if answer not in VALID_ANSWERS:
-        raise ValueError(f"Expected one of {sorted(VALID_ANSWERS)}, got {answer!r}.")
+        raise ValueError(
+            f"Expected an answer label like '(A)' ... '(Z)', got {answer!r}."
+        )
+
     return answer
+
+
+def _answer_letter(answer: str) -> str:
+    return _validate_answer(answer)[1]
 
 
 def _encode_1d(tokenizer, text: str) -> torch.Tensor:
@@ -69,21 +74,24 @@ def _encode_1d(tokenizer, text: str) -> torch.Tensor:
         add_special_tokens=False,
         return_tensors="pt",
     )
+
     return ids[0]
 
 
 def _single_token_id(tokenizer, text: str) -> int:
-    ids = tokenizer.encode(text, add_special_tokens=False)
+    ids = tokenizer.encode(
+        text,
+        add_special_tokens=False,
+    )
+
     if len(ids) != 1:
-        raise ValueError(
-            f"Expected {text!r} to tokenize to one token, got {ids}. "
-            "Binary A/B evaluation needs a model-specific scoring adapter."
-        )
+        raise ValueError(f"Expected {text!r} to tokenize to one token, got {ids}.")
+
     return int(ids[0])
 
 
 def find_last_subsequence(tokens, subsequence) -> int:
-    """Return the starting index of the last occurrence of ``subsequence``."""
+    """Return the starting index of the last occurrence of subsequence."""
 
     tokens = list(tokens)
     subsequence = list(subsequence)
@@ -98,14 +106,20 @@ def find_last_subsequence(tokens, subsequence) -> int:
     raise ValueError("Subsequence not found in token sequence.")
 
 
-# Llama-2 Chat: exact legacy formatting used by the verified reproduction.
+# ---------------------------------------------------------------------------
+# Llama-2 Chat
+# ---------------------------------------------------------------------------
+
+
 def format_llama2_chat(
     question: str,
     answer: Optional[str] = None,
 ) -> str:
     text = f"{B_INST} {question.strip()} {E_INST}"
+
     if answer is not None:
         text += f" {answer.strip()}"
+
     return text
 
 
@@ -114,8 +128,15 @@ def tokenize_llama2_chat(
     question: str,
     answer: Optional[str] = None,
 ):
-    text = format_llama2_chat(question, answer)
-    return tokenizer.encode(text, return_tensors="pt")
+    text = format_llama2_chat(
+        question,
+        answer,
+    )
+
+    return tokenizer.encode(
+        text,
+        return_tensors="pt",
+    )
 
 
 def get_answer_token_position(
@@ -123,20 +144,31 @@ def get_answer_token_position(
     question: str,
     answer: str,
 ) -> int:
-    """Legacy Llama-2 answer-letter position helper."""
+    """
+    Return the token position containing the answer letter.
+
+    Verified Llama-2 formatting ends with:
+        '(' 'A/B/C/...' ')'
+    """
 
     answer = _validate_answer(answer)
-    tokens = tokenize_llama2_chat(tokenizer, question, answer)[0]
 
-    # Verified Llama-2 CAA prompt ending: '(' 'A/B' ')'.
+    tokens = tokenize_llama2_chat(
+        tokenizer,
+        question,
+        answer,
+    )[0]
+
     answer_position = len(tokens) - 2
+
     decoded = tokenizer.decode([tokens[answer_position]])
-    expected = answer.strip("()")
+
+    expected = _answer_letter(answer)
 
     if decoded.strip() != expected:
         raise ValueError(
-            f"Expected answer token {expected!r}, found {decoded!r} "
-            f"at position {answer_position}."
+            f"Expected answer token {expected!r}, "
+            f"found {decoded!r} at position {answer_position}."
         )
 
     return answer_position
@@ -146,11 +178,48 @@ def get_instruction_end_position(
     tokenizer: PreTrainedTokenizer,
     input_ids,
 ) -> int:
-    """Legacy Llama-2 steering boundary: final token of the last ``[/INST]``."""
+    """Return the final token of the last [/INST] marker."""
 
-    end_tokens = tokenizer.encode(E_INST, add_special_tokens=False)
-    start = find_last_subsequence(input_ids.tolist(), end_tokens)
+    end_tokens = tokenizer.encode(
+        E_INST,
+        add_special_tokens=False,
+    )
+
+    start = find_last_subsequence(
+        input_ids.tolist(),
+        end_tokens,
+    )
+
     return start + len(end_tokens) - 1
+
+
+def _llama2_answer_token_ids(tokenizer) -> Dict[str, int]:
+    """
+    Build label -> answer-letter token mapping.
+
+    Unsupported labels are omitted. Evaluation checks that the specific
+    requested pair is available.
+    """
+
+    result = {}
+
+    for answer in sorted(VALID_ANSWERS):
+        letter = _answer_letter(answer)
+
+        try:
+            token_id = _single_token_id(
+                tokenizer,
+                letter,
+            )
+        except (KeyError, ValueError):
+            continue
+
+        decoded = tokenizer.decode([token_id]).strip()
+
+        if decoded == letter:
+            result[answer] = token_id
+
+    return result
 
 
 class Llama2ChatAdapter(PromptAdapter):
@@ -163,30 +232,61 @@ class Llama2ChatAdapter(PromptAdapter):
         answer: str,
     ) -> ContrastivePrompt:
         answer = _validate_answer(answer)
-        input_ids = tokenize_llama2_chat(tokenizer, question, answer)
-        answer_position = get_answer_token_position(tokenizer, question, answer)
-        return ContrastivePrompt(input_ids=input_ids, answer_position=answer_position)
+
+        input_ids = tokenize_llama2_chat(
+            tokenizer,
+            question,
+            answer,
+        )
+
+        answer_position = get_answer_token_position(
+            tokenizer,
+            question,
+            answer,
+        )
+
+        return ContrastivePrompt(
+            input_ids=input_ids,
+            answer_position=answer_position,
+        )
 
     def build_scoring_prompt(
         self,
         tokenizer: PreTrainedTokenizer,
         question: str,
     ) -> ScoringPrompt:
-        # Exact original CAA scoring convention: continue after "(".
-        input_ids = tokenize_llama2_chat(tokenizer, question, "(")
-        from_position = get_instruction_end_position(tokenizer, input_ids[0])
+        # Continue immediately after the opening parenthesis.
+        input_ids = tokenize_llama2_chat(
+            tokenizer,
+            question,
+            "(",
+        )
+
+        from_position = get_instruction_end_position(
+            tokenizer,
+            input_ids[0],
+        )
+
+        answer_token_ids = _llama2_answer_token_ids(tokenizer)
+
+        if len(answer_token_ids) < 2:
+            raise ValueError(
+                "Could not construct at least two answer-choice tokens "
+                "for Llama-2 scoring."
+            )
 
         return ScoringPrompt(
             input_ids=input_ids,
             steering_start_position=from_position,
-            answer_token_ids={
-                "(A)": _single_token_id(tokenizer, "A"),
-                "(B)": _single_token_id(tokenizer, "B"),
-            },
+            answer_token_ids=answer_token_ids,
         )
 
 
-# Llama-3-family Instruct: native Hugging Face chat template.
+# ---------------------------------------------------------------------------
+# Llama-3 Instruct
+# ---------------------------------------------------------------------------
+
+
 class Llama3InstructAdapter(PromptAdapter):
     family = "llama3-instruct"
 
@@ -198,7 +298,13 @@ class Llama3InstructAdapter(PromptAdapter):
         if not hasattr(tokenizer, "apply_chat_template"):
             raise ValueError("Tokenizer does not support apply_chat_template().")
 
-        messages = [{"role": "user", "content": question.strip()}]
+        messages = [
+            {
+                "role": "user",
+                "content": question.strip(),
+            }
+        ]
+
         input_ids = tokenizer.apply_chat_template(
             messages,
             tokenize=True,
@@ -206,7 +312,6 @@ class Llama3InstructAdapter(PromptAdapter):
             return_tensors="pt",
         )
 
-        # HF returns [1, seq] when return_tensors='pt'.
         if not isinstance(input_ids, torch.Tensor) or input_ids.ndim != 2:
             raise ValueError(
                 "Expected apply_chat_template(..., return_tensors='pt') "
@@ -223,23 +328,38 @@ class Llama3InstructAdapter(PromptAdapter):
     ) -> ContrastivePrompt:
         answer = _validate_answer(answer)
 
-        prefix = self._generation_prefix(tokenizer, question)
-        answer_ids = _encode_1d(tokenizer, answer)
+        prefix = self._generation_prefix(
+            tokenizer,
+            question,
+        )
+
+        answer_ids = _encode_1d(
+            tokenizer,
+            answer,
+        )
 
         if answer_ids.numel() == 0:
             raise ValueError(f"Answer {answer!r} produced no tokens.")
 
-        # The first appended token is the answer-bearing token. In the verified
-        # Llama-3.1 tokenizer, '(A)' -> ['(A', ')'] and '(B)' -> ['(B', ')'].
         answer_position = prefix.shape[1]
-        input_ids = torch.cat([prefix, answer_ids.unsqueeze(0)], dim=1)
 
-        expected_letter = answer.strip("()")
+        input_ids = torch.cat(
+            [
+                prefix,
+                answer_ids.unsqueeze(0),
+            ],
+            dim=1,
+        )
+
+        expected_letter = _answer_letter(answer)
+
         decoded_first = tokenizer.decode([int(answer_ids[0])])
+
         if expected_letter not in decoded_first:
             raise ValueError(
-                f"Expected first answer token for {answer!r} to contain "
-                f"{expected_letter!r}, found {decoded_first!r}."
+                f"Expected first answer token for {answer!r} "
+                f"to contain {expected_letter!r}, "
+                f"found {decoded_first!r}."
             )
 
         return ContrastivePrompt(
@@ -252,36 +372,60 @@ class Llama3InstructAdapter(PromptAdapter):
         tokenizer: PreTrainedTokenizer,
         question: str,
     ) -> ScoringPrompt:
-        prefix = self._generation_prefix(tokenizer, question)
+        prefix = self._generation_prefix(
+            tokenizer,
+            question,
+        )
 
-        # Unlike Llama-2, the verified Llama-3.1 tokenizer merges the opening
-        # parenthesis with the answer letter: '(A)' -> ['(A', ')'] and
-        # '(B)' -> ['(B', ')']. Feeding a standalone '(' and then scoring
-        # standalone 'A'/'B' would therefore create a non-canonical tokenization.
-        # Score the first *native answer-bearing token* directly from the assistant
-        # generation prefix instead.
-        a_ids = tokenizer.encode("(A)", add_special_tokens=False)
-        b_ids = tokenizer.encode("(B)", add_special_tokens=False)
-        if not a_ids or not b_ids:
-            raise ValueError("Llama-3 A/B labels produced no tokens.")
-        if a_ids[0] == b_ids[0]:
+        answer_token_ids = {}
+        token_to_answer = {}
+
+        for answer in sorted(VALID_ANSWERS):
+            try:
+                ids = tokenizer.encode(
+                    answer,
+                    add_special_tokens=False,
+                )
+            except (KeyError, ValueError):
+                continue
+
+            if not ids:
+                continue
+
+            token_id = int(ids[0])
+
+            decoded = tokenizer.decode([token_id])
+
+            if _answer_letter(answer) not in decoded:
+                continue
+
+            # If two labels share the same first token, first-token scoring
+            # cannot distinguish them safely.
+            if token_id in token_to_answer:
+                continue
+
+            answer_token_ids[answer] = token_id
+            token_to_answer[token_id] = answer
+
+        if len(answer_token_ids) < 2:
             raise ValueError(
-                "The first tokens of '(A)' and '(B)' are identical; "
-                "a sequence-level scoring adapter is required."
+                "Could not construct at least two distinct answer-bearing "
+                "tokens for Llama-3 scoring."
             )
 
-        # The last token of the assistant-generation prefix is the state from
-        # which the first answer-bearing token is predicted.
+        # State from which the first assistant answer token is predicted.
         from_position = prefix.shape[1] - 1
 
         return ScoringPrompt(
             input_ids=prefix,
             steering_start_position=from_position,
-            answer_token_ids={
-                "(A)": int(a_ids[0]),
-                "(B)": int(b_ids[0]),
-            },
+            answer_token_ids=answer_token_ids,
         )
+
+
+# ---------------------------------------------------------------------------
+# Adapter selection
+# ---------------------------------------------------------------------------
 
 
 _ADAPTERS = {
@@ -297,11 +441,21 @@ _ADAPTERS = {
 
 
 def infer_prompt_family(
-    model=None, tokenizer=None, model_name: Optional[str] = None
+    model=None,
+    tokenizer=None,
+    model_name: Optional[str] = None,
 ) -> str:
-    """Infer the supported chat family from model/tokenizer metadata."""
+    """Infer supported prompt family from model/tokenizer metadata."""
 
-    name = model_name or model_name_from_objects(model=model, tokenizer=tokenizer) or ""
+    name = (
+        model_name
+        or model_name_from_objects(
+            model=model,
+            tokenizer=tokenizer,
+        )
+        or ""
+    )
+
     normalized = name.lower().replace("_", "-")
 
     if "llama-3" in normalized or "llama3" in normalized:
@@ -310,7 +464,6 @@ def infer_prompt_family(
     if "llama-2" in normalized or "llama2" in normalized:
         return "llama2-chat"
 
-    # Fallback to tokenizer vocabulary markers when the model path is local.
     if tokenizer is not None:
         try:
             vocab = tokenizer.get_vocab()
@@ -321,11 +474,13 @@ def infer_prompt_family(
             return "llama3-instruct"
 
         chat_template = getattr(tokenizer, "chat_template", None) or ""
+
         if "[INST]" in chat_template or "[/INST]" in chat_template:
             return "llama2-chat"
 
     raise ValueError(
-        "Could not infer prompt family. Pass prompt_family explicitly. "
+        "Could not infer prompt family. "
+        "Pass prompt_family explicitly. "
         f"Observed model name: {name!r}."
     )
 
@@ -336,9 +491,10 @@ def get_prompt_adapter(
     model_name: Optional[str] = None,
     prompt_family: str = "auto",
 ) -> PromptAdapter:
-    """Return a prompt adapter for the requested/loaded model family."""
+    """Return the prompt adapter for the requested model family."""
 
     family = prompt_family
+
     if family == "auto":
         family = infer_prompt_family(
             model=model,
@@ -347,7 +503,9 @@ def get_prompt_adapter(
         )
 
     key = family.lower()
+
     adapter_cls = _ADAPTERS.get(key)
+
     if adapter_cls is None:
         raise ValueError(
             f"Unsupported prompt family {family!r}. "
