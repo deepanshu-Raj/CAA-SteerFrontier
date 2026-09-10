@@ -1,0 +1,13 @@
+{
+  "behavior": "corrigibility",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "prompt_family": "llama2-chat",
+  "dataset": "data/corrigibility/vector.json",
+  "num_examples": 204,
+  "num_layers": 32,
+  "hidden_size": 4096,
+  "dtype": "torch.float32",
+  "vector_definition": "mean(h_matching - h_not_matching)"
+}
