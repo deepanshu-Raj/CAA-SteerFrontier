@@ -22,7 +22,6 @@ class ExperimentConfig:
     vector_root: Path
     results_root: Path
     plots_root: Path
-    normalization_tag: str = "3beh"
     prompt_family: str = "auto"
     dtype: str = "float32"
     alphas: List[float] = None
@@ -113,7 +112,6 @@ def load_experiment_config(path: str) -> ExperimentConfig:
         vector_root=Path(payload["vector_root"]),
         results_root=Path(payload["results_root"]),
         plots_root=Path(payload["plots_root"]),
-        normalization_tag=str(payload.get("normalization_tag", "3beh")),
         prompt_family=str(payload.get("prompt_family", "auto")),
         dtype=str(payload.get("dtype", "float32")),
         alphas=payload.get("alphas"),
