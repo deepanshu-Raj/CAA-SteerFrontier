@@ -6,8 +6,8 @@ import torch
 import torch.nn.functional as F
 
 from steerfrontier.config import load_experiment_config
-from steerfrontier.data import load_ab_test_data
-from steerfrontier.evaluation import evaluate_ab
+from steerfrontier.data import load_test_data
+from steerfrontier.evaluation import evaluate_behavior
 from steerfrontier.models import load_model
 from steerfrontier.prompts import get_prompt_adapter
 from steerfrontier.workflow import load_normalized_vectors
@@ -94,7 +94,7 @@ def run_cross_steering(config, layers, alphas, device):
 
     vectors = load_normalized_vectors(config)
     datasets = {
-        behavior: load_ab_test_data(config.layout.test_ab_path(behavior))
+        behavior: load_test_data(config.layout.test_data_path(behavior))
         for behavior in config.behaviors
     }
 
@@ -106,7 +106,7 @@ def run_cross_steering(config, layers, alphas, device):
         for target in config.behaviors:
             reference_behavior = config.behaviors[0]
             baselines[target] = float(
-                evaluate_ab(
+                evaluate_behavior(
                     model=model,
                     tokenizer=tokenizer,
                     dataset=datasets[target],
@@ -128,7 +128,7 @@ def run_cross_steering(config, layers, alphas, device):
                         score = baseline
                     else:
                         score = float(
-                            evaluate_ab(
+                            evaluate_behavior(
                                 model=model,
                                 tokenizer=tokenizer,
                                 dataset=datasets[target],
