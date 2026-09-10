@@ -8,13 +8,16 @@ behaviors:
   - sycophancy
   - refusal
   - hallucination
+  - corrigibility
+  - survival_instinct
+  - myopic_reward
+  - ai_coordination
 
 data_root: data
 vector_root: vectors/llama2-7b-chat
 results_root: results/llama2-7b-chat
 plots_root: plots/llama2-7b-chat
 
-normalization_tag: 3beh
 candidate_width: 9
 layer_sweep_alphas: [-1.0, 1.0]
 alphas: [-2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0]
