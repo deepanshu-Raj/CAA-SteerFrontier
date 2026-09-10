@@ -8,7 +8,7 @@ from torch import nn
 
 from steerfrontier.activations import LayerActivationCapture
 from steerfrontier.config import ExperimentConfig
-from steerfrontier.evaluation import evaluate_ab, evaluate_mmlu_detailed
+from steerfrontier.evaluation import evaluate_behavior, evaluate_mmlu_detailed
 from steerfrontier.experiment import ExperimentLayout
 from steerfrontier.models import get_decoder_layers, model_summary
 from steerfrontier.normalization import normalize_behavior_vectors
@@ -86,7 +86,7 @@ class TinyModel(nn.Module):
             device=hidden.device,
         )
         logits[..., 0] = 1.0 + hidden[..., 0]  # token 0 = A
-        logits[..., 1] = 0.0                  # token 1 = B
+        logits[..., 1] = 0.0  # token 1 = B
         return SimpleNamespace(logits=logits)
 
 
@@ -166,14 +166,16 @@ def test_experiment_layout_is_model_root_agnostic():
         results_root=Path("results/example-model"),
         plots_root=Path("plots/example-model"),
     )
-    assert str(layout.generation_path("refusal")) == "data/refusal/generate.json"
+    assert str(layout.vector_data_path("refusal")) == "data/refusal/vector.json"
+    assert str(layout.validation_data_path("refusal")) == "data/refusal/validation.json"
+    assert str(layout.test_data_path("refusal")) == "data/refusal/test.json"
     assert (
-        str(layout.normalized_vectors_path("refusal", tag="3beh"))
-        == "vectors/example-model/refusal/normalized_vectors_3beh.pt"
+        str(layout.normalized_vectors_path("refusal"))
+        == "vectors/example-model/refusal/normalized_vectors.pt"
     )
     assert (
-        str(layout.reference_norms_path("3beh"))
-        == "vectors/example-model/normalization/3beh_reference_layer_norms.pt"
+        str(layout.reference_norms_path())
+        == "vectors/example-model/normalization/reference_layer_norms.pt"
     )
     assert str(layout.results_dir("refusal")) == "results/example-model/refusal"
 
@@ -196,9 +198,7 @@ def test_experiment_config_dtype_and_defaults():
 
 
 def test_layer_spec_parsers():
-    assert parse_layer_specs(
-        ["sycophancy=10-12", "refusal=13"]
-    ) == {
+    assert parse_layer_specs(["sycophancy=10-12", "refusal=13"]) == {
         "sycophancy": [10, 11, 12],
         "refusal": [13],
     }
@@ -229,17 +229,11 @@ def test_candidate_window_centers_on_largest_coarse_span():
     assert infer_candidate_layers(df, num_layers=5, width=3) == [1, 2, 3]
 
 
-def test_three_behavior_normalization_equalizes_each_layer_norm():
+def test_shared_normalization_equalizes_each_layer_norm():
     vectors = {
-        "sycophancy": torch.tensor(
-            [[3.0, 0.0], [0.0, 4.0]], dtype=torch.float32
-        ),
-        "refusal": torch.tensor(
-            [[0.0, 4.0], [5.0, 0.0]], dtype=torch.float32
-        ),
-        "hallucination": torch.tensor(
-            [[6.0, 0.0], [0.0, 8.0]], dtype=torch.float32
-        ),
+        "sycophancy": torch.tensor([[3.0, 0.0], [0.0, 4.0]], dtype=torch.float32),
+        "refusal": torch.tensor([[0.0, 4.0], [5.0, 0.0]], dtype=torch.float32),
+        "hallucination": torch.tensor([[6.0, 0.0], [0.0, 8.0]], dtype=torch.float32),
     }
 
     normalized, reference = normalize_behavior_vectors(vectors)
@@ -264,9 +258,9 @@ def test_llama2_adapter_preserves_verified_scoring_contract():
     scoring = adapter.build_scoring_prompt(tokenizer, "Question?")
 
     assert positive.answer_position == positive.input_ids.shape[1] - 2
-    assert tokenizer.decode(
-        [int(positive.input_ids[0, positive.answer_position])]
-    ) == "A"
+    assert (
+        tokenizer.decode([int(positive.input_ids[0, positive.answer_position])]) == "A"
+    )
     assert scoring.steering_start_position == 3
     assert scoring.answer_token_ids == {"(A)": 319, "(B)": 350}
 
@@ -365,7 +359,7 @@ def test_behavior_evaluation_runs_end_to_end_without_real_model():
         }
     ]
 
-    baseline = evaluate_ab(
+    baseline = evaluate_behavior(
         model=model,
         tokenizer=None,
         dataset=dataset,
@@ -375,7 +369,7 @@ def test_behavior_evaluation_runs_end_to_end_without_real_model():
         device="cpu",
         prompt_adapter=adapter,
     )
-    positive = evaluate_ab(
+    positive = evaluate_behavior(
         model=model,
         tokenizer=None,
         dataset=dataset,
