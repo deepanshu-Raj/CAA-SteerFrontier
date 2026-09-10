@@ -1,0 +1,357 @@
+{
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "datasets": [
+    {
+      "behavior": "sycophancy",
+      "source_directory": "sycophancy",
+      "source_file": "data/source/caa/sycophancy/dataset.json",
+      "source_sha256": "5b457e1f7b1363075bcb60d89f57ae9fdc024b7b6316109d77d8774576ddaf66",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 20184,
+      "unique_count": 20184,
+      "duplicates_removed": 0,
+      "study_pool_count": 1500,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 750,
+        "(B)": 750
+      },
+      "split_counts": {
+        "vector": 900,
+        "validation": 300,
+        "test": 300
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 450,
+          "(B)": 450
+        },
+        "validation": {
+          "(A)": 150,
+          "(B)": 150
+        },
+        "test": {
+          "(A)": 150,
+          "(B)": 150
+        }
+      },
+      "output_sha256": {
+        "vector": "72314f5aede173bb109cd07a53e2769696aa988dc58d76fd014ba656b0baea9d",
+        "validation": "956924d9043620b6f08c82915f60c4210de7cfb5fdd8502ff5848292cd6e65de",
+        "test": "b58a16e81d12ba617f82ea358b5d7fe1fd56f6bb9732a2a8dc9298b4e3d082ef"
+      }
+    },
+    {
+      "behavior": "refusal",
+      "source_directory": "refusal",
+      "source_file": "data/source/caa/refusal/dataset.json",
+      "source_sha256": "e2472065f2cc371256141921cd0dc013ec96f1318c44a7f05d6c90df814a6033",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 458,
+      "unique_count": 458,
+      "duplicates_removed": 0,
+      "study_pool_count": 458,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 215,
+        "(B)": 243
+      },
+      "split_counts": {
+        "vector": 275,
+        "validation": 92,
+        "test": 91
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 129,
+          "(B)": 146
+        },
+        "validation": {
+          "(A)": 43,
+          "(B)": 49
+        },
+        "test": {
+          "(A)": 43,
+          "(B)": 48
+        }
+      },
+      "output_sha256": {
+        "vector": "ce9be0ea1ea0c1b39c2c37de4944ca81085a96191a73f8ebabe24c9ded9b6d77",
+        "validation": "245f39c34ecc2baf75e4de1697b0f721ef2696ac4527e15d3b24cae9dd8439a0",
+        "test": "64163e039466368a207c98edb2203fd82d24bb6999ab1f022fccb93eb08ce347"
+      }
+    },
+    {
+      "behavior": "hallucination",
+      "source_directory": "hallucination",
+      "source_file": "data/source/caa/hallucination/dataset.json",
+      "source_sha256": "782b27a7aafb21d64e6c76646b72cea9dad97e866daceb4835e24e0f2f9f7d39",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 6486,
+      "unique_count": 6485,
+      "duplicates_removed": 1,
+      "study_pool_count": 1500,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 773,
+        "(B)": 727
+      },
+      "split_counts": {
+        "vector": 900,
+        "validation": 300,
+        "test": 300
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 464,
+          "(B)": 436
+        },
+        "validation": {
+          "(A)": 155,
+          "(B)": 145
+        },
+        "test": {
+          "(A)": 154,
+          "(B)": 146
+        }
+      },
+      "output_sha256": {
+        "vector": "e98c7f9c7b06cb11e59cfeca2148486c83a7213b05d2446bfd714b88b34a10b5",
+        "validation": "9a7503c49d5f28c595a94b1247c3e47175709c774dc74c590b647865b2bea6f5",
+        "test": "4b6f6350369712a15f21fe626f068fffb2acfb2e6024c7cbfd3e7e09e44a0b6e"
+      }
+    },
+    {
+      "behavior": "corrigibility",
+      "source_directory": "corrigible-neutral-HHH",
+      "source_file": "data/source/caa/corrigible-neutral-HHH/dataset.json",
+      "source_sha256": "560d8fae1a8d10da3f91b0256b47b7b14ac03a93d3ecf88fc5fe9e0e480e8820",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 340,
+      "unique_count": 340,
+      "duplicates_removed": 0,
+      "study_pool_count": 340,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 170,
+        "(B)": 170
+      },
+      "split_counts": {
+        "vector": 204,
+        "validation": 68,
+        "test": 68
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 102,
+          "(B)": 102
+        },
+        "validation": {
+          "(A)": 34,
+          "(B)": 34
+        },
+        "test": {
+          "(A)": 34,
+          "(B)": 34
+        }
+      },
+      "output_sha256": {
+        "vector": "4a03ed40e23343dba7382b91e7686f873955a665a3582f1fb954651ebbd9523e",
+        "validation": "0db58fe805e999aa7a0300f0667254520db19fcf13027faf4291663284588036",
+        "test": "986fa12377218d80e17dc49bea80b70fdd5d9ebb88f0c0cc5ede34e038f74c5e"
+      }
+    },
+    {
+      "behavior": "survival_instinct",
+      "source_directory": "survival-instinct",
+      "source_file": "data/source/caa/survival-instinct/dataset.json",
+      "source_sha256": "37c3de0e5eae2d83dc33c9e657d3a84407cbaa64900338dfb466d814e6002e7d",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 953,
+      "unique_count": 953,
+      "duplicates_removed": 0,
+      "study_pool_count": 953,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 590,
+        "(B)": 271,
+        "(C)": 63,
+        "(D)": 15,
+        "(E)": 9,
+        "(F)": 1,
+        "(G)": 3,
+        "(H)": 1
+      },
+      "split_counts": {
+        "vector": 572,
+        "validation": 191,
+        "test": 190
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 354,
+          "(B)": 163,
+          "(C)": 38,
+          "(D)": 9,
+          "(E)": 5,
+          "(G)": 2,
+          "(H)": 1
+        },
+        "validation": {
+          "(A)": 118,
+          "(B)": 54,
+          "(C)": 13,
+          "(D)": 3,
+          "(E)": 2,
+          "(G)": 1
+        },
+        "test": {
+          "(A)": 118,
+          "(B)": 54,
+          "(C)": 12,
+          "(D)": 3,
+          "(E)": 2,
+          "(F)": 1
+        }
+      },
+      "output_sha256": {
+        "vector": "7c43c92bd74dd3e6998a5762a31e188313d29e81061b4f9de4ba79585af2afb3",
+        "validation": "b15c5fad322ec04049e8ba2466b63b9dbd783918c6c61148dce1e6155190d0f5",
+        "test": "594201a60cd28475b05787e7bfe27dbebd85bcc0e100f3b9af620f8659a57e80"
+      }
+    },
+    {
+      "behavior": "myopic_reward",
+      "source_directory": "myopic-reward",
+      "source_file": "data/source/caa/myopic-reward/dataset.json",
+      "source_sha256": "c9964655ebb29a4b5fcba080ba27e5c7fd1f242e434663103a42561494de958b",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 1000,
+      "unique_count": 1000,
+      "duplicates_removed": 0,
+      "study_pool_count": 1000,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 500,
+        "(B)": 500
+      },
+      "split_counts": {
+        "vector": 600,
+        "validation": 200,
+        "test": 200
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 300,
+          "(B)": 300
+        },
+        "validation": {
+          "(A)": 100,
+          "(B)": 100
+        },
+        "test": {
+          "(A)": 100,
+          "(B)": 100
+        }
+      },
+      "output_sha256": {
+        "vector": "89cf15b207ca7cb2e0c56eced7b1cd0047bfdc0c0498695037f8707a121ea255",
+        "validation": "57c51067e43007b7a33f4996ae794a70eb306264c2a668336417ef18da965b8a",
+        "test": "54b0cb24b6e64ec9c6a6553361b64b9b28eb4c270f50f97fe8f7c1873a2fc175"
+      }
+    },
+    {
+      "behavior": "ai_coordination",
+      "source_directory": "coordinate-other-ais",
+      "source_file": "data/source/caa/coordinate-other-ais/dataset.json",
+      "source_sha256": "1d52f1c0fe741e34e459a1d3e831f5840c1dc55c2ffd130173e6c69d834972af",
+      "seed": 42,
+      "max_pool_size": 1500,
+      "stratification": "answer_matching_behavior",
+      "original_count": 410,
+      "unique_count": 410,
+      "duplicates_removed": 0,
+      "study_pool_count": 410,
+      "split_ratio": {
+        "vector": 0.6,
+        "validation": 0.2,
+        "test": 0.2
+      },
+      "study_pool_matching_distribution": {
+        "(A)": 205,
+        "(B)": 205
+      },
+      "split_counts": {
+        "vector": 246,
+        "validation": 82,
+        "test": 82
+      },
+      "split_matching_distributions": {
+        "vector": {
+          "(A)": 123,
+          "(B)": 123
+        },
+        "validation": {
+          "(A)": 41,
+          "(B)": 41
+        },
+        "test": {
+          "(A)": 41,
+          "(B)": 41
+        }
+      },
+      "output_sha256": {
+        "vector": "b19fb72e161734852efaee9eb88fa22383be2030ac2fc89669f607bd98792ecb",
+        "validation": "4e14cae4bf3d39bcd2ee5518fa368d1641c6f98fe6f3bdfba312d9ad3f7749db",
+        "test": "de1ed5b4f95bc80808093103447661db1973c20c8757aa0698ff0f82fbc2f9bf"
+      }
+    }
+  ]
+}

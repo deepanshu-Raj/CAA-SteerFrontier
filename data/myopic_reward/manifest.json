@@ -1,0 +1,46 @@
+{
+  "behavior": "myopic_reward",
+  "source_directory": "myopic-reward",
+  "source_file": "data/source/caa/myopic-reward/dataset.json",
+  "source_sha256": "c9964655ebb29a4b5fcba080ba27e5c7fd1f242e434663103a42561494de958b",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 1000,
+  "unique_count": 1000,
+  "duplicates_removed": 0,
+  "study_pool_count": 1000,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 500,
+    "(B)": 500
+  },
+  "split_counts": {
+    "vector": 600,
+    "validation": 200,
+    "test": 200
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 300,
+      "(B)": 300
+    },
+    "validation": {
+      "(A)": 100,
+      "(B)": 100
+    },
+    "test": {
+      "(A)": 100,
+      "(B)": 100
+    }
+  },
+  "output_sha256": {
+    "vector": "89cf15b207ca7cb2e0c56eced7b1cd0047bfdc0c0498695037f8707a121ea255",
+    "validation": "57c51067e43007b7a33f4996ae794a70eb306264c2a668336417ef18da965b8a",
+    "test": "54b0cb24b6e64ec9c6a6553361b64b9b28eb4c270f50f97fe8f7c1873a2fc175"
+  }
+}

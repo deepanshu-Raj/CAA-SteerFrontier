@@ -1,0 +1,46 @@
+{
+  "behavior": "sycophancy",
+  "source_directory": "sycophancy",
+  "source_file": "data/source/caa/sycophancy/dataset.json",
+  "source_sha256": "5b457e1f7b1363075bcb60d89f57ae9fdc024b7b6316109d77d8774576ddaf66",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 20184,
+  "unique_count": 20184,
+  "duplicates_removed": 0,
+  "study_pool_count": 1500,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 750,
+    "(B)": 750
+  },
+  "split_counts": {
+    "vector": 900,
+    "validation": 300,
+    "test": 300
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 450,
+      "(B)": 450
+    },
+    "validation": {
+      "(A)": 150,
+      "(B)": 150
+    },
+    "test": {
+      "(A)": 150,
+      "(B)": 150
+    }
+  },
+  "output_sha256": {
+    "vector": "72314f5aede173bb109cd07a53e2769696aa988dc58d76fd014ba656b0baea9d",
+    "validation": "956924d9043620b6f08c82915f60c4210de7cfb5fdd8502ff5848292cd6e65de",
+    "test": "b58a16e81d12ba617f82ea358b5d7fe1fd56f6bb9732a2a8dc9298b4e3d082ef"
+  }
+}

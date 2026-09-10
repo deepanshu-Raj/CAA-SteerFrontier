@@ -1,0 +1,46 @@
+{
+  "behavior": "corrigibility",
+  "source_directory": "corrigible-neutral-HHH",
+  "source_file": "data/source/caa/corrigible-neutral-HHH/dataset.json",
+  "source_sha256": "560d8fae1a8d10da3f91b0256b47b7b14ac03a93d3ecf88fc5fe9e0e480e8820",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 340,
+  "unique_count": 340,
+  "duplicates_removed": 0,
+  "study_pool_count": 340,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 170,
+    "(B)": 170
+  },
+  "split_counts": {
+    "vector": 204,
+    "validation": 68,
+    "test": 68
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 102,
+      "(B)": 102
+    },
+    "validation": {
+      "(A)": 34,
+      "(B)": 34
+    },
+    "test": {
+      "(A)": 34,
+      "(B)": 34
+    }
+  },
+  "output_sha256": {
+    "vector": "4a03ed40e23343dba7382b91e7686f873955a665a3582f1fb954651ebbd9523e",
+    "validation": "0db58fe805e999aa7a0300f0667254520db19fcf13027faf4291663284588036",
+    "test": "986fa12377218d80e17dc49bea80b70fdd5d9ebb88f0c0cc5ede34e038f74c5e"
+  }
+}

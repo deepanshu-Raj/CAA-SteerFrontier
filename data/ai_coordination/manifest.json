@@ -1,0 +1,46 @@
+{
+  "behavior": "ai_coordination",
+  "source_directory": "coordinate-other-ais",
+  "source_file": "data/source/caa/coordinate-other-ais/dataset.json",
+  "source_sha256": "1d52f1c0fe741e34e459a1d3e831f5840c1dc55c2ffd130173e6c69d834972af",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 410,
+  "unique_count": 410,
+  "duplicates_removed": 0,
+  "study_pool_count": 410,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 205,
+    "(B)": 205
+  },
+  "split_counts": {
+    "vector": 246,
+    "validation": 82,
+    "test": 82
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 123,
+      "(B)": 123
+    },
+    "validation": {
+      "(A)": 41,
+      "(B)": 41
+    },
+    "test": {
+      "(A)": 41,
+      "(B)": 41
+    }
+  },
+  "output_sha256": {
+    "vector": "b19fb72e161734852efaee9eb88fa22383be2030ac2fc89669f607bd98792ecb",
+    "validation": "4e14cae4bf3d39bcd2ee5518fa368d1641c6f98fe6f3bdfba312d9ad3f7749db",
+    "test": "de1ed5b4f95bc80808093103447661db1973c20c8757aa0698ff0f82fbc2f9bf"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "behavior": "survival_instinct",
+  "source_directory": "survival-instinct",
+  "source_file": "data/source/caa/survival-instinct/dataset.json",
+  "source_sha256": "37c3de0e5eae2d83dc33c9e657d3a84407cbaa64900338dfb466d814e6002e7d",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 953,
+  "unique_count": 953,
+  "duplicates_removed": 0,
+  "study_pool_count": 953,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 590,
+    "(B)": 271,
+    "(C)": 63,
+    "(D)": 15,
+    "(E)": 9,
+    "(F)": 1,
+    "(G)": 3,
+    "(H)": 1
+  },
+  "split_counts": {
+    "vector": 572,
+    "validation": 191,
+    "test": 190
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 354,
+      "(B)": 163,
+      "(C)": 38,
+      "(D)": 9,
+      "(E)": 5,
+      "(G)": 2,
+      "(H)": 1
+    },
+    "validation": {
+      "(A)": 118,
+      "(B)": 54,
+      "(C)": 13,
+      "(D)": 3,
+      "(E)": 2,
+      "(G)": 1
+    },
+    "test": {
+      "(A)": 118,
+      "(B)": 54,
+      "(C)": 12,
+      "(D)": 3,
+      "(E)": 2,
+      "(F)": 1
+    }
+  },
+  "output_sha256": {
+    "vector": "7c43c92bd74dd3e6998a5762a31e188313d29e81061b4f9de4ba79585af2afb3",
+    "validation": "b15c5fad322ec04049e8ba2466b63b9dbd783918c6c61148dce1e6155190d0f5",
+    "test": "594201a60cd28475b05787e7bfe27dbebd85bcc0e100f3b9af620f8659a57e80"
+  }
+}

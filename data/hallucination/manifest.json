@@ -1,0 +1,46 @@
+{
+  "behavior": "hallucination",
+  "source_directory": "hallucination",
+  "source_file": "data/source/caa/hallucination/dataset.json",
+  "source_sha256": "782b27a7aafb21d64e6c76646b72cea9dad97e866daceb4835e24e0f2f9f7d39",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 6486,
+  "unique_count": 6485,
+  "duplicates_removed": 1,
+  "study_pool_count": 1500,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 773,
+    "(B)": 727
+  },
+  "split_counts": {
+    "vector": 900,
+    "validation": 300,
+    "test": 300
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 464,
+      "(B)": 436
+    },
+    "validation": {
+      "(A)": 155,
+      "(B)": 145
+    },
+    "test": {
+      "(A)": 154,
+      "(B)": 146
+    }
+  },
+  "output_sha256": {
+    "vector": "e98c7f9c7b06cb11e59cfeca2148486c83a7213b05d2446bfd714b88b34a10b5",
+    "validation": "9a7503c49d5f28c595a94b1247c3e47175709c774dc74c590b647865b2bea6f5",
+    "test": "4b6f6350369712a15f21fe626f068fffb2acfb2e6024c7cbfd3e7e09e44a0b6e"
+  }
+}

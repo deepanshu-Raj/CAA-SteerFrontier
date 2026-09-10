@@ -1,0 +1,46 @@
+{
+  "behavior": "refusal",
+  "source_directory": "refusal",
+  "source_file": "data/source/caa/refusal/dataset.json",
+  "source_sha256": "e2472065f2cc371256141921cd0dc013ec96f1318c44a7f05d6c90df814a6033",
+  "seed": 42,
+  "max_pool_size": 1500,
+  "stratification": "answer_matching_behavior",
+  "original_count": 458,
+  "unique_count": 458,
+  "duplicates_removed": 0,
+  "study_pool_count": 458,
+  "split_ratio": {
+    "vector": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "study_pool_matching_distribution": {
+    "(A)": 215,
+    "(B)": 243
+  },
+  "split_counts": {
+    "vector": 275,
+    "validation": 92,
+    "test": 91
+  },
+  "split_matching_distributions": {
+    "vector": {
+      "(A)": 129,
+      "(B)": 146
+    },
+    "validation": {
+      "(A)": 43,
+      "(B)": 49
+    },
+    "test": {
+      "(A)": 43,
+      "(B)": 48
+    }
+  },
+  "output_sha256": {
+    "vector": "ce9be0ea1ea0c1b39c2c37de4944ca81085a96191a73f8ebabe24c9ded9b6d77",
+    "validation": "245f39c34ecc2baf75e4de1697b0f721ef2696ac4527e15d3b24cae9dd8439a0",
+    "test": "64163e039466368a207c98edb2203fd82d24bb6999ab1f022fccb93eb08ce347"
+  }
+}
