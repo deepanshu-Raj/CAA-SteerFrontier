@@ -4,7 +4,7 @@ import torch
 
 from steerfrontier.activations import LayerActivationCapture
 from steerfrontier.config import load_experiment_config
-from steerfrontier.data import load_generation_data
+from steerfrontier.data import load_vector_data
 from steerfrontier.models import get_decoder_layers, load_model, model_summary
 from steerfrontier.prompts import get_prompt_adapter
 from steerfrontier.steering import SteeringIntervention
@@ -40,7 +40,7 @@ def main():
         prompt_family=config.prompt_family,
     )
 
-    dataset = load_generation_data(config.layout.generation_path(behavior))
+    dataset = load_vector_data(config.layout.vector_data_path(behavior))
     item = dataset[0]
     layers = get_decoder_layers(model)
     layer_idx = args.layer if args.layer is not None else len(layers) // 2
