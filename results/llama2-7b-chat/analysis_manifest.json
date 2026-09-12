@@ -1,0 +1,137 @@
+{
+  "phase": "analysis",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "model_summary": {
+    "model_class": "LlamaForCausalLM",
+    "model_type": "llama",
+    "num_hidden_layers": 32,
+    "hidden_size": 4096,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 32,
+    "intermediate_size": 11008,
+    "max_position_embeddings": 4096
+  },
+  "prompt_family": "llama2-chat",
+  "behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "normalization": "shared_mean_layer_norm",
+  "alphas": [
+    -2.0,
+    -1.5,
+    -1.0,
+    -0.5,
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "layer_sweep_alphas": [
+    -1.0,
+    1.0
+  ],
+  "candidate_width": 9,
+  "data_root": "data",
+  "vector_root": "vectors/llama2-7b-chat",
+  "results_root": "results/llama2-7b-chat",
+  "plots_root": "plots/llama2-7b-chat",
+  "dtype": "float32",
+  "candidate_layers": {
+    "sycophancy": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "refusal": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "hallucination": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "corrigibility": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "survival_instinct": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "myopic_reward": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ],
+    "ai_coordination": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ]
+  },
+  "residual_scale_path": "vectors/llama2-7b-chat/normalization/residual_scale.pt",
+  "eta_definition": "|alpha| * vector_norm / residual_scale",
+  "signed_eta_definition": "alpha * vector_norm / residual_scale",
+  "bootstrap": {
+    "method": "paired percentile bootstrap over per-example behavior deltas",
+    "samples": 10000,
+    "confidence_level": 0.95,
+    "base_seed": 42
+  },
+  "resume_enabled": true
+}

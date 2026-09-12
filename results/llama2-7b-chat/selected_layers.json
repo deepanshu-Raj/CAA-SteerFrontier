@@ -1,0 +1,14 @@
+{
+  "model": "llama2-7b-chat",
+  "selection_split": "validation",
+  "selection_rule": "maximize bidirectional_gain = negative_gain + positive_gain over candidate layers",
+  "selected_layers": {
+    "sycophancy": 12,
+    "refusal": 13,
+    "hallucination": 13,
+    "corrigibility": 13,
+    "survival_instinct": 11,
+    "myopic_reward": 13,
+    "ai_coordination": 13
+  }
+}

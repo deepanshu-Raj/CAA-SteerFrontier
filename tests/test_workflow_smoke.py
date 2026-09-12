@@ -420,6 +420,7 @@ def test_layer_selection_metrics_without_writing(monkeypatch):
         "pathlib.Path.mkdir",
         lambda *args, **kwargs: None,
     )
+
     monkeypatch.setattr(
         pd.DataFrame,
         "to_csv",
@@ -431,26 +432,57 @@ def test_layer_selection_metrics_without_writing(monkeypatch):
             {
                 "behavior": "refusal",
                 "layer": 13,
+                "alpha": -2.0,
+                "eta": 0.68,
+                "behavior_score": 0.30,
+                "baseline": 0.60,
+                "delta_from_baseline": -0.30,
+                "delta_ci_low": -0.36,
+                "delta_ci_high": -0.24,
+            },
+            {
+                "behavior": "refusal",
+                "layer": 13,
                 "alpha": -1.0,
+                "eta": 0.34,
                 "behavior_score": 0.40,
                 "baseline": 0.60,
                 "delta_from_baseline": -0.20,
+                "delta_ci_low": -0.25,
+                "delta_ci_high": -0.15,
             },
             {
                 "behavior": "refusal",
                 "layer": 13,
                 "alpha": 0.0,
+                "eta": 0.00,
                 "behavior_score": 0.60,
                 "baseline": 0.60,
                 "delta_from_baseline": 0.00,
+                "delta_ci_low": 0.00,
+                "delta_ci_high": 0.00,
             },
             {
                 "behavior": "refusal",
                 "layer": 13,
                 "alpha": 1.0,
+                "eta": 0.34,
                 "behavior_score": 0.75,
                 "baseline": 0.60,
                 "delta_from_baseline": 0.15,
+                "delta_ci_low": 0.10,
+                "delta_ci_high": 0.20,
+            },
+            {
+                "behavior": "refusal",
+                "layer": 13,
+                "alpha": 2.0,
+                "eta": 0.68,
+                "behavior_score": 0.85,
+                "baseline": 0.60,
+                "delta_from_baseline": 0.25,
+                "delta_ci_low": 0.18,
+                "delta_ci_high": 0.32,
             },
         ]
     )
@@ -462,9 +494,28 @@ def test_layer_selection_metrics_without_writing(monkeypatch):
     )
 
     row = metrics.iloc[0]
+
     assert row["layer"] == 13
-    assert row["spearman_rho"] == pytest.approx(1.0)
-    assert row["monotonic_violations"] == 0
-    assert row["negative_gain"] == pytest.approx(0.20)
-    assert row["positive_gain"] == pytest.approx(0.15)
-    assert row["bidirectional_gain"] == pytest.approx(0.35)
+
+    # Negative steering gets stronger monotonically.
+    assert row["negative_rho"] == pytest.approx(1.0)
+    assert row["negative_monotonic_violations"] == 0
+    assert row["negative_gain"] == pytest.approx(0.30)
+    assert row["mean_negative_gain"] == pytest.approx(0.25)
+    assert row["negative_direction_fraction"] == pytest.approx(1.0)
+    assert row["negative_significant_fraction"] == pytest.approx(1.0)
+    assert row["negative_peak_alpha"] == pytest.approx(-2.0)
+    assert row["negative_peak_eta"] == pytest.approx(0.68)
+
+    # Positive steering also gets stronger monotonically.
+    assert row["positive_rho"] == pytest.approx(1.0)
+    assert row["positive_monotonic_violations"] == 0
+    assert row["positive_gain"] == pytest.approx(0.25)
+    assert row["mean_positive_gain"] == pytest.approx(0.20)
+    assert row["positive_direction_fraction"] == pytest.approx(1.0)
+    assert row["positive_significant_fraction"] == pytest.approx(1.0)
+    assert row["positive_peak_alpha"] == pytest.approx(2.0)
+    assert row["positive_peak_eta"] == pytest.approx(0.68)
+
+    assert row["bidirectional_gain"] == pytest.approx(0.55)
+    assert row["total_range"] == pytest.approx(0.55)
