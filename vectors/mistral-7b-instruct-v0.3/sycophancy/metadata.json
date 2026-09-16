@@ -1,0 +1,13 @@
+{
+  "behavior": "sycophancy",
+  "model_name": "mistralai/Mistral-7B-Instruct-v0.3",
+  "model_label": "Mistral 7B Instruct v0.3",
+  "model_slug": "mistral-7b-instruct-v0.3",
+  "prompt_family": "mistral-instruct",
+  "dataset": "data/sycophancy/vector.json",
+  "num_examples": 900,
+  "num_layers": 32,
+  "hidden_size": 4096,
+  "dtype": "torch.float32",
+  "vector_definition": "mean(h_matching - h_not_matching)"
+}
