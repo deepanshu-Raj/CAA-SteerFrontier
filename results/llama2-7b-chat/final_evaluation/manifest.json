@@ -1,0 +1,19 @@
+{
+  "protocol": "phase2_final_confirmatory_evaluation",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "precision": "torch.float32",
+  "batch_size": 16,
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 42,
+  "frozen_coefficients_file": "results/llama2-7b-chat/selected_coefficients.json",
+  "frozen_coefficients_sha256": "bc45632a7f073ec8433e7766b170a5df6d8825c3a2b3c827e5e4a89db1a97118",
+  "behavior_split": "test",
+  "capability_role": "holdout",
+  "core_benchmarks": [
+    "mmlu",
+    "arc_challenge",
+    "hellaswag"
+  ],
+  "rule": "Frozen layer/coefficient choices must not be changed after examining behavior-test or capability-holdout results."
+}
