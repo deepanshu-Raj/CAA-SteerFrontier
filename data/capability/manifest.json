@@ -1,0 +1,63 @@
+{
+  "protocol": "phase2_capability",
+  "seed": 42,
+  "roles": {
+    "selection": "Used to determine capability-feasible steering coefficients. These examples may influence alpha selection.",
+    "holdout": "Untouched until steering layer and coefficient are frozen. Must not be used to reselect alpha."
+  },
+  "datasets": {
+    "selection": {
+      "mmlu": {
+        "num_examples": 1500,
+        "path": "data/capability/selection/mmlu.json",
+        "sha256": "4f555b4519767dc7f1b2371496df68a5e34d487a6af2f5cecbec0d51198b2c06",
+        "source_splits": [
+          "validation"
+        ]
+      },
+      "arc_challenge": {
+        "num_examples": 1418,
+        "path": "data/capability/selection/arc_challenge.json",
+        "sha256": "1dffdf2b17a184d58f50e1cee178faff898d5f0eb77b7246169b070ae00c66df",
+        "source_splits": [
+          "train",
+          "validation"
+        ]
+      },
+      "hellaswag": {
+        "num_examples": 1500,
+        "path": "data/capability/selection/hellaswag.json",
+        "sha256": "f9002929ee765acd37db9932c21f02900241362abddd281776812662f563917f",
+        "source_splits": [
+          "train"
+        ]
+      }
+    },
+    "holdout": {
+      "mmlu": {
+        "num_examples": 1500,
+        "path": "data/capability/holdout/mmlu.json",
+        "sha256": "d5197ed79aa186a4de1bdcb84c75b8ce7e393006ceebcf368d003e3084585f2d",
+        "source_splits": [
+          "test"
+        ]
+      },
+      "arc_challenge": {
+        "num_examples": 1172,
+        "path": "data/capability/holdout/arc_challenge.json",
+        "sha256": "71102d49e7af35bb2bf14d593237056f5ae97fc0001b427917f909a92976e004",
+        "source_splits": [
+          "test"
+        ]
+      },
+      "hellaswag": {
+        "num_examples": 1500,
+        "path": "data/capability/holdout/hellaswag.json",
+        "sha256": "8b4f01badd3379bb91abfe54e0f7ea8a41bb8aeb40febb784ef1eda4fe176fa2",
+        "source_splits": [
+          "validation"
+        ]
+      }
+    }
+  }
+}
