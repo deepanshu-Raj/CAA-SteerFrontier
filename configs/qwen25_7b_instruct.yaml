@@ -1,0 +1,23 @@
+model_name: Qwen/Qwen2.5-7B-Instruct
+model_label: Qwen2.5 7B Instruct
+model_slug: qwen2.5-7b-instruct
+prompt_family: auto
+dtype: float32
+
+behaviors:
+  - sycophancy
+  - refusal
+  - hallucination
+  - corrigibility
+  - survival_instinct
+  - myopic_reward
+  - ai_coordination
+
+data_root: data
+vector_root: vectors/qwen2.5-7b-instruct
+results_root: results/qwen2.5-7b-instruct
+plots_root: plots/qwen2.5-7b-instruct
+
+candidate_width: 9
+layer_sweep_alphas: [-1.0, 1.0]
+alphas: [-2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0]
