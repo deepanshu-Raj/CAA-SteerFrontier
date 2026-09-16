@@ -1,0 +1,13 @@
+{
+  "behavior": "refusal",
+  "model_name": "Qwen/Qwen2.5-7B-Instruct",
+  "model_label": "Qwen2.5 7B Instruct",
+  "model_slug": "qwen2.5-7b-instruct",
+  "prompt_family": "qwen2.5-instruct",
+  "dataset": "data/refusal/vector.json",
+  "num_examples": 275,
+  "num_layers": 28,
+  "hidden_size": 3584,
+  "dtype": "torch.float32",
+  "vector_definition": "mean(h_matching - h_not_matching)"
+}

@@ -1,0 +1,21 @@
+{
+  "model_name": "Qwen/Qwen2.5-7B-Instruct",
+  "model_label": "Qwen2.5 7B Instruct",
+  "model_slug": "qwen2.5-7b-instruct",
+  "prompt_family": "qwen2.5-instruct",
+  "source_split": "vector",
+  "measurement_position": "steering_start_position",
+  "examples_per_behavior_requested": 100,
+  "examples_used": {
+    "sycophancy": 100,
+    "refusal": 100,
+    "hallucination": 100,
+    "corrigibility": 100,
+    "survival_instinct": 100,
+    "myopic_reward": 100,
+    "ai_coordination": 100
+  },
+  "total_examples": 700,
+  "definition": "r_l = mean_x ||x_{l,t_start}||_2",
+  "eta_definition": "eta(alpha,l) = |alpha| * reference_vector_norm_l / residual_scale_l"
+}
