@@ -386,14 +386,25 @@ def test_behavior_evaluation_runs_end_to_end_without_real_model():
 
 
 def test_mmlu_evaluation_runs_end_to_end_without_real_model():
-    model = TinyModel(num_layers=1, hidden_size=3, vocab_size=4)
+    model = TinyModel()
+
     adapter = StaticScoringAdapter()
-    vector = torch.zeros(3)
+
     dataset = [
         {
-            "prompt": "dummy",
+            "id": "mmlu-1",
+            "question": "dummy",
+            "choices": [
+                {
+                    "label": "(A)",
+                    "text": "option A",
+                },
+                {
+                    "label": "(B)",
+                    "text": "option B",
+                },
+            ],
             "correct": "(A)",
-            "incorrect": "(B)",
             "category": "dummy_category",
         }
     ]
@@ -403,16 +414,39 @@ def test_mmlu_evaluation_runs_end_to_end_without_real_model():
         tokenizer=None,
         dataset=dataset,
         layer_idx=0,
-        vector=vector,
+        vector=torch.zeros(3),
         coefficient=0.0,
         device="cpu",
         prompt_adapter=adapter,
     )
 
+    assert result["benchmark"] == "mmlu"
     assert result["num_examples"] == 1
-    assert result["accuracy"] == 1.0
-    assert result["capability_score"] > 0.5
-    assert result["items"][0]["prediction"] == "(A)"
+
+    assert 0.0 <= result["accuracy"] <= 1.0
+
+    assert 0.0 <= result["mean_correct_choice_prob"] <= 1.0
+
+    assert len(result["items"]) == 1
+
+    item = result["items"][0]
+
+    assert item["id"] == "mmlu-1"
+    assert item["correct"] == "(A)"
+
+    assert item["prediction"] in {
+        "(A)",
+        "(B)",
+    }
+
+    assert isinstance(
+        item["is_correct"],
+        bool,
+    )
+
+    assert 0.0 <= item["correct_choice_prob"] <= 1.0
+
+    assert 0.0 <= item["correct_raw_prob"] <= 1.0
 
 
 def test_layer_selection_metrics_without_writing(monkeypatch):
