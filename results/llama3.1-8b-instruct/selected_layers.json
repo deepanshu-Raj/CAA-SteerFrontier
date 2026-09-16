@@ -1,0 +1,14 @@
+{
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "selection_split": "validation",
+  "selection_rule": "argmax_layer(negative_gain + positive_gain)",
+  "selected_layers": {
+    "sycophancy": 16,
+    "refusal": 13,
+    "hallucination": 13,
+    "corrigibility": 14,
+    "survival_instinct": 13,
+    "myopic_reward": 12,
+    "ai_coordination": 13
+  }
+}

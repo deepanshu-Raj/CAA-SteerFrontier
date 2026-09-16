@@ -1,0 +1,19 @@
+{
+  "protocol": "phase2_final_confirmatory_evaluation",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "model_label": "Llama 3.1 8B Instruct",
+  "precision": "torch.float32",
+  "batch_size": 16,
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 42,
+  "frozen_coefficients_file": "results/llama3.1-8b-instruct/selected_coefficients.json",
+  "frozen_coefficients_sha256": "2a12402d206cd001393fd1796476851b8d47a47df47efaef9408debf40ffe3bd",
+  "behavior_split": "test",
+  "capability_role": "holdout",
+  "core_benchmarks": [
+    "mmlu",
+    "arc_challenge",
+    "hellaswag"
+  ],
+  "rule": "Frozen layer/coefficient choices must not be changed after examining behavior-test or capability-holdout results."
+}
