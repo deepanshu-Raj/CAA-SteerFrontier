@@ -1,0 +1,13 @@
+{
+  "behavior": "ai_coordination",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "model_label": "Llama 3.1 8B Instruct",
+  "model_slug": "llama3.1-8b-instruct",
+  "prompt_family": "llama3-instruct",
+  "dataset": "data/ai_coordination/vector.json",
+  "num_examples": 246,
+  "num_layers": 32,
+  "hidden_size": 4096,
+  "dtype": "torch.float32",
+  "vector_definition": "mean(h_matching - h_not_matching)"
+}
