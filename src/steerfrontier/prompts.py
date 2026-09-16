@@ -10,12 +10,20 @@ from steerfrontier.models import model_name_from_objects
 B_INST = "[INST]"
 E_INST = "[/INST]"
 
-VALID_ANSWERS = {f"({chr(code)})" for code in range(ord("A"), ord("Z") + 1)}
+VALID_ANSWERS = {
+    f"({chr(code)})"
+    for code in range(
+        ord("A"),
+        ord("Z") + 1,
+    )
+}
 
 
 @dataclass(frozen=True)
 class ContrastivePrompt:
-    """Tokenized prompt used for CAA vector extraction."""
+    """
+    Tokenized prompt used for CAA vector extraction.
+    """
 
     input_ids: torch.Tensor
     answer_position: int
@@ -23,15 +31,39 @@ class ContrastivePrompt:
 
 @dataclass(frozen=True)
 class ScoringPrompt:
-    """Prompt state from which answer-choice tokens are scored."""
+    """
+    Prompt state from which discrete answer-choice tokens are scored.
+    """
 
     input_ids: torch.Tensor
     steering_start_position: int
     answer_token_ids: Dict[str, int]
 
 
+@dataclass(frozen=True)
+class ContinuationPrompt:
+    """
+    Full prompt + candidate continuation for sequence likelihood scoring.
+
+    continuation_start_position:
+        Index of the first continuation token inside input_ids.
+
+    steering_start_position:
+        First residual-stream position at which CAA is applied.
+
+    For a continuation beginning at token position t, the model logits
+    at position t-1 predict that first continuation token.
+    """
+
+    input_ids: torch.Tensor
+    continuation_start_position: int
+    steering_start_position: int
+
+
 class PromptAdapter(ABC):
-    """Model-family-specific prompt/tokenization behavior."""
+    """
+    Model-family-specific prompt/tokenization behavior.
+    """
 
     family: str
 
@@ -52,8 +84,27 @@ class PromptAdapter(ABC):
     ) -> ScoringPrompt:
         raise NotImplementedError
 
+    def build_continuation_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        context: str,
+        continuation: str,
+    ) -> ContinuationPrompt:
+        """
+        Build a prompt for full candidate-continuation scoring.
 
-def _validate_answer(answer: str) -> str:
+        Kept non-abstract so lightweight test adapters that only exercise
+        behavior scoring do not need to implement continuation scoring.
+        """
+
+        raise NotImplementedError(
+            f"{self.family} does not implement continuation scoring."
+        )
+
+
+def _validate_answer(
+    answer: str,
+) -> str:
     answer = answer.strip()
 
     if answer not in VALID_ANSWERS:
@@ -64,11 +115,33 @@ def _validate_answer(answer: str) -> str:
     return answer
 
 
-def _answer_letter(answer: str) -> str:
+def _answer_letter(
+    answer: str,
+) -> str:
     return _validate_answer(answer)[1]
 
 
-def _encode_1d(tokenizer, text: str) -> torch.Tensor:
+def _validate_continuation(
+    continuation: str,
+) -> str:
+    if not isinstance(
+        continuation,
+        str,
+    ):
+        raise TypeError("Continuation must be a string.")
+
+    continuation = continuation.strip()
+
+    if not continuation:
+        raise ValueError("Continuation cannot be empty.")
+
+    return continuation
+
+
+def _encode_1d(
+    tokenizer,
+    text: str,
+) -> torch.Tensor:
     ids = tokenizer.encode(
         text,
         add_special_tokens=False,
@@ -78,7 +151,10 @@ def _encode_1d(tokenizer, text: str) -> torch.Tensor:
     return ids[0]
 
 
-def _single_token_id(tokenizer, text: str) -> int:
+def _single_token_id(
+    tokenizer,
+    text: str,
+) -> int:
     ids = tokenizer.encode(
         text,
         add_special_tokens=False,
@@ -90,16 +166,27 @@ def _single_token_id(tokenizer, text: str) -> int:
     return int(ids[0])
 
 
-def find_last_subsequence(tokens, subsequence) -> int:
-    """Return the starting index of the last occurrence of subsequence."""
+def find_last_subsequence(
+    tokens,
+    subsequence,
+) -> int:
+    """
+    Return the starting index of the last occurrence of subsequence.
+    """
 
     tokens = list(tokens)
+
     subsequence = list(subsequence)
 
     n = len(tokens)
+
     m = len(subsequence)
 
-    for i in range(n - m, -1, -1):
+    for i in range(
+        n - m,
+        -1,
+        -1,
+    ):
         if tokens[i : i + m] == subsequence:
             return i
 
@@ -167,8 +254,10 @@ def get_answer_token_position(
 
     if decoded.strip() != expected:
         raise ValueError(
-            f"Expected answer token {expected!r}, "
-            f"found {decoded!r} at position {answer_position}."
+            f"Expected answer token "
+            f"{expected!r}, found "
+            f"{decoded!r} at position "
+            f"{answer_position}."
         )
 
     return answer_position
@@ -178,7 +267,9 @@ def get_instruction_end_position(
     tokenizer: PreTrainedTokenizer,
     input_ids,
 ) -> int:
-    """Return the final token of the last [/INST] marker."""
+    """
+    Return the final token position of the last [/INST] marker.
+    """
 
     end_tokens = tokenizer.encode(
         E_INST,
@@ -193,12 +284,14 @@ def get_instruction_end_position(
     return start + len(end_tokens) - 1
 
 
-def _llama2_answer_token_ids(tokenizer) -> Dict[str, int]:
+def _llama2_answer_token_ids(
+    tokenizer,
+) -> Dict[str, int]:
     """
     Build label -> answer-letter token mapping.
 
-    Unsupported labels are omitted. Evaluation checks that the specific
-    requested pair is available.
+    Unsupported labels are omitted. Evaluation checks that the
+    particular requested labels are available.
     """
 
     result = {}
@@ -211,7 +304,11 @@ def _llama2_answer_token_ids(tokenizer) -> Dict[str, int]:
                 tokenizer,
                 letter,
             )
-        except (KeyError, ValueError):
+
+        except (
+            KeyError,
+            ValueError,
+        ):
             continue
 
         decoded = tokenizer.decode([token_id]).strip()
@@ -247,7 +344,7 @@ class Llama2ChatAdapter(PromptAdapter):
 
         return ContrastivePrompt(
             input_ids=input_ids,
-            answer_position=answer_position,
+            answer_position=(answer_position),
         )
 
     def build_scoring_prompt(
@@ -255,7 +352,6 @@ class Llama2ChatAdapter(PromptAdapter):
         tokenizer: PreTrainedTokenizer,
         question: str,
     ) -> ScoringPrompt:
-        # Continue immediately after the opening parenthesis.
         input_ids = tokenize_llama2_chat(
             tokenizer,
             question,
@@ -271,14 +367,57 @@ class Llama2ChatAdapter(PromptAdapter):
 
         if len(answer_token_ids) < 2:
             raise ValueError(
-                "Could not construct at least two answer-choice tokens "
+                "Could not construct at least "
+                "two answer-choice tokens "
                 "for Llama-2 scoring."
             )
 
         return ScoringPrompt(
             input_ids=input_ids,
-            steering_start_position=from_position,
-            answer_token_ids=answer_token_ids,
+            steering_start_position=(from_position),
+            answer_token_ids=(answer_token_ids),
+        )
+
+    def build_continuation_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        context: str,
+        continuation: str,
+    ) -> ContinuationPrompt:
+        continuation = _validate_continuation(continuation)
+
+        prefix = tokenize_llama2_chat(
+            tokenizer,
+            context,
+        )
+
+        continuation_ids = _encode_1d(
+            tokenizer,
+            " " + continuation,
+        )
+
+        if continuation_ids.numel() == 0:
+            raise ValueError("Continuation produced no tokens.")
+
+        continuation_start_position = int(prefix.shape[1])
+
+        input_ids = torch.cat(
+            [
+                prefix,
+                continuation_ids.unsqueeze(0),
+            ],
+            dim=1,
+        )
+
+        steering_start_position = get_instruction_end_position(
+            tokenizer,
+            prefix[0],
+        )
+
+        return ContinuationPrompt(
+            input_ids=input_ids,
+            continuation_start_position=(continuation_start_position),
+            steering_start_position=(steering_start_position),
         )
 
 
@@ -295,13 +434,16 @@ class Llama3InstructAdapter(PromptAdapter):
         tokenizer: PreTrainedTokenizer,
         question: str,
     ) -> torch.Tensor:
-        if not hasattr(tokenizer, "apply_chat_template"):
+        if not hasattr(
+            tokenizer,
+            "apply_chat_template",
+        ):
             raise ValueError("Tokenizer does not support apply_chat_template().")
 
         messages = [
             {
                 "role": "user",
-                "content": question.strip(),
+                "content": (question.strip()),
             }
         ]
 
@@ -312,9 +454,17 @@ class Llama3InstructAdapter(PromptAdapter):
             return_tensors="pt",
         )
 
-        if not isinstance(input_ids, torch.Tensor) or input_ids.ndim != 2:
+        if (
+            not isinstance(
+                input_ids,
+                torch.Tensor,
+            )
+            or input_ids.ndim != 2
+        ):
             raise ValueError(
-                "Expected apply_chat_template(..., return_tensors='pt') "
+                "Expected "
+                "apply_chat_template(..., "
+                "return_tensors='pt') "
                 "to return a rank-2 tensor."
             )
 
@@ -357,14 +507,15 @@ class Llama3InstructAdapter(PromptAdapter):
 
         if expected_letter not in decoded_first:
             raise ValueError(
-                f"Expected first answer token for {answer!r} "
-                f"to contain {expected_letter!r}, "
+                "Expected first answer token "
+                f"for {answer!r} to contain "
+                f"{expected_letter!r}, "
                 f"found {decoded_first!r}."
             )
 
         return ContrastivePrompt(
             input_ids=input_ids,
-            answer_position=answer_position,
+            answer_position=(answer_position),
         )
 
     def build_scoring_prompt(
@@ -386,7 +537,11 @@ class Llama3InstructAdapter(PromptAdapter):
                     answer,
                     add_special_tokens=False,
                 )
-            except (KeyError, ValueError):
+
+            except (
+                KeyError,
+                ValueError,
+            ):
                 continue
 
             if not ids:
@@ -399,27 +554,602 @@ class Llama3InstructAdapter(PromptAdapter):
             if _answer_letter(answer) not in decoded:
                 continue
 
-            # If two labels share the same first token, first-token scoring
-            # cannot distinguish them safely.
             if token_id in token_to_answer:
                 continue
 
             answer_token_ids[answer] = token_id
+
             token_to_answer[token_id] = answer
 
         if len(answer_token_ids) < 2:
             raise ValueError(
-                "Could not construct at least two distinct answer-bearing "
+                "Could not construct at least "
+                "two distinct answer-bearing "
                 "tokens for Llama-3 scoring."
             )
 
-        # State from which the first assistant answer token is predicted.
         from_position = prefix.shape[1] - 1
 
         return ScoringPrompt(
             input_ids=prefix,
-            steering_start_position=from_position,
-            answer_token_ids=answer_token_ids,
+            steering_start_position=(from_position),
+            answer_token_ids=(answer_token_ids),
+        )
+
+    def build_continuation_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        context: str,
+        continuation: str,
+    ) -> ContinuationPrompt:
+        continuation = _validate_continuation(continuation)
+
+        prefix = self._generation_prefix(
+            tokenizer,
+            context,
+        )
+
+        continuation_ids = _encode_1d(
+            tokenizer,
+            continuation,
+        )
+
+        if continuation_ids.numel() == 0:
+            raise ValueError("Continuation produced no tokens.")
+
+        continuation_start_position = int(prefix.shape[1])
+
+        input_ids = torch.cat(
+            [
+                prefix,
+                continuation_ids.unsqueeze(0),
+            ],
+            dim=1,
+        )
+
+        steering_start_position = continuation_start_position - 1
+
+        return ContinuationPrompt(
+            input_ids=input_ids,
+            continuation_start_position=(continuation_start_position),
+            steering_start_position=(steering_start_position),
+        )
+
+
+# ---------------------------------------------------------------------------
+# Mistral Instruct
+# ---------------------------------------------------------------------------
+
+
+class MistralInstructAdapter(PromptAdapter):
+    family = "mistral-instruct"
+
+    @staticmethod
+    def _generation_prefix(
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+    ) -> torch.Tensor:
+        if not hasattr(
+            tokenizer,
+            "apply_chat_template",
+        ):
+            raise ValueError("Tokenizer does not support apply_chat_template().")
+
+        messages = [
+            {
+                "role": "user",
+                "content": (question.strip()),
+            }
+        ]
+
+        input_ids = tokenizer.apply_chat_template(
+            messages,
+            tokenize=True,
+            add_generation_prompt=True,
+            return_tensors="pt",
+        )
+
+        if (
+            not isinstance(
+                input_ids,
+                torch.Tensor,
+            )
+            or input_ids.ndim != 2
+        ):
+            raise ValueError(
+                "Expected "
+                "apply_chat_template(..., "
+                "return_tensors='pt') "
+                "to return a rank-2 tensor."
+            )
+
+        return input_ids
+
+    @staticmethod
+    def _full_answer_chat(
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+        answer: str,
+    ) -> torch.Tensor:
+        messages = [
+            {
+                "role": "user",
+                "content": (question.strip()),
+            },
+            {
+                "role": "assistant",
+                "content": (answer.strip()),
+            },
+        ]
+
+        input_ids = tokenizer.apply_chat_template(
+            messages,
+            tokenize=True,
+            add_generation_prompt=False,
+            return_tensors="pt",
+        )
+
+        if (
+            not isinstance(
+                input_ids,
+                torch.Tensor,
+            )
+            or input_ids.ndim != 2
+        ):
+            raise ValueError(
+                "Expected full Mistral chat template to return a rank-2 tensor."
+            )
+
+        return input_ids
+
+    @staticmethod
+    def _answer_components(
+        tokenizer: PreTrainedTokenizer,
+        answer: str,
+    ):
+        answer = _validate_answer(answer)
+
+        ids = tokenizer.encode(
+            answer,
+            add_special_tokens=False,
+        )
+
+        if not ids:
+            raise ValueError(f"Answer {answer!r} produced no tokens.")
+
+        expected_letter = _answer_letter(answer)
+
+        matching_offsets = []
+
+        for offset, token_id in enumerate(ids):
+            decoded = tokenizer.decode([int(token_id)]).strip()
+
+            if decoded == expected_letter:
+                matching_offsets.append(offset)
+
+        if len(matching_offsets) != 1:
+            raise ValueError(
+                f"Expected exactly one "
+                f"answer-letter token in "
+                f"{answer!r}, got token IDs "
+                f"{ids} with letter matches "
+                f"{matching_offsets}."
+            )
+
+        letter_offset = matching_offsets[0]
+
+        return (
+            ids,
+            letter_offset,
+            int(ids[letter_offset]),
+        )
+
+    @staticmethod
+    def _answer_token_ids(
+        tokenizer: PreTrainedTokenizer,
+    ) -> Dict[str, int]:
+        result = {}
+
+        token_to_answer = {}
+
+        open_paren_ids = tokenizer.encode(
+            "(",
+            add_special_tokens=False,
+        )
+
+        if len(open_paren_ids) != 1:
+            raise ValueError(
+                "Expected '(' to tokenize to exactly one token for Mistral scoring."
+            )
+
+        open_paren_id = int(open_paren_ids[0])
+
+        for answer in sorted(VALID_ANSWERS):
+            try:
+                (
+                    ids,
+                    letter_offset,
+                    token_id,
+                ) = MistralInstructAdapter._answer_components(
+                    tokenizer,
+                    answer,
+                )
+
+            except (
+                KeyError,
+                ValueError,
+            ):
+                continue
+
+            if letter_offset != 1:
+                continue
+
+            if int(ids[0]) != open_paren_id:
+                continue
+
+            if token_id in token_to_answer:
+                continue
+
+            result[answer] = token_id
+
+            token_to_answer[token_id] = answer
+
+        return result
+
+    def build_contrastive_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+        answer: str,
+    ) -> ContrastivePrompt:
+        answer = _validate_answer(answer)
+
+        input_ids = self._full_answer_chat(
+            tokenizer,
+            question,
+            answer,
+        )
+
+        (
+            answer_ids,
+            letter_offset,
+            _,
+        ) = self._answer_components(
+            tokenizer,
+            answer,
+        )
+
+        answer_start = find_last_subsequence(
+            input_ids[0].tolist(),
+            answer_ids,
+        )
+
+        answer_position = answer_start + letter_offset
+
+        decoded = tokenizer.decode(
+            [
+                int(
+                    input_ids[
+                        0,
+                        answer_position,
+                    ]
+                )
+            ]
+        ).strip()
+
+        expected = _answer_letter(answer)
+
+        if decoded != expected:
+            raise ValueError(
+                f"Expected Mistral answer "
+                f"token {expected!r}, found "
+                f"{decoded!r} at position "
+                f"{answer_position}."
+            )
+
+        return ContrastivePrompt(
+            input_ids=input_ids,
+            answer_position=(answer_position),
+        )
+
+    def build_scoring_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+    ) -> ScoringPrompt:
+        prefix = self._generation_prefix(
+            tokenizer,
+            question,
+        )
+
+        open_paren_ids = tokenizer.encode(
+            "(",
+            add_special_tokens=False,
+        )
+
+        if len(open_paren_ids) != 1:
+            raise ValueError(
+                "Expected '(' to tokenize to exactly one token for Mistral scoring."
+            )
+
+        open_paren = torch.tensor(
+            [[int(open_paren_ids[0])]],
+            dtype=prefix.dtype,
+        )
+
+        input_ids = torch.cat(
+            [
+                prefix,
+                open_paren,
+            ],
+            dim=1,
+        )
+
+        answer_token_ids = self._answer_token_ids(tokenizer)
+
+        if len(answer_token_ids) < 2:
+            raise ValueError(
+                "Could not construct at least "
+                "two distinct context-conditioned "
+                "answer-letter tokens for "
+                "Mistral scoring."
+            )
+
+        steering_start_position = prefix.shape[1] - 1
+
+        return ScoringPrompt(
+            input_ids=input_ids,
+            steering_start_position=(steering_start_position),
+            answer_token_ids=(answer_token_ids),
+        )
+
+    def build_continuation_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        context: str,
+        continuation: str,
+    ) -> ContinuationPrompt:
+        continuation = _validate_continuation(continuation)
+
+        prefix = self._generation_prefix(
+            tokenizer,
+            context,
+        )
+
+        continuation_ids = _encode_1d(
+            tokenizer,
+            continuation,
+        )
+
+        if continuation_ids.numel() == 0:
+            raise ValueError("Continuation produced no tokens.")
+
+        continuation_start_position = int(prefix.shape[1])
+
+        input_ids = torch.cat(
+            [
+                prefix,
+                continuation_ids.unsqueeze(0),
+            ],
+            dim=1,
+        )
+
+        steering_start_position = continuation_start_position - 1
+
+        return ContinuationPrompt(
+            input_ids=input_ids,
+            continuation_start_position=(continuation_start_position),
+            steering_start_position=(steering_start_position),
+        )
+
+
+# ---------------------------------------------------------------------------
+# Qwen 2.5 Instruct
+# ---------------------------------------------------------------------------
+
+
+class Qwen25InstructAdapter(PromptAdapter):
+    family = "qwen2.5-instruct"
+
+    @staticmethod
+    def _generation_prefix(
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+    ) -> torch.Tensor:
+        if not hasattr(
+            tokenizer,
+            "apply_chat_template",
+        ):
+            raise ValueError("Tokenizer does not support apply_chat_template().")
+
+        messages = [
+            {
+                "role": "user",
+                "content": (question.strip()),
+            }
+        ]
+
+        input_ids = tokenizer.apply_chat_template(
+            messages,
+            tokenize=True,
+            add_generation_prompt=True,
+            return_tensors="pt",
+        )
+
+        if (
+            not isinstance(
+                input_ids,
+                torch.Tensor,
+            )
+            or input_ids.ndim != 2
+        ):
+            raise ValueError("Expected Qwen chat template to return a rank-2 tensor.")
+
+        return input_ids
+
+    @staticmethod
+    def _answer_token_ids(
+        tokenizer: PreTrainedTokenizer,
+    ) -> Dict[str, int]:
+        """
+        Qwen2.5 tokenizes labels such as '(A)' as:
+
+            '(A' ')'
+
+        The first token is answer-bearing and differs across choices.
+        """
+
+        result = {}
+        token_to_answer = {}
+
+        for answer in sorted(VALID_ANSWERS):
+            try:
+                ids = tokenizer.encode(
+                    answer,
+                    add_special_tokens=False,
+                )
+
+            except (
+                KeyError,
+                ValueError,
+            ):
+                continue
+
+            if not ids:
+                continue
+
+            token_id = int(ids[0])
+
+            decoded = tokenizer.decode([token_id])
+
+            expected_letter = _answer_letter(answer)
+
+            if expected_letter not in decoded:
+                continue
+
+            if token_id in token_to_answer:
+                continue
+
+            result[answer] = token_id
+
+            token_to_answer[token_id] = answer
+
+        return result
+
+    def build_contrastive_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+        answer: str,
+    ) -> ContrastivePrompt:
+        answer = _validate_answer(answer)
+
+        prefix = self._generation_prefix(
+            tokenizer,
+            question,
+        )
+
+        answer_ids = _encode_1d(
+            tokenizer,
+            answer,
+        )
+
+        if answer_ids.numel() == 0:
+            raise ValueError(f"Answer {answer!r} produced no tokens.")
+
+        answer_position = int(prefix.shape[1])
+
+        first_answer_token = int(answer_ids[0])
+
+        decoded_first = tokenizer.decode([first_answer_token])
+
+        expected_letter = _answer_letter(answer)
+
+        if expected_letter not in decoded_first:
+            raise ValueError(
+                "Expected first Qwen answer token "
+                f"for {answer!r} to contain "
+                f"{expected_letter!r}, "
+                f"found {decoded_first!r}."
+            )
+
+        input_ids = torch.cat(
+            [
+                prefix,
+                answer_ids.unsqueeze(0),
+            ],
+            dim=1,
+        )
+
+        return ContrastivePrompt(
+            input_ids=input_ids,
+            answer_position=(answer_position),
+        )
+
+    def build_scoring_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        question: str,
+    ) -> ScoringPrompt:
+        prefix = self._generation_prefix(
+            tokenizer,
+            question,
+        )
+
+        answer_token_ids = self._answer_token_ids(tokenizer)
+
+        if len(answer_token_ids) < 2:
+            raise ValueError(
+                "Could not construct at least "
+                "two distinct answer-bearing "
+                "tokens for Qwen scoring."
+            )
+
+        steering_start_position = prefix.shape[1] - 1
+
+        return ScoringPrompt(
+            input_ids=prefix,
+            steering_start_position=(steering_start_position),
+            answer_token_ids=(answer_token_ids),
+        )
+
+    def build_continuation_prompt(
+        self,
+        tokenizer: PreTrainedTokenizer,
+        context: str,
+        continuation: str,
+    ) -> ContinuationPrompt:
+        continuation = _validate_continuation(continuation)
+
+        prefix = self._generation_prefix(
+            tokenizer,
+            context,
+        )
+
+        continuation_ids = _encode_1d(
+            tokenizer,
+            continuation,
+        )
+
+        if continuation_ids.numel() == 0:
+            raise ValueError("Continuation produced no tokens.")
+
+        continuation_start_position = int(prefix.shape[1])
+
+        input_ids = torch.cat(
+            [
+                prefix,
+                continuation_ids.unsqueeze(0),
+            ],
+            dim=1,
+        )
+
+        steering_start_position = continuation_start_position - 1
+
+        return ContinuationPrompt(
+            input_ids=input_ids,
+            continuation_start_position=(continuation_start_position),
+            steering_start_position=(steering_start_position),
         )
 
 
@@ -437,6 +1167,12 @@ _ADAPTERS = {
     "llama31": Llama3InstructAdapter,
     "llama-3": Llama3InstructAdapter,
     "llama-3.1": Llama3InstructAdapter,
+    "mistral": MistralInstructAdapter,
+    "mistral-instruct": MistralInstructAdapter,
+    "qwen": Qwen25InstructAdapter,
+    "qwen2": Qwen25InstructAdapter,
+    "qwen2.5": Qwen25InstructAdapter,
+    "qwen2.5-instruct": Qwen25InstructAdapter,
 }
 
 
@@ -445,7 +1181,9 @@ def infer_prompt_family(
     tokenizer=None,
     model_name: Optional[str] = None,
 ) -> str:
-    """Infer supported prompt family from model/tokenizer metadata."""
+    """
+    Infer supported prompt family from model/tokenizer metadata.
+    """
 
     name = (
         model_name
@@ -456,7 +1194,16 @@ def infer_prompt_family(
         or ""
     )
 
-    normalized = name.lower().replace("_", "-")
+    normalized = name.lower().replace(
+        "_",
+        "-",
+    )
+
+    if "qwen2.5" in normalized or "qwen2" in normalized or "qwen" in normalized:
+        return "qwen2.5-instruct"
+
+    if "mistral" in normalized:
+        return "mistral-instruct"
 
     if "llama-3" in normalized or "llama3" in normalized:
         return "llama3-instruct"
@@ -467,16 +1214,33 @@ def infer_prompt_family(
     if tokenizer is not None:
         try:
             vocab = tokenizer.get_vocab()
+
         except Exception:
             vocab = {}
+
+        if "<|im_start|>" in vocab and "<|im_end|>" in vocab:
+            return "qwen2.5-instruct"
 
         if "<|start_header_id|>" in vocab and "<|eot_id|>" in vocab:
             return "llama3-instruct"
 
-        chat_template = getattr(tokenizer, "chat_template", None) or ""
+        chat_template = (
+            getattr(
+                tokenizer,
+                "chat_template",
+                None,
+            )
+            or ""
+        )
 
         if "[INST]" in chat_template or "[/INST]" in chat_template:
-            return "llama2-chat"
+            raise ValueError(
+                "Found an [INST]-style chat "
+                "template but could not determine "
+                "whether it belongs to Llama-2 "
+                "or Mistral from model metadata. "
+                "Pass prompt_family explicitly."
+            )
 
     raise ValueError(
         "Could not infer prompt family. "
@@ -491,7 +1255,9 @@ def get_prompt_adapter(
     model_name: Optional[str] = None,
     prompt_family: str = "auto",
 ) -> PromptAdapter:
-    """Return the prompt adapter for the requested model family."""
+    """
+    Return the prompt adapter for the requested model family.
+    """
 
     family = prompt_family
 
@@ -508,8 +1274,9 @@ def get_prompt_adapter(
 
     if adapter_cls is None:
         raise ValueError(
-            f"Unsupported prompt family {family!r}. "
-            f"Supported aliases: {sorted(_ADAPTERS)}"
+            "Unsupported prompt family "
+            f"{family!r}. Supported aliases: "
+            f"{sorted(_ADAPTERS)}"
         )
 
     return adapter_cls()
