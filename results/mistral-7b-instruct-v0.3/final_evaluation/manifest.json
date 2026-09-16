@@ -1,0 +1,19 @@
+{
+  "protocol": "phase2_final_confirmatory_evaluation",
+  "model_name": "mistralai/Mistral-7B-Instruct-v0.3",
+  "model_label": "Mistral 7B Instruct v0.3",
+  "precision": "torch.float32",
+  "batch_size": 16,
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 42,
+  "frozen_coefficients_file": "results/mistral-7b-instruct-v0.3/selected_coefficients.json",
+  "frozen_coefficients_sha256": "250f40884727f54e199b7c73c1a1050f17fd03b94b4fa229b0179633b33427b3",
+  "behavior_split": "test",
+  "capability_role": "holdout",
+  "core_benchmarks": [
+    "mmlu",
+    "arc_challenge",
+    "hellaswag"
+  ],
+  "rule": "Frozen layer/coefficient choices must not be changed after examining behavior-test or capability-holdout results."
+}
