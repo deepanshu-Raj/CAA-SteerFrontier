@@ -4,6 +4,9 @@ import pytest
 
 from steerfrontier.data import (
     discover_behaviors,
+    load_arc_challenge_data,
+    load_hellaswag_data,
+    load_mmlu_data,
     load_test_data,
     load_validation_data,
     load_vector_data,
@@ -90,3 +93,134 @@ def test_discover_behaviors_requires_all_three_splits(tmp_path):
         (source / filename).write_text("[]")
 
     assert discover_behaviors(tmp_path) == ["sycophancy"]
+
+
+def test_multiple_choice_capability_loader(tmp_path):
+    path = tmp_path / "mmlu.json"
+
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "mmlu-1",
+                    "question": "What is 2 + 2?",
+                    "choices": [
+                        {
+                            "label": "(A)",
+                            "text": "3",
+                        },
+                        {
+                            "label": "(B)",
+                            "text": "4",
+                        },
+                        {
+                            "label": "(C)",
+                            "text": "5",
+                        },
+                        {
+                            "label": "(D)",
+                            "text": "6",
+                        },
+                    ],
+                    "correct": "(B)",
+                    "category": "math",
+                }
+            ]
+        )
+    )
+
+    data = load_mmlu_data(path)
+
+    assert len(data) == 1
+    assert data[0]["correct"] == "(B)"
+    assert len(data[0]["choices"]) == 4
+
+
+def test_multiple_choice_capability_rejects_missing_correct_choice(
+    tmp_path,
+):
+    path = tmp_path / "bad.json"
+
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "bad-1",
+                    "question": "Question?",
+                    "choices": [
+                        {
+                            "label": "(A)",
+                            "text": "one",
+                        },
+                        {
+                            "label": "(B)",
+                            "text": "two",
+                        },
+                    ],
+                    "correct": "(C)",
+                }
+            ]
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="not present",
+    ):
+        load_mmlu_data(path)
+
+
+def test_hellaswag_loader(tmp_path):
+    path = tmp_path / "hellaswag.json"
+
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "hs-1",
+                    "context": "A person opens the door.",
+                    "endings": [
+                        "They walk inside.",
+                        "The moon turns green.",
+                        "A fish writes a book.",
+                        "The building disappears.",
+                    ],
+                    "correct_index": 0,
+                }
+            ]
+        )
+    )
+
+    data = load_hellaswag_data(path)
+
+    assert len(data) == 1
+    assert data[0]["correct_index"] == 0
+    assert len(data[0]["endings"]) == 4
+
+
+def test_hellaswag_loader_rejects_bad_index(
+    tmp_path,
+):
+    path = tmp_path / "bad_hs.json"
+
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "hs-bad",
+                    "context": "Context",
+                    "endings": [
+                        "A",
+                        "B",
+                    ],
+                    "correct_index": 2,
+                }
+            ]
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="invalid correct_index",
+    ):
+        load_hellaswag_data(path)
