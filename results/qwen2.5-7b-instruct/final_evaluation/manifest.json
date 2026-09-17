@@ -1,0 +1,19 @@
+{
+  "protocol": "phase2_final_confirmatory_evaluation",
+  "model_name": "Qwen/Qwen2.5-7B-Instruct",
+  "model_label": "Qwen2.5 7B Instruct",
+  "precision": "torch.float32",
+  "batch_size": 16,
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 42,
+  "frozen_coefficients_file": "results/qwen2.5-7b-instruct/selected_coefficients.json",
+  "frozen_coefficients_sha256": "45a328d09434dde4c874908439c49d4d68c34195a7596eb066c0e51e8d1e0149",
+  "behavior_split": "test",
+  "capability_role": "holdout",
+  "core_benchmarks": [
+    "mmlu",
+    "arc_challenge",
+    "hellaswag"
+  ],
+  "rule": "Frozen layer/coefficient choices must not be changed after examining behavior-test or capability-holdout results."
+}
