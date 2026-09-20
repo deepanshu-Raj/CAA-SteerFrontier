@@ -1,0 +1,55 @@
+{
+  "protocol": "sycophancy_cross_domain_vectors_v1",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "behavior": "sycophancy",
+  "domains_requested": [
+    "nlp",
+    "political"
+  ],
+  "frozen_epsilon": 0.03,
+  "frozen_layer": 12,
+  "frozen_operating_points": {
+    "negative": {
+      "alpha_star": -0.5,
+      "eta_star": -0.203457051679878
+    },
+    "positive": {
+      "alpha_star": 0.5,
+      "eta_star": 0.203457051679878
+    }
+  },
+  "normalization_policy": "Source-domain raw vectors are normalized to the existing model-level reference norms from the original seven-behavior experiment. No OOD-specific normalization scale is learned.",
+  "reference_layer_norms_path": "vectors/llama2-7b-chat/normalization/reference_layer_norms.pt",
+  "canonical_sycophancy_vector_path": "vectors/llama2-7b-chat/sycophancy/normalized_vectors.pt",
+  "smoke_prefix": false,
+  "domains": {
+    "nlp": {
+      "raw_vectors_path": "vectors/llama2-7b-chat/ood/sycophancy/nlp/raw_vectors.pt",
+      "normalized_vectors_path": "vectors/llama2-7b-chat/ood/sycophancy/nlp/normalized_vectors.pt",
+      "metadata_path": "vectors/llama2-7b-chat/ood/sycophancy/nlp/metadata.json",
+      "raw_sha256": "57ae1572b9f0c3aee9af9cde96343991f3e3702460a7eb692a5ae01ecae84c8a",
+      "normalized_sha256": "6e516f599808547446f6c6dd82b5a0c9100698ea54717ef89d101651f0ea9f93",
+      "num_examples": 447,
+      "max_reference_norm_relative_error": 2.5144302640001115e-07,
+      "canonical_cosine_at_frozen_layer": 0.9468393325805664
+    },
+    "political": {
+      "raw_vectors_path": "vectors/llama2-7b-chat/ood/sycophancy/political/raw_vectors.pt",
+      "normalized_vectors_path": "vectors/llama2-7b-chat/ood/sycophancy/political/normalized_vectors.pt",
+      "metadata_path": "vectors/llama2-7b-chat/ood/sycophancy/political/metadata.json",
+      "raw_sha256": "37a4729c4554bc61f43f9257e1990f401875a2ee96752aa4d26e0ad60111c2d1",
+      "normalized_sha256": "45a5be676e0554ce77e2167468f44aa7401123e318fa7ceaa305e12974aff57a",
+      "num_examples": 453,
+      "max_reference_norm_relative_error": 2.525704587696964e-07,
+      "canonical_cosine_at_frozen_layer": 0.7019497156143188
+    }
+  },
+  "nlp_vs_political_geometry": {
+    "cosine_at_frozen_layer": 0.43550509214401245,
+    "all_layers_min": -0.9863073825836182,
+    "all_layers_median": 0.391193151473999,
+    "all_layers_max": 0.4693351089954376
+  }
+}

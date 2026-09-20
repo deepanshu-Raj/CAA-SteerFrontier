@@ -1,0 +1,38 @@
+{
+  "model_name": "mistralai/Mistral-7B-Instruct-v0.3",
+  "model_label": "Mistral 7B Instruct v0.3",
+  "model_slug": "mistral-7b-instruct-v0.3",
+  "behavior": "sycophancy",
+  "domain": "nlp",
+  "vector_definition": "mean(h_matching_behavior - h_not_matching_behavior)",
+  "normalization": "Each layer rescaled to the frozen main-experiment reference_layer_norms.",
+  "data_path": "data/ood/sycophancy/nlp_vector.json",
+  "data_sha256": "b349c2b7378295fbc26505b848ada19b48e3d5215f61e40ab14490d0af18bbee",
+  "num_examples_available": 447,
+  "num_examples_used": 447,
+  "smoke_prefix": false,
+  "raw_vectors_path": "vectors/mistral-7b-instruct-v0.3/ood/sycophancy/nlp/raw_vectors.pt",
+  "normalized_vectors_path": "vectors/mistral-7b-instruct-v0.3/ood/sycophancy/nlp/normalized_vectors.pt",
+  "reference_layer_norms_path": "vectors/mistral-7b-instruct-v0.3/normalization/reference_layer_norms.pt",
+  "canonical_sycophancy_vector_path": "vectors/mistral-7b-instruct-v0.3/sycophancy/normalized_vectors.pt",
+  "frozen_frontier_path": "results/mistral-7b-instruct-v0.3/final_evaluation/frontier_test_results.csv",
+  "frozen_epsilon": 0.03,
+  "frozen_layer": 13,
+  "frozen_operating_points": {
+    "negative": {
+      "alpha_star": -0.5,
+      "eta_star": -0.1432776449143773
+    },
+    "positive": {
+      "alpha_star": 1.5,
+      "eta_star": 0.429832934743132
+    }
+  },
+  "max_reference_norm_relative_error": 2.1534607697049069e-07,
+  "canonical_cosine_at_frozen_layer": 0.9639836549758911,
+  "canonical_cosine_all_layers": {
+    "min": 0.06606151908636093,
+    "median": 0.9660365581512451,
+    "max": 0.9788782596588135
+  }
+}

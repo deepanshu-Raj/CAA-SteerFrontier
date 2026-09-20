@@ -1,0 +1,38 @@
+{
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "behavior": "sycophancy",
+  "domain": "political",
+  "vector_definition": "mean(h_matching_behavior - h_not_matching_behavior)",
+  "normalization": "Each layer rescaled to the frozen main-experiment reference_layer_norms.",
+  "data_path": "data/ood/sycophancy/political_vector.json",
+  "data_sha256": "f8b1a27393dcd9fec7148eb439e4f6b1fc5348013d4b860f58a6e115e1621495",
+  "num_examples_available": 453,
+  "num_examples_used": 453,
+  "smoke_prefix": false,
+  "raw_vectors_path": "vectors/llama2-7b-chat/ood/sycophancy/political/raw_vectors.pt",
+  "normalized_vectors_path": "vectors/llama2-7b-chat/ood/sycophancy/political/normalized_vectors.pt",
+  "reference_layer_norms_path": "vectors/llama2-7b-chat/normalization/reference_layer_norms.pt",
+  "canonical_sycophancy_vector_path": "vectors/llama2-7b-chat/sycophancy/normalized_vectors.pt",
+  "frozen_frontier_path": "results/llama2-7b-chat/final_evaluation/frontier_test_results.csv",
+  "frozen_epsilon": 0.03,
+  "frozen_layer": 12,
+  "frozen_operating_points": {
+    "negative": {
+      "alpha_star": -0.5,
+      "eta_star": -0.203457051679878
+    },
+    "positive": {
+      "alpha_star": 0.5,
+      "eta_star": 0.203457051679878
+    }
+  },
+  "max_reference_norm_relative_error": 2.525704587696964e-07,
+  "canonical_cosine_at_frozen_layer": 0.7019497156143188,
+  "canonical_cosine_all_layers": {
+    "min": 0.21076078712940216,
+    "median": 0.7107534408569336,
+    "max": 0.7367388010025024
+  }
+}
