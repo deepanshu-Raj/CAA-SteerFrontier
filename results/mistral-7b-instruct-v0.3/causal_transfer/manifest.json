@@ -1,0 +1,90 @@
+{
+  "analysis": "ordered_cross_behavior_causal_transfer",
+  "model_name": "mistralai/Mistral-7B-Instruct-v0.3",
+  "model_label": "Mistral 7B Instruct v0.3",
+  "model_slug": "mistral-7b-instruct-v0.3",
+  "source_behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "target_behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "num_layers": 32,
+  "hidden_size": 4096,
+  "eta_transfer": 0.2,
+  "eta_status": "frozen before causal-transfer outcomes were observed",
+  "eta_selection_basis": "eta=0.20 chosen conservatively from the already-completed positive-direction epsilon=0.03 frozen frontier distribution; below its first quartile.",
+  "intervention_definition": "Inject +alpha_l * normalized CAA source vector at layer l, where alpha_l = eta_transfer / perturbation_ratio_l.",
+  "eta_definition": "eta(alpha,l) = |alpha| * reference_vector_norm_l / residual_scale_l",
+  "calibration_note": "reference_vector_norm_l is shared across behaviors within a model/layer, so alpha_l depends on model/layer but not source behavior.",
+  "diagonal_policy": "Excluded. Only ordered source != target transfers are evaluated.",
+  "target_split": "behavior test",
+  "selection_policy": "No transfer-result-based tuning. Depth anchors and eta are frozen.",
+  "bootstrap_samples": 10000,
+  "base_seed": 20260918,
+  "num_depth_anchors": 7,
+  "depth_anchors": [
+    {
+      "requested_fractional_depth": 0.25,
+      "layer": 8,
+      "fractional_depth": 0.2580645161290322,
+      "depth_error": 0.0080645161290322
+    },
+    {
+      "requested_fractional_depth": 0.33,
+      "layer": 10,
+      "fractional_depth": 0.3225806451612903,
+      "depth_error": -0.0074193548387097
+    },
+    {
+      "requested_fractional_depth": 0.42,
+      "layer": 13,
+      "fractional_depth": 0.4193548387096774,
+      "depth_error": -0.0006451612903225
+    },
+    {
+      "requested_fractional_depth": 0.5,
+      "layer": 16,
+      "fractional_depth": 0.5161290322580645,
+      "depth_error": 0.0161290322580645
+    },
+    {
+      "requested_fractional_depth": 0.58,
+      "layer": 18,
+      "fractional_depth": 0.5806451612903226,
+      "depth_error": 0.0006451612903226
+    },
+    {
+      "requested_fractional_depth": 0.67,
+      "layer": 21,
+      "fractional_depth": 0.6774193548387096,
+      "depth_error": 0.0074193548387095
+    },
+    {
+      "requested_fractional_depth": 0.75,
+      "layer": 23,
+      "fractional_depth": 0.7419354838709677,
+      "depth_error": -0.0080645161290322
+    }
+  ],
+  "num_transfer_conditions": 294,
+  "num_completed_transfer_conditions": 294,
+  "geometry_file": "results/mistral-7b-instruct-v0.3/geometry/pairwise_cosine_anchor_layers.csv",
+  "geometry_file_sha256": "c11fdb7fa1c9825061347b7a030de8f5b419b68ee8648231f417f4c2dfec5694",
+  "residual_scale_file": "vectors/mistral-7b-instruct-v0.3/normalization/residual_scale.pt",
+  "reference_layer_norms_file": "vectors/mistral-7b-instruct-v0.3/normalization/reference_layer_norms.pt",
+  "perturbation_ratio_file": "vectors/mistral-7b-instruct-v0.3/normalization/perturbation_ratio.pt",
+  "residual_scale_metadata_file": "vectors/mistral-7b-instruct-v0.3/normalization/residual_scale_metadata.json"
+}
