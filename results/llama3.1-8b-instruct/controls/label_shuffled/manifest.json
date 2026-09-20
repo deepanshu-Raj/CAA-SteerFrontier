@@ -1,0 +1,31 @@
+{
+  "control": "label_shuffled",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "model_label": "Llama 3.1 8B Instruct",
+  "model_slug": "llama3.1-8b-instruct",
+  "config": "configs/llama31_8b_instruct.yaml",
+  "device": "cuda",
+  "behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "num_label_shuffles": 20,
+  "seed_start": 0,
+  "base_seed": 20260917,
+  "bootstrap_samples": 10000,
+  "frozen_frontiers": "results/llama3.1-8b-instruct/steering_frontiers.csv",
+  "frozen_frontiers_sha256": "9edb6ac4395d542b7a74e52b5e76cfb01ccb90350739b9bef1c6b284f1e9df83",
+  "final_results": "results/llama3.1-8b-instruct/final_evaluation/frontier_test_results.csv",
+  "final_results_sha256": "88e6ab11ed2e10ca2d0fbd4be4001ab066845a585e8f744d38f95db73a44f663",
+  "num_unique_frozen_nonzero_operating_points": 32,
+  "num_completed_control_evaluations": 640,
+  "shuffle_definition": "Independent paired label swap within each vector example; equivalently multiply each per-example contrastive activation difference by a deterministic Rademacher sign.",
+  "normalization": "Each label-shuffled vector is rescaled to exactly match the L2 norm of the normalized learned CAA vector at the frozen selected layer.",
+  "selection_policy": "No control-based layer or coefficient selection. CAA layers and coefficients remain frozen.",
+  "evaluation_split": "behavior test"
+}

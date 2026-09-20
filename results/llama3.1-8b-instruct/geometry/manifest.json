@@ -1,0 +1,76 @@
+{
+  "analysis": "pairwise_steering_vector_geometry",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "model_label": "Llama 3.1 8B Instruct",
+  "model_slug": "llama3.1-8b-instruct",
+  "behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "num_behaviors": 7,
+  "num_layers": 32,
+  "hidden_size": 4096,
+  "pairwise_relations_per_layer": 21,
+  "num_geometry_rows": 672,
+  "requested_depth_anchors": [
+    0.25,
+    0.33,
+    0.42,
+    0.5,
+    0.58,
+    0.67,
+    0.75
+  ],
+  "actual_anchor_layers": [
+    {
+      "requested_fractional_depth": 0.25,
+      "layer": 8,
+      "fractional_depth": 0.25806451612903225,
+      "depth_error": 0.008064516129032251
+    },
+    {
+      "requested_fractional_depth": 0.33,
+      "layer": 10,
+      "fractional_depth": 0.3225806451612903,
+      "depth_error": -0.007419354838709702
+    },
+    {
+      "requested_fractional_depth": 0.42,
+      "layer": 13,
+      "fractional_depth": 0.41935483870967744,
+      "depth_error": -0.000645161290322549
+    },
+    {
+      "requested_fractional_depth": 0.5,
+      "layer": 16,
+      "fractional_depth": 0.5161290322580645,
+      "depth_error": 0.016129032258064502
+    },
+    {
+      "requested_fractional_depth": 0.58,
+      "layer": 18,
+      "fractional_depth": 0.5806451612903226,
+      "depth_error": 0.00064516129032266
+    },
+    {
+      "requested_fractional_depth": 0.67,
+      "layer": 21,
+      "fractional_depth": 0.6774193548387096,
+      "depth_error": 0.007419354838709591
+    },
+    {
+      "requested_fractional_depth": 0.75,
+      "layer": 23,
+      "fractional_depth": 0.7419354838709677,
+      "depth_error": -0.008064516129032251
+    }
+  ],
+  "geometry_definition": "Signed cosine similarity between normalized CAA steering vectors for each unordered behavior pair at the same transformer layer.",
+  "transfer_eta_frozen": 0.2,
+  "transfer_eta_note": "Frozen before causal-transfer outcomes were observed; chosen conservatively from the existing positive epsilon=0.03 frontier eta distribution."
+}
