@@ -1,3 +1,9 @@
+"""Load one configured model and verify its prompt-adapter setup.
+
+This lightweight preparation step checks model metadata and adapter resolution
+before expensive vector extraction or evaluation jobs.
+"""
+
 import argparse
 
 from steerfrontier.config import load_experiment_config
@@ -7,6 +13,10 @@ from steerfrontier.workflow import (
     build_shared_normalization,
     extract_or_load_raw_vectors,
 )
+
+# =============================================================================
+# Command-line interface
+# =============================================================================
 
 
 def parse_args():
@@ -34,6 +44,11 @@ def parse_args():
     )
 
     return parser.parse_args()
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():

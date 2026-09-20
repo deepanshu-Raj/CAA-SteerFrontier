@@ -1,3 +1,9 @@
+"""Evaluate frozen behavior-selected layers on capability-selection benchmarks.
+
+Capability results determine feasible steering budgets but never behavior-layer
+selection; holdout data are not consulted by this script.
+"""
+
 import argparse
 import hashlib
 import json
@@ -34,6 +40,10 @@ from steerfrontier.workflow import (
     load_normalized_vectors,
 )
 
+# =============================================================================
+# Configuration
+# =============================================================================
+
 CORE_BENCHMARKS = (
     "mmlu",
     "arc_challenge",
@@ -47,11 +57,15 @@ DEFAULT_TOLERANCES = (
 )
 
 
+# =============================================================================
+# Command-line interface
+# =============================================================================
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
-            "Run Phase-2 capability-selection sweeps "
-            "at frozen behavior-selected layers."
+            "Run capability-selection sweeps at frozen behavior-selected layers."
         )
     )
 
@@ -432,6 +446,11 @@ def add_feasibility(
     return summary
 
 
+# =============================================================================
+# Main
+# =============================================================================
+
+
 def main():
     args = parse_args()
 
@@ -453,7 +472,7 @@ def main():
 
     print("=" * 76)
 
-    print("PHASE-2 CAPABILITY SELECTION")
+    print("CAPABILITY SELECTION")
 
     print("=" * 76)
 

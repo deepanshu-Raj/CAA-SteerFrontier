@@ -1,8 +1,18 @@
+"""Select and freeze capability-constrained steering budgets.
+
+Behavior-selected layers are fixed upstream, feasibility is determined only on
+capability-selection data, and holdout results are never used here.
+"""
+
 import argparse
 import json
 from pathlib import Path
 
 import pandas as pd
+
+# =============================================================================
+# Configuration
+# =============================================================================
 
 TOLERANCES = {
     "01": 0.01,
@@ -17,10 +27,15 @@ CORE_BENCHMARKS = {
 }
 
 
+# =============================================================================
+# Command-line interface
+# =============================================================================
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
-            "Select and freeze Phase-2 steering "
+            "Select and freeze steering "
             "frontiers from behavior-validation and "
             "capability-selection results."
         )
@@ -296,6 +311,11 @@ def select_direction(
     }
 
 
+# =============================================================================
+# Main
+# =============================================================================
+
+
 def main():
     args = parse_args()
 
@@ -308,7 +328,7 @@ def main():
     output_rows = []
 
     frozen = {
-        "protocol": ("phase2_steering_frontiers"),
+        "protocol": ("steering_frontiers"),
         "selection_split": ("behavior_validation + capability_selection"),
         "selection_rule": (
             "For each behavior, direction, and "
@@ -425,7 +445,7 @@ def main():
 
     print("=" * 76)
 
-    print("PHASE-2 STEERING FRONTIERS FROZEN")
+    print("STEERING FRONTIERS FROZEN")
 
     print("=" * 76)
 

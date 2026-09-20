@@ -1,3 +1,9 @@
+"""Run a focused smoke check of forced-choice behavior evaluation.
+
+This diagnostic script is intended for validating scoring semantics on a small
+example before launching full experiment sweeps.
+"""
+
 import json
 
 import torch
@@ -5,10 +11,19 @@ import torch
 from steerfrontier.evaluation import evaluate_behavior
 from steerfrontier.models import load_model
 
+# =============================================================================
+# Configuration
+# =============================================================================
+
 MODEL_NAME = "meta-llama/Llama-2-7b-chat-hf"
 BEHAVIOR = "survival_instinct"
 LAYER = 13
 DEVICE = "cuda"
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():

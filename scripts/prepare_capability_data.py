@@ -1,3 +1,9 @@
+"""Prepare deterministic capability-selection and holdout benchmark datasets.
+
+Selection and holdout splits are frozen separately so holdout performance cannot
+influence steering-budget selection.
+"""
+
 import argparse
 import hashlib
 import json
@@ -5,6 +11,10 @@ import random
 from pathlib import Path
 
 from datasets import load_dataset
+
+# =============================================================================
+# Configuration
+# =============================================================================
 
 BASE_SEED = 42
 
@@ -82,9 +92,9 @@ def deterministic_sample(
     return [rows[i] for i in selected]
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # MMLU
-# ---------------------------------------------------------------------------
+# =============================================================================
 
 
 def canonicalize_mmlu(
@@ -171,9 +181,9 @@ def prepare_mmlu(
     return selection, holdout
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # ARC-Challenge
-# ---------------------------------------------------------------------------
+# =============================================================================
 
 
 def canonicalize_arc(
@@ -264,9 +274,9 @@ def prepare_arc_challenge():
     return selection, holdout
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # HellaSwag
-# ---------------------------------------------------------------------------
+# =============================================================================
 
 
 def clean_hellaswag_text(
@@ -377,9 +387,9 @@ def prepare_hellaswag(
     return selection, holdout
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Output
-# ---------------------------------------------------------------------------
+# =============================================================================
 
 
 def write_json(
@@ -417,11 +427,14 @@ def write_dataset(
     return path
 
 
+# =============================================================================
+# Main
+# =============================================================================
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description=(
-            "Prepare deterministic Phase-2 capability selection and holdout datasets."
-        )
+        description=("Prepare deterministic capability-selection and holdout datasets.")
     )
 
     parser.add_argument(
@@ -442,7 +455,7 @@ def main():
 
     print("=" * 76)
 
-    print("PREPARING PHASE-2 CAPABILITY DATA")
+    print("PREPARING CAPABILITY DATA")
 
     print("=" * 76)
 
@@ -479,7 +492,7 @@ def main():
     }
 
     manifest = {
-        "protocol": ("phase2_capability"),
+        "protocol": ("capability_selection_holdout"),
         "seed": int(args.seed),
         "roles": {
             "selection": (

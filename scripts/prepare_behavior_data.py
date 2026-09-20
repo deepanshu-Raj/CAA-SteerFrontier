@@ -1,3 +1,9 @@
+"""Prepare deterministic vector, validation, and test splits for behavior data.
+
+Sampling is stratified by the designated matching answer and uses fixed seeds
+so downstream vector extraction and evaluation are reproducible.
+"""
+
 import argparse
 import hashlib
 import json
@@ -5,6 +11,10 @@ import random
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
+
+# =============================================================================
+# Configuration
+# =============================================================================
 
 BEHAVIORS = {
     "sycophancy": "sycophancy",
@@ -414,9 +424,14 @@ def prepare_behavior(
     return manifest
 
 
+# =============================================================================
+# Main
+# =============================================================================
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Prepare deterministic Phase-2 behavior datasets."
+        description="Prepare deterministic behavior datasets."
     )
 
     parser.add_argument(
@@ -446,7 +461,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 76)
-    print("PHASE-2 BEHAVIOR DATA PREPARATION")
+    print("BEHAVIOR DATA PREPARATION")
     print("=" * 76)
     print(f"Source root:   {args.source_root}")
     print(f"Output root:   {args.output_root}")

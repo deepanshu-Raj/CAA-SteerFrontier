@@ -1,3 +1,9 @@
+"""Validate prompt-adapter positions and steering hooks for one configured model.
+
+The check confirms that prompt boundaries, captured activations, and steered
+logits behave consistently before full evaluation runs.
+"""
+
 import argparse
 
 import torch
@@ -9,6 +15,10 @@ from steerfrontier.models import get_decoder_layers, load_model, model_summary
 from steerfrontier.prompts import get_prompt_adapter
 from steerfrontier.steering import SteeringIntervention
 
+# =============================================================================
+# Command-line interface
+# =============================================================================
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -19,6 +29,11 @@ def parse_args():
     parser.add_argument("--layer", type=int, default=None)
     parser.add_argument("--device", default="cuda")
     return parser.parse_args()
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():

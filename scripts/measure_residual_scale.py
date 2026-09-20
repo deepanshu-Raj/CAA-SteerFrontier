@@ -1,3 +1,9 @@
+"""Measure layer-wise residual-stream scale for steering calibration.
+
+The resulting residual norms define the denominator of the residual-relative
+perturbation magnitude used throughout calibrated steering experiments.
+"""
+
 import argparse
 import json
 
@@ -8,6 +14,10 @@ from steerfrontier.config import load_experiment_config
 from steerfrontier.data import load_vector_data
 from steerfrontier.models import load_model
 from steerfrontier.prompts import get_prompt_adapter
+
+# =============================================================================
+# Command-line interface
+# =============================================================================
 
 
 def parse_args():
@@ -34,6 +44,11 @@ def parse_args():
     )
 
     return parser.parse_args()
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():

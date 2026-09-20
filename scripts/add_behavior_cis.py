@@ -1,3 +1,9 @@
+"""Add paired-bootstrap confidence intervals to behavior sweep artifacts.
+
+Resampling uses deterministic condition-level seeds and preserves the existing
+experimental outputs apart from the added uncertainty columns.
+"""
+
 import argparse
 import hashlib
 from pathlib import Path
@@ -145,6 +151,11 @@ def add_bootstrap_cis(
     )
 
     return merged
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():

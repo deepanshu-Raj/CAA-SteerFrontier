@@ -1,6 +1,16 @@
+"""Inspect answer-token and contrastive-extraction positions across model families.
+
+This diagnostic verifies the tokenization assumptions used by forced-choice
+behavior scoring and steering-vector extraction.
+"""
+
 from transformers import AutoTokenizer
 
 from steerfrontier.prompts import get_prompt_adapter
+
+# =============================================================================
+# Configuration
+# =============================================================================
 
 MODELS = [
     (

@@ -1,3 +1,9 @@
+"""Run the behavior-side CAA steering analysis for one configured model.
+
+This stage performs vector extraction, layer sweeps, coefficient sweeps, and
+validation diagnostics; capability selection and holdout evaluation are separate.
+"""
+
 import argparse
 import hashlib
 from pathlib import Path
@@ -28,11 +34,15 @@ from steerfrontier.workflow import (
     write_run_manifest,
 )
 
+# =============================================================================
+# Command-line interface
+# =============================================================================
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
-            "Phase-2 CAA analysis runner. For every configured behavior, this "
+            "CAA behavior-analysis runner. For every configured behavior, this "
             "runs or resumes the coarse layer sweep, paired-bootstrap CIs, "
             "candidate-layer inference, dense coefficient sweep, paired-bootstrap "
             "CIs, and directional layer-selection diagnostics."
@@ -49,9 +59,9 @@ def parse_args():
         choices=["analyze", "finalize"],
         default="analyze",
         help=(
-            "Use 'analyze' for the current Phase-2 pipeline. "
-            "'finalize' is intentionally disabled until the Phase-2 capability "
-            "suite and budget-selection protocol are implemented."
+            "Use 'analyze' for the behavior-analysis pipeline. "
+            "'finalize' is deprecated; capability selection and final evaluation "
+            "are handled by dedicated downstream scripts."
         ),
     )
 
@@ -850,7 +860,7 @@ def run_analysis(
 
     print("=" * 76)
 
-    print("PHASE-2 BEHAVIOR ANALYSIS COMPLETE")
+    print("BEHAVIOR ANALYSIS COMPLETE")
 
     print("=" * 76)
 
@@ -876,12 +886,17 @@ def run_analysis(
     print()
 
     print(
-        "Next protocol step: review/freeze the "
-        "behavior-selected layers, then implement "
-        "the Phase-2 capability suite and usable-budget "
-        "selection. Do not run the old MMLU-only "
-        "finalization path."
+        "Next protocol step: freeze the "
+        "behavior-selected layers, then run "
+        "capability selection and steering-frontier "
+        "selection. Do not use the deprecated MMLU-only "
+        "finalize mode."
     )
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():
@@ -889,12 +904,9 @@ def main():
 
     if args.phase == "finalize":
         raise RuntimeError(
-            "Phase-2 finalization is intentionally "
-            "disabled for now. The old MMLU-only "
-            "finalization does not implement the new "
-            "MMLU + ARC-Challenge + HellaSwag "
-            "capability constraint or validation-selected "
-            "usable steering budgets."
+            "The legacy finalize mode is intentionally disabled. "
+            "Use the dedicated capability-selection, frontier-selection, "
+            "and final-evaluation scripts instead."
         )
 
     config = load_experiment_config(args.config)
@@ -908,12 +920,12 @@ def main():
 
     print("=" * 76)
 
-    print("CAA STEERFRONTIER — PHASE 2")
+    print("CAA STEERFRONTIER — BEHAVIOR ANALYSIS")
 
     print("=" * 76)
 
     print(
-        "Phase:",
+        "Mode:",
         args.phase,
     )
 

@@ -1,3 +1,9 @@
+"""Run cross-behavior steering and vector-geometry diagnostics for one model.
+
+The script produces descriptive transfer and similarity artifacts from already
+constructed steering vectors.
+"""
+
 import argparse
 from itertools import combinations
 
@@ -11,6 +17,10 @@ from steerfrontier.evaluation import evaluate_behavior
 from steerfrontier.models import load_model
 from steerfrontier.prompts import get_prompt_adapter
 from steerfrontier.workflow import load_normalized_vectors
+
+# =============================================================================
+# Command-line interface
+# =============================================================================
 
 
 def parse_args():
@@ -158,6 +168,11 @@ def run_cross_steering(config, layers, alphas, device):
         output_path = output_dir / f"cross_behavior_steering_layer{layer}.csv"
         pd.DataFrame(rows).to_csv(output_path, index=False)
         print("Saved:", output_path)
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main():

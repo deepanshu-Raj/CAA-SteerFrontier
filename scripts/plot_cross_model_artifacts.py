@@ -1,3 +1,9 @@
+"""Render cross-model comparison figures from aggregated experiment artifacts.
+
+This legacy-compatible plotter is descriptive only and does not modify frozen
+interventions or evaluation results.
+"""
+
 import argparse
 import json
 from pathlib import Path
@@ -8,6 +14,10 @@ import pandas as pd
 from matplotlib.colors import TwoSlopeNorm
 
 from steerfrontier.config import load_experiment_config
+
+# =============================================================================
+# Command-line interface
+# =============================================================================
 
 
 def parse_args():
@@ -581,8 +591,12 @@ def plot_cross_steering(configs, layer, output_dir):
     )
 
 
+# =============================================================================
+# Main
+# =============================================================================
+
+
 def main():
-    print(f"[cross-model plotter] file={Path(__file__).resolve()}")
     configure_style()
     args = parse_args()
 
