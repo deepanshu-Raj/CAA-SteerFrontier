@@ -1,0 +1,9 @@
+epsilon,limiting_holdout_benchmark,failed_frontiers
+0.01,arc_challenge,1
+0.01,hellaswag,11
+0.01,mmlu,3
+0.03,hellaswag,9
+0.03,mmlu,2
+0.05,arc_challenge,1
+0.05,hellaswag,6
+0.05,mmlu,1

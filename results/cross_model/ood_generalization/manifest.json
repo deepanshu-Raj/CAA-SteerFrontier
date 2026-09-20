@@ -1,0 +1,16 @@
+{
+  "protocol": "ood_generalization_analysis_v1",
+  "models": [
+    "llama2-7b-chat",
+    "llama3.1-8b-instruct",
+    "mistral-7b-instruct-v0.3",
+    "qwen2.5-7b-instruct"
+  ],
+  "num_raw_rows": 40,
+  "num_sycophancy_transfer_pairs": 16,
+  "num_truthfulqa_conditions": 8,
+  "primary_sycophancy_metric": "Raw cross-domain directional gain.",
+  "retention_policy": "OOD / ID retention ratio is secondary and is computed only when the corresponding in-domain directional gain has a 95% CI lower bound > 0.",
+  "truthfulqa_metric": "Directional gain using the frozen canonical hallucination intervention.",
+  "no_posthoc_selection": true
+}

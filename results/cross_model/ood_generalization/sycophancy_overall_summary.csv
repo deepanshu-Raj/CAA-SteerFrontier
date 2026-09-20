@@ -1,0 +1,2 @@
+num_models,num_transfer_pairs,mean_id_gain,median_id_gain,mean_ood_gain,median_ood_gain,mean_ood_minus_id,median_ood_minus_id,positive_id_gain_count,supported_id_gain_count,positive_ood_gain_count,supported_ood_gain_count,retention_ratio_count,mean_retention_ratio,median_retention_ratio
+4,16,0.04215623463094358,0.026653993806441352,0.022186846098041387,0.0115655611420778,-0.019969388532902192,-0.00734354710397665,14,9,14,9,9,0.821193719834032,0.4645052418342359

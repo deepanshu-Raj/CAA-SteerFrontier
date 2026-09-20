@@ -1,0 +1,29 @@
+model_slug,model_label,behavior,selected_layer,num_hidden_layers,fractional_depth
+llama2-7b-chat,Llama-2 7B Chat,sycophancy,12,32,0.3870967741935484
+llama2-7b-chat,Llama-2 7B Chat,refusal,13,32,0.41935483870967744
+llama2-7b-chat,Llama-2 7B Chat,hallucination,13,32,0.41935483870967744
+llama2-7b-chat,Llama-2 7B Chat,corrigibility,13,32,0.41935483870967744
+llama2-7b-chat,Llama-2 7B Chat,survival_instinct,11,32,0.3548387096774194
+llama2-7b-chat,Llama-2 7B Chat,myopic_reward,13,32,0.41935483870967744
+llama2-7b-chat,Llama-2 7B Chat,ai_coordination,13,32,0.41935483870967744
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,sycophancy,16,32,0.5161290322580645
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,refusal,13,32,0.41935483870967744
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,hallucination,13,32,0.41935483870967744
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,corrigibility,14,32,0.45161290322580644
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,survival_instinct,13,32,0.41935483870967744
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,myopic_reward,12,32,0.3870967741935484
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,ai_coordination,13,32,0.41935483870967744
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,sycophancy,13,32,0.41935483870967744
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,refusal,13,32,0.41935483870967744
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,hallucination,13,32,0.41935483870967744
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,corrigibility,13,32,0.41935483870967744
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,survival_instinct,15,32,0.4838709677419355
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,myopic_reward,13,32,0.41935483870967744
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,ai_coordination,13,32,0.41935483870967744
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,sycophancy,18,28,0.6666666666666666
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,refusal,18,28,0.6666666666666666
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,hallucination,18,28,0.6666666666666666
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,corrigibility,18,28,0.6666666666666666
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,survival_instinct,19,28,0.7037037037037037
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,myopic_reward,18,28,0.6666666666666666
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,ai_coordination,17,28,0.6296296296296297

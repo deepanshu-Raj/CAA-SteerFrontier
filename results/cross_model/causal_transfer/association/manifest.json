@@ -1,0 +1,26 @@
+{
+  "analysis": "geometry_causal_transfer_association",
+  "input": "results/cross_model/causal_transfer/transfer_results.csv",
+  "num_transfer_rows": 1176,
+  "num_model_depth_blocks": 28,
+  "behaviors": [
+    "ai_coordination",
+    "corrigibility",
+    "hallucination",
+    "myopic_reward",
+    "refusal",
+    "survival_instinct",
+    "sycophancy"
+  ],
+  "num_behaviors": 7,
+  "num_exact_behavior_label_permutations": 5040,
+  "primary_analysis": "Mean within-model-depth ordered signed Spearman correlation between cosine geometry and signed causal transfer.",
+  "primary_permutation_test": "Exact 7! behavior-label permutation. The same semantic label permutation is applied synchronously across blocks.",
+  "secondary_analyses": [
+    "Ordered signed Pearson correlation.",
+    "Ordered |cosine| versus |transfer| Spearman.",
+    "21-pair symmetrized transfer analysis using (T_i_to_j + T_j_to_i)/2."
+  ],
+  "p_value_definition": "Two-sided exact permutation p-value including the identity permutation.",
+  "iid_note": "Standard IID correlation p-values are not used because geometry is symmetric while transfer is directional and the same behaviors recur across layers/models."
+}

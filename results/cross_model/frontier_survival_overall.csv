@@ -1,0 +1,4 @@
+epsilon,total_frontier_claims,zero_frontiers,nonzero_frontiers,behavior_supported,capability_holdout_pass,joint_pass,behavior_support_rate,capability_pass_rate,joint_pass_rate
+0.01,56,32,24,23,9,9,0.9583333333333334,0.375,0.375
+0.03,56,1,55,48,44,40,0.8727272727272727,0.8,0.7272727272727273
+0.05,56,0,56,50,48,43,0.8928571428571429,0.8571428571428571,0.7678571428571429

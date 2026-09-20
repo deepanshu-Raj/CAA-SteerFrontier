@@ -1,0 +1,45 @@
+{
+  "protocol": "open_ended_blinded_judging_v2",
+  "seed": 20260919,
+  "num_models": 4,
+  "raw_generation_responses": 864,
+  "raw_matched_triplets": 288,
+  "persistent_nontermination_responses": 12,
+  "persistent_nontermination_definition": "Generation reached the original 2056-token cap without EOS and again reached a 4096-token confirmation cap without EOS under the identical frozen prompt, vector, layer, coefficient, and greedy decoding policy.",
+  "content_judging_exclusion_policy": "If any condition for a model/prompt triplet persistently failed to terminate, exclude all three negative/baseline/positive responses for that matched triplet from behavioral content judging.",
+  "excluded_matched_triplets": 12,
+  "retained_blinded_cases": 276,
+  "retained_judged_responses": 828,
+  "blinding": "Model identity and intervention condition are hidden from the judge.",
+  "condition_position_policy": "All six permutations of baseline, negative, and positive are used exactly 46 times across the 276 retained cases. Consequently each condition appears exactly 92 times under each of A, B, C.",
+  "primary_judging_output": "Independent ordinal target-behavior scores from 0 to 4 for A/B/C. Ties are allowed.",
+  "generation_stability_is_separate_outcome": true,
+  "no_behavioral_output_used_to_select_exclusions": true,
+  "repair_attempts_path": "results/llama3.1-8b-instruct/open_ended_generation/truncation_repair_4096/repair_attempts.csv",
+  "repair_attempts_sha256": "ce2395b186724dcd9f425b751b163e3d3fed43555a13cebaf02deb37231a0f58",
+  "generation_files": {
+    "llama2-7b-chat": {
+      "path": "results/llama2-7b-chat/open_ended_generation/generations.csv",
+      "sha256": "8d71e5cf3ed6a8a27e1d89fcaaa511de5ac9b9ce6f6b4276848b786eb28eb8d0"
+    },
+    "llama3.1-8b-instruct": {
+      "path": "results/llama3.1-8b-instruct/open_ended_generation/generations.csv",
+      "sha256": "08c94a82b58e961eafba261ab7fd363956733fd480c49699d3a6736bb0724849"
+    },
+    "mistral-7b-instruct-v0.3": {
+      "path": "results/mistral-7b-instruct-v0.3/open_ended_generation/generations.csv",
+      "sha256": "1ba770e9c185712946c9e80e01e571224739ae45bccdf905df6dbe3019a4036a"
+    },
+    "qwen2.5-7b-instruct": {
+      "path": "results/qwen2.5-7b-instruct/open_ended_generation/generations.csv",
+      "sha256": "63d37f9c45796eb3db8ce4a36466e7daea111b2f00f40719c641312c13608575"
+    }
+  },
+  "prompt_file": {
+    "path": "data/open_ended/prompts.json",
+    "sha256": "0c7d4efc8546700b767d83fde8fbd4c684969f538909f9f98d82b18b01d2eaa2"
+  },
+  "rubric_version": "open_ended_judging_rubrics_v1",
+  "condition_key_is_blinded": true,
+  "do_not_use_condition_key_during_judging": true
+}

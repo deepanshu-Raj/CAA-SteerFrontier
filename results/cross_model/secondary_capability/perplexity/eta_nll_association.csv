@@ -1,0 +1,11 @@
+scope,model_slug,model_label,num_points,pearson_abs_eta_vs_delta_nll,spearman_abs_eta_vs_delta_nll
+all_points,ALL,All models,56,0.6317098993683503,0.8188156243543948
+nonzero_only,ALL,All models,55,0.6305391600109667,0.8100002415471312
+all_points,llama2-7b-chat,Llama 2 7B Chat,14,0.7106217748379964,0.5616319105342955
+nonzero_only,llama2-7b-chat,Llama 2 7B Chat,13,0.7341721271025186,0.519425430516541
+all_points,llama3.1-8b-instruct,Llama 3.1 8B Instruct,14,0.9422681216523987,0.9084944955095203
+nonzero_only,llama3.1-8b-instruct,Llama 3.1 8B Instruct,14,0.9422681216523987,0.9084944955095203
+all_points,mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,14,0.8859337062738878,0.723895371046917
+nonzero_only,mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,14,0.8859337062738878,0.723895371046917
+all_points,qwen2.5-7b-instruct,Qwen2.5 7B Instruct,14,0.727407051757937,0.707943099374987
+nonzero_only,qwen2.5-7b-instruct,Qwen2.5 7B Instruct,14,0.727407051757937,0.707943099374987

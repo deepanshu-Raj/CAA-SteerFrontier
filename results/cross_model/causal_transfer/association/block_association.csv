@@ -1,0 +1,169 @@
+model_slug,model_label,requested_fractional_depth,layer,variant,metric,n_relations,observed_statistic,exact_permutation_p_two_sided,num_exact_permutations
+llama2-7b-chat,Llama 2 7B Chat,0.25,8,ordered,signed_spearman,42,-0.13105718226407526,0.37023809523809526,5040
+llama2-7b-chat,Llama 2 7B Chat,0.25,8,ordered,signed_pearson,42,-0.05904464404374598,0.6839285714285714,5040
+llama2-7b-chat,Llama 2 7B Chat,0.25,8,ordered,magnitude_spearman,42,0.14305994400608216,0.45654761904761904,5040
+llama2-7b-chat,Llama 2 7B Chat,0.25,8,pair_mean,signed_spearman,21,-0.11168831168831168,0.5613095238095238,5040
+llama2-7b-chat,Llama 2 7B Chat,0.25,8,pair_mean,signed_pearson,21,-0.08469811970265552,0.6839285714285714,5040
+llama2-7b-chat,Llama 2 7B Chat,0.25,8,pair_mean,magnitude_spearman,21,0.15714285714285714,0.616468253968254,5040
+llama2-7b-chat,Llama 2 7B Chat,0.33,10,ordered,signed_spearman,42,0.289039478706166,0.002777777777777778,5040
+llama2-7b-chat,Llama 2 7B Chat,0.33,10,ordered,signed_pearson,42,0.33333861946292986,0.0017857142857142857,5040
+llama2-7b-chat,Llama 2 7B Chat,0.33,10,ordered,magnitude_spearman,42,-0.15798229644209072,0.5103174603174603,5040
+llama2-7b-chat,Llama 2 7B Chat,0.33,10,pair_mean,signed_spearman,21,0.587012987012987,0.0015873015873015873,5040
+llama2-7b-chat,Llama 2 7B Chat,0.33,10,pair_mean,signed_pearson,21,0.5885082878167393,0.0017857142857142857,5040
+llama2-7b-chat,Llama 2 7B Chat,0.33,10,pair_mean,magnitude_spearman,21,0.016883116883116882,0.9390873015873016,5040
+llama2-7b-chat,Llama 2 7B Chat,0.42,13,ordered,signed_spearman,42,0.81845859121847,0.0015873015873015873,5040
+llama2-7b-chat,Llama 2 7B Chat,0.42,13,ordered,signed_pearson,42,0.8082036603462066,0.0007936507936507937,5040
+llama2-7b-chat,Llama 2 7B Chat,0.42,13,ordered,magnitude_spearman,42,0.5336362990703064,0.008928571428571428,5040
+llama2-7b-chat,Llama 2 7B Chat,0.42,13,pair_mean,signed_spearman,21,0.9363636363636364,0.001388888888888889,5040
+llama2-7b-chat,Llama 2 7B Chat,0.42,13,pair_mean,signed_pearson,21,0.9246803466979215,0.0007936507936507937,5040
+llama2-7b-chat,Llama 2 7B Chat,0.42,13,pair_mean,magnitude_spearman,21,0.825974025974026,0.003968253968253968,5040
+llama2-7b-chat,Llama 2 7B Chat,0.5,16,ordered,signed_spearman,42,0.5436926670163122,0.002777777777777778,5040
+llama2-7b-chat,Llama 2 7B Chat,0.5,16,ordered,signed_pearson,42,0.41435922212093873,0.01904761904761905,5040
+llama2-7b-chat,Llama 2 7B Chat,0.5,16,ordered,magnitude_spearman,42,0.12619119777407245,0.5275793650793651,5040
+llama2-7b-chat,Llama 2 7B Chat,0.5,16,pair_mean,signed_spearman,21,0.6701298701298701,0.011111111111111112,5040
+llama2-7b-chat,Llama 2 7B Chat,0.5,16,pair_mean,signed_pearson,21,0.6346091456481181,0.01904761904761905,5040
+llama2-7b-chat,Llama 2 7B Chat,0.5,16,pair_mean,magnitude_spearman,21,0.08961038961038961,0.7238095238095238,5040
+llama2-7b-chat,Llama 2 7B Chat,0.58,18,ordered,signed_spearman,42,0.46583691517626746,0.03591269841269841,5040
+llama2-7b-chat,Llama 2 7B Chat,0.58,18,ordered,signed_pearson,42,0.40874375616295694,0.06111111111111111,5040
+llama2-7b-chat,Llama 2 7B Chat,0.58,18,ordered,magnitude_spearman,42,-0.11126884533806389,0.6150793650793651,5040
+llama2-7b-chat,Llama 2 7B Chat,0.58,18,pair_mean,signed_spearman,21,0.5493506493506494,0.049206349206349205,5040
+llama2-7b-chat,Llama 2 7B Chat,0.58,18,pair_mean,signed_pearson,21,0.5560839549502646,0.06111111111111111,5040
+llama2-7b-chat,Llama 2 7B Chat,0.58,18,pair_mean,magnitude_spearman,21,0.09740259740259741,0.7507936507936508,5040
+llama2-7b-chat,Llama 2 7B Chat,0.67,21,ordered,signed_spearman,42,0.3289405515241889,0.1484126984126984,5040
+llama2-7b-chat,Llama 2 7B Chat,0.67,21,ordered,signed_pearson,42,0.24534834844929487,0.2365079365079365,5040
+llama2-7b-chat,Llama 2 7B Chat,0.67,21,ordered,magnitude_spearman,42,-0.13559876778807786,0.5095238095238095,5040
+llama2-7b-chat,Llama 2 7B Chat,0.67,21,pair_mean,signed_spearman,21,0.2584415584415584,0.32936507936507936,5040
+llama2-7b-chat,Llama 2 7B Chat,0.67,21,pair_mean,signed_pearson,21,0.32090913793311315,0.2365079365079365,5040
+llama2-7b-chat,Llama 2 7B Chat,0.67,21,pair_mean,magnitude_spearman,21,-0.36103896103896105,0.19503968253968254,5040
+llama2-7b-chat,Llama 2 7B Chat,0.75,23,ordered,signed_spearman,42,0.28676868594416466,0.2222222222222222,5040
+llama2-7b-chat,Llama 2 7B Chat,0.75,23,ordered,signed_pearson,42,0.24373379223481031,0.264484126984127,5040
+llama2-7b-chat,Llama 2 7B Chat,0.75,23,ordered,magnitude_spearman,42,-0.24881400692214287,0.3867063492063492,5040
+llama2-7b-chat,Llama 2 7B Chat,0.75,23,pair_mean,signed_spearman,21,0.3012987012987013,0.2515873015873016,5040
+llama2-7b-chat,Llama 2 7B Chat,0.75,23,pair_mean,signed_pearson,21,0.30629457399094306,0.264484126984127,5040
+llama2-7b-chat,Llama 2 7B Chat,0.75,23,pair_mean,magnitude_spearman,21,-0.32987012987012987,0.2724206349206349,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.25,8,ordered,signed_spearman,42,-0.030817901770017697,0.8408730158730159,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.25,8,ordered,signed_pearson,42,-0.06898130892335402,0.6466269841269842,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.25,8,ordered,magnitude_spearman,42,-0.02854710900801639,0.8142857142857143,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.25,8,pair_mean,signed_spearman,21,0.00909090909090909,0.9706349206349206,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.25,8,pair_mean,signed_pearson,21,-0.10508826127719369,0.6466269841269842,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.25,8,pair_mean,magnitude_spearman,21,-0.12207792207792208,0.6498015873015873,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.33,10,ordered,signed_spearman,42,-0.5420706721863112,0.0015873015873015873,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.33,10,ordered,signed_pearson,42,-0.5590979167439235,0.0025793650793650793,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.33,10,ordered,magnitude_spearman,42,0.14825032746208514,0.3531746031746032,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.33,10,pair_mean,signed_spearman,21,-0.7311688311688311,0.005952380952380952,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.33,10,pair_mean,signed_pearson,21,-0.7773478117621682,0.0025793650793650793,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.33,10,pair_mean,magnitude_spearman,21,0.21558441558441557,0.44087301587301586,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.42,13,ordered,signed_spearman,42,0.6413367557823683,0.007341269841269841,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.42,13,ordered,signed_pearson,42,0.514539533662962,0.018055555555555554,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.42,13,ordered,magnitude_spearman,42,0.17387784577609985,0.4234126984126984,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.42,13,pair_mean,signed_spearman,21,0.6558441558441559,0.01646825396825397,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.42,13,pair_mean,signed_pearson,21,0.6086964836530168,0.018055555555555554,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.42,13,pair_mean,magnitude_spearman,21,0.22727272727272727,0.42162698412698413,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.5,16,ordered,signed_spearman,42,0.3545680698382036,0.04027777777777778,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.5,16,ordered,signed_pearson,42,0.2647411081755975,0.11984126984126985,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.5,16,ordered,magnitude_spearman,42,0.05060623869602906,0.7498015873015873,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.5,16,pair_mean,signed_spearman,21,0.37012987012987014,0.09424603174603174,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.5,16,pair_mean,signed_pearson,21,0.33564934005568037,0.11984126984126985,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.5,16,pair_mean,magnitude_spearman,21,0.05974025974025974,0.799404761904762,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.58,18,ordered,signed_spearman,42,0.2059933434101183,0.1986111111111111,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.58,18,ordered,signed_pearson,42,0.10216690681156636,0.5462301587301587,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.58,18,ordered,magnitude_spearman,42,0.04606465317202645,0.7686507936507937,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.58,18,pair_mean,signed_spearman,21,0.21428571428571427,0.3121031746031746,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.58,18,pair_mean,signed_pearson,21,0.14084688956326807,0.5462301587301587,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.58,18,pair_mean,magnitude_spearman,21,0.016883116883116882,0.9523809523809523,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.67,21,ordered,signed_spearman,42,0.4655125162102673,0.006150793650793651,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.67,21,ordered,signed_pearson,42,0.3956777973615487,0.013095238095238096,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.67,21,ordered,magnitude_spearman,42,0.25627518314014713,0.12976190476190477,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.67,21,pair_mean,signed_spearman,21,0.6181818181818182,0.00376984126984127,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.67,21,pair_mean,signed_pearson,21,0.5000416587880083,0.013095238095238096,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.67,21,pair_mean,magnitude_spearman,21,0.2831168831168831,0.26765873015873015,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.75,23,ordered,signed_spearman,42,0.4350190134062498,0.009523809523809525,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.75,23,ordered,signed_pearson,42,0.31651030870311364,0.05813492063492064,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.75,23,ordered,magnitude_spearman,42,0.160253089204092,0.2833333333333333,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.75,23,pair_mean,signed_spearman,21,0.5883116883116883,0.006746031746031746,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.75,23,pair_mean,signed_pearson,21,0.4189672663903802,0.05813492063492064,5040
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,0.75,23,pair_mean,magnitude_spearman,21,0.09350649350649351,0.7125,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.25,8,ordered,signed_spearman,42,0.8590084619684932,0.002976190476190476,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.25,8,ordered,signed_pearson,42,0.6715966951342514,0.004563492063492064,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.25,8,ordered,magnitude_spearman,42,0.4995744076402869,0.07579365079365079,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.25,8,pair_mean,signed_spearman,21,0.9116883116883117,0.002777777777777778,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.25,8,pair_mean,signed_pearson,21,0.8167151306996487,0.004563492063492064,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.25,8,pair_mean,magnitude_spearman,21,0.5818181818181818,0.09642857142857143,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.33,10,ordered,signed_spearman,42,0.7347636579904219,0.0001984126984126984,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.33,10,ordered,signed_pearson,42,0.6925239171583483,0.004761904761904762,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.33,10,ordered,magnitude_spearman,42,0.4152306764802384,0.06111111111111111,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.33,10,pair_mean,signed_spearman,21,0.8337662337662337,0.0007936507936507937,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.33,10,pair_mean,signed_pearson,21,0.8290268905991551,0.004761904761904762,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.33,10,pair_mean,magnitude_spearman,21,0.6181818181818182,0.02738095238095238,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.42,13,ordered,signed_spearman,42,0.8181341922524697,0.0003968253968253968,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.42,13,ordered,signed_pearson,42,0.809053794553593,0.0003968253968253968,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.42,13,ordered,magnitude_spearman,42,0.5751593667183302,0.0007936507936507937,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.42,13,pair_mean,signed_spearman,21,0.9077922077922078,0.0003968253968253968,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.42,13,pair_mean,signed_pearson,21,0.9030012380580286,0.0003968253968253968,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.42,13,pair_mean,magnitude_spearman,21,0.7610389610389611,0.001388888888888889,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.5,16,ordered,signed_spearman,42,0.1394915553800801,0.3404761904761905,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.5,16,ordered,signed_pearson,42,0.09265834847088406,0.5630952380952381,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.5,16,ordered,magnitude_spearman,42,-0.19950536409011455,0.2714285714285714,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.5,16,pair_mean,signed_spearman,21,0.13116883116883116,0.5769841269841269,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.5,16,pair_mean,signed_pearson,21,0.1392320400955962,0.5630952380952381,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.5,16,pair_mean,magnitude_spearman,21,-0.3233766233766234,0.1527777777777778,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.58,18,ordered,signed_spearman,42,0.08629012495604955,0.5444444444444444,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.58,18,ordered,signed_pearson,42,0.09319770366893501,0.5136904761904761,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.58,18,ordered,magnitude_spearman,42,-0.4587001379242634,0.03531746031746032,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.58,18,pair_mean,signed_spearman,21,0.18441558441558442,0.38432539682539685,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.58,18,pair_mean,signed_pearson,21,0.1442846724263516,0.5136904761904761,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.58,18,pair_mean,magnitude_spearman,21,-0.3987012987012987,0.08968253968253968,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.67,21,ordered,signed_spearman,42,-0.03633268419202086,0.8142857142857143,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.67,21,ordered,signed_pearson,42,-0.1064923548911389,0.4595238095238095,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.67,21,ordered,magnitude_spearman,42,-0.14565513573408365,0.4589285714285714,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.67,21,pair_mean,signed_spearman,21,-0.07142857142857142,0.7063492063492064,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.67,21,pair_mean,signed_pearson,21,-0.13880218507106895,0.4595238095238095,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.67,21,pair_mean,magnitude_spearman,21,-0.22597402597402597,0.43412698412698414,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.75,23,ordered,signed_spearman,42,-0.10542966395006054,0.49543650793650795,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.75,23,ordered,signed_pearson,42,-0.16510749113953269,0.29484126984126985,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.75,23,ordered,magnitude_spearman,42,-0.269899939712155,0.24603174603174602,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.75,23,pair_mean,signed_spearman,21,-0.1025974025974026,0.5948412698412698,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.75,23,pair_mean,signed_pearson,21,-0.2155793756681344,0.29484126984126985,5040
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.75,23,pair_mean,magnitude_spearman,21,0.05454545454545454,0.8410714285714286,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.25,7,ordered,signed_spearman,42,-0.0921293063440529,0.5232142857142857,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.25,7,ordered,signed_pearson,42,0.007735549552291821,0.9561507936507937,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.25,7,ordered,magnitude_spearman,42,0.1628482809320935,0.22976190476190475,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.25,7,pair_mean,signed_spearman,21,-0.33766233766233766,0.15337301587301588,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.25,7,pair_mean,signed_pearson,21,0.011997780689790023,0.9561507936507937,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.25,7,pair_mean,magnitude_spearman,21,0.18311688311688312,0.35079365079365077,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.33,9,ordered,signed_spearman,42,-0.021410331756012296,0.9077380952380952,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.33,9,ordered,signed_pearson,42,0.07312716981658447,0.6906746031746032,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.33,9,ordered,magnitude_spearman,42,0.09407570014005402,0.598015873015873,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.33,9,pair_mean,signed_spearman,21,-0.03506493506493506,0.8978174603174603,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.33,9,pair_mean,signed_pearson,21,0.10796310352097278,0.6906746031746032,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.33,9,pair_mean,magnitude_spearman,21,0.19480519480519481,0.4726190476190476,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.42,11,ordered,signed_spearman,42,-0.16155068506809275,0.19305555555555556,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.42,11,ordered,signed_pearson,42,-0.20827402445460624,0.1484126984126984,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.42,11,ordered,magnitude_spearman,42,-0.07980214563604582,0.5313492063492063,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.42,11,pair_mean,signed_spearman,21,-0.33246753246753247,0.09642857142857143,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.42,11,pair_mean,signed_pearson,21,-0.30556660509237316,0.1484126984126984,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.42,11,pair_mean,magnitude_spearman,21,-0.03766233766233766,0.8799603174603174,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.5,14,ordered,signed_spearman,42,0.5229311331923002,0.001388888888888889,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.5,14,ordered,signed_pearson,42,0.38479940104592253,0.0015873015873015873,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.5,14,ordered,magnitude_spearman,42,-0.13851835848207955,0.5773809523809523,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.5,14,pair_mean,signed_spearman,21,0.6506493506493507,0.0007936507936507937,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.5,14,pair_mean,signed_pearson,21,0.5670647698182768,0.0015873015873015873,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.5,14,pair_mean,magnitude_spearman,21,0.08181818181818182,0.7603174603174603,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.58,16,ordered,signed_spearman,42,0.4917888324562824,0.0011904761904761906,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.58,16,ordered,signed_pearson,42,0.49408145315559204,0.0015873015873015873,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.58,16,ordered,magnitude_spearman,42,0.010705165878006148,0.9587301587301588,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.58,16,pair_mean,signed_spearman,21,0.6025974025974026,0.004166666666666667,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.58,16,pair_mean,signed_pearson,21,0.6557346021331485,0.0015873015873015873,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.58,16,pair_mean,magnitude_spearman,21,0.18831168831168832,0.48035714285714287,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.67,18,ordered,signed_spearman,42,0.578078957412332,0.005555555555555556,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.67,18,ordered,signed_pearson,42,0.46693333617667054,0.01011904761904762,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.67,18,ordered,magnitude_spearman,42,-0.017193145198009872,0.942063492063492,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.67,18,pair_mean,signed_spearman,21,0.5727272727272728,0.011111111111111112,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.67,18,pair_mean,signed_pearson,21,0.5721318677306824,0.01011904761904762,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.67,18,pair_mean,magnitude_spearman,21,-0.13116883116883116,0.6714285714285714,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.75,20,ordered,signed_spearman,42,0.18166342096010432,0.2121031746031746,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.75,20,ordered,signed_pearson,42,0.08840970327944159,0.4986111111111111,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.75,20,ordered,magnitude_spearman,42,-0.2173473072201248,0.24404761904761904,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.75,20,pair_mean,signed_spearman,21,0.12077922077922078,0.564484126984127,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.75,20,pair_mean,signed_pearson,21,0.14378185406776522,0.4986111111111111,5040
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.75,20,pair_mean,magnitude_spearman,21,-0.38831168831168833,0.12043650793650794,5040

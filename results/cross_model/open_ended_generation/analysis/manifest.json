@@ -1,0 +1,19 @@
+{
+  "protocol": "open_ended_judging_analysis_v1",
+  "bootstrap_samples": 10000,
+  "bootstrap_seed": 20260919,
+  "num_judged_triplets": 276,
+  "primary_metrics": [
+    "positive_score - baseline_score",
+    "baseline_score - negative_score"
+  ],
+  "monotonic_metrics": {
+    "strict": "negative < baseline < positive",
+    "weak": "negative <= baseline <= positive"
+  },
+  "bootstrap_policy": "Paired score differences are computed within each model/prompt triplet. Cross-model pooled confidence intervals use a cluster bootstrap over underlying (behavior, prompt_id) prompts so repeated evaluation of one prompt across models remains within the same resampled cluster.",
+  "generation_stability_policy": "The 12 persistent nontermination events are reported separately. Their complete matched triplets were excluded from behavioral-content judging before the condition key was opened.",
+  "judge_condition_blinding_broken_only_after_judging": true,
+  "judge_results_path": "results/cross_model/open_ended_generation/judging/judge_results/judge_results.csv",
+  "condition_key_path": "results/cross_model/open_ended_generation/judging/_condition_key.csv"
+}

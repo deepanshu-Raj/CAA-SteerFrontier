@@ -1,0 +1,85 @@
+model_slug,model_label,behavior,epsilon,total_frontier_claims,zero_frontiers,nonzero_frontiers,behavior_supported,capability_holdout_pass,joint_pass,behavior_support_rate,capability_pass_rate,joint_pass_rate
+llama2-7b-chat,Llama-2 7B Chat,sycophancy,0.01,2,2,0,0,0,0,,,
+llama2-7b-chat,Llama-2 7B Chat,sycophancy,0.03,2,0,2,1,1,1,0.5,0.5,0.5
+llama2-7b-chat,Llama-2 7B Chat,sycophancy,0.05,2,0,2,1,2,1,0.5,1.0,0.5
+llama2-7b-chat,Llama-2 7B Chat,refusal,0.01,2,1,1,1,0,0,1.0,0.0,0.0
+llama2-7b-chat,Llama-2 7B Chat,refusal,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,refusal,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,hallucination,0.01,2,2,0,0,0,0,,,
+llama2-7b-chat,Llama-2 7B Chat,hallucination,0.03,2,0,2,2,1,1,1.0,0.5,0.5
+llama2-7b-chat,Llama-2 7B Chat,hallucination,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,corrigibility,0.01,2,1,1,1,0,0,1.0,0.0,0.0
+llama2-7b-chat,Llama-2 7B Chat,corrigibility,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,corrigibility,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,survival_instinct,0.01,2,1,1,1,0,0,1.0,0.0,0.0
+llama2-7b-chat,Llama-2 7B Chat,survival_instinct,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,survival_instinct,0.05,2,0,2,2,1,1,1.0,0.5,0.5
+llama2-7b-chat,Llama-2 7B Chat,myopic_reward,0.01,2,2,0,0,0,0,,,
+llama2-7b-chat,Llama-2 7B Chat,myopic_reward,0.03,2,1,1,1,1,1,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,myopic_reward,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,ai_coordination,0.01,2,2,0,0,0,0,,,
+llama2-7b-chat,Llama-2 7B Chat,ai_coordination,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama2-7b-chat,Llama-2 7B Chat,ai_coordination,0.05,2,0,2,2,1,1,1.0,0.5,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,sycophancy,0.01,2,2,0,0,0,0,,,
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,sycophancy,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,sycophancy,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,refusal,0.01,2,0,2,2,1,1,1.0,0.5,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,refusal,0.03,2,0,2,1,2,1,0.5,1.0,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,refusal,0.05,2,0,2,1,2,1,0.5,1.0,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,hallucination,0.01,2,0,2,2,0,0,1.0,0.0,0.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,hallucination,0.03,2,0,2,2,1,1,1.0,0.5,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,hallucination,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,corrigibility,0.01,2,1,1,1,0,0,1.0,0.0,0.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,corrigibility,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,corrigibility,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,survival_instinct,0.01,2,0,2,2,0,0,1.0,0.0,0.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,survival_instinct,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,survival_instinct,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,myopic_reward,0.01,2,0,2,2,1,1,1.0,0.5,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,myopic_reward,0.03,2,0,2,2,1,1,1.0,0.5,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,myopic_reward,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,ai_coordination,0.01,2,0,2,2,1,1,1.0,0.5,0.5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,ai_coordination,0.03,2,0,2,2,0,0,1.0,0.0,0.0
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,ai_coordination,0.05,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,sycophancy,0.01,2,2,0,0,0,0,,,
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,sycophancy,0.03,2,0,2,0,1,0,0.0,0.5,0.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,sycophancy,0.05,2,0,2,1,1,1,0.5,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,refusal,0.01,2,1,1,1,1,1,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,refusal,0.03,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,refusal,0.05,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,hallucination,0.01,2,1,1,1,1,1,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,hallucination,0.03,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,hallucination,0.05,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,corrigibility,0.01,2,2,0,0,0,0,,,
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,corrigibility,0.03,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,corrigibility,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,survival_instinct,0.01,2,1,1,1,1,1,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,survival_instinct,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,survival_instinct,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,myopic_reward,0.01,2,2,0,0,0,0,,,
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,myopic_reward,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,myopic_reward,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,ai_coordination,0.01,2,0,2,2,1,1,1.0,0.5,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,ai_coordination,0.03,2,0,2,1,2,1,0.5,1.0,0.5
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,ai_coordination,0.05,2,0,2,1,1,0,0.5,0.5,0.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,sycophancy,0.01,2,1,1,1,1,1,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,sycophancy,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,sycophancy,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,refusal,0.01,2,2,0,0,0,0,,,
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,refusal,0.03,2,0,2,1,1,1,0.5,0.5,0.5
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,refusal,0.05,2,0,2,1,2,1,0.5,1.0,0.5
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,hallucination,0.01,2,2,0,0,0,0,,,
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,hallucination,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,hallucination,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,corrigibility,0.01,2,1,1,1,0,0,1.0,0.0,0.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,corrigibility,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,corrigibility,0.05,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,survival_instinct,0.01,2,1,1,0,0,0,0.0,0.0,0.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,survival_instinct,0.03,2,0,2,1,2,1,0.5,1.0,0.5
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,survival_instinct,0.05,2,0,2,1,2,1,0.5,1.0,0.5
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,myopic_reward,0.01,2,1,1,1,1,1,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,myopic_reward,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,myopic_reward,0.05,2,0,2,2,1,1,1.0,0.5,0.5
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,ai_coordination,0.01,2,1,1,1,0,0,1.0,0.0,0.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,ai_coordination,0.03,2,0,2,2,2,2,1.0,1.0,1.0
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,ai_coordination,0.05,2,0,2,2,2,2,1.0,1.0,1.0

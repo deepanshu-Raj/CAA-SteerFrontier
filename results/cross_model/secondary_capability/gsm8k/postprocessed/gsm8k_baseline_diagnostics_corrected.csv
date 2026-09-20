@@ -1,0 +1,5 @@
+model_slug,num_examples,flexible_accuracy,corrected_strict_accuracy,corrected_marker_rate,original_strict_accuracy,original_marker_rate,flexible_parse_rate,truncation_rate,mean_generated_tokens,model_label
+llama2-7b-chat,64,0.265625,0.015625,0.0625,0.03125,0.1875,1.0,0.0,184.171875,Llama 2 7B Chat
+llama3.1-8b-instruct,64,0.859375,0.859375,0.953125,0.859375,0.953125,0.953125,0.046875,279.125,Llama 3.1 8B Instruct
+mistral-7b-instruct-v0.3,64,0.546875,0.53125,0.921875,0.53125,0.9375,1.0,0.0,164.796875,Mistral 7B Instruct v0.3
+qwen2.5-7b-instruct,64,0.921875,0.859375,0.90625,0.921875,0.984375,1.0,0.0,179.515625,Qwen2.5 7B Instruct

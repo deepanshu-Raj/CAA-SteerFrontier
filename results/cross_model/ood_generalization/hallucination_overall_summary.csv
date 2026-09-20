@@ -1,0 +1,2 @@
+num_models,num_directional_conditions,mean_directional_gain,median_directional_gain,min_directional_gain,max_directional_gain,positive_gain_count,supported_gain_count
+4,8,0.04394124295274823,0.03953429240577385,-0.0182773316506809,0.0924715271322579,7,7

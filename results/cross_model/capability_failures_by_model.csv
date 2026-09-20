@@ -1,0 +1,18 @@
+model_slug,model_label,epsilon,limiting_holdout_benchmark,failed_frontiers
+llama2-7b-chat,Llama-2 7B Chat,0.01,hellaswag,2
+llama2-7b-chat,Llama-2 7B Chat,0.01,mmlu,1
+llama2-7b-chat,Llama-2 7B Chat,0.03,hellaswag,2
+llama2-7b-chat,Llama-2 7B Chat,0.05,arc_challenge,1
+llama2-7b-chat,Llama-2 7B Chat,0.05,hellaswag,1
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,0.01,arc_challenge,1
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,0.01,hellaswag,5
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,0.01,mmlu,2
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,0.03,hellaswag,2
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,0.03,mmlu,2
+llama3.1-8b-instruct,Llama-3.1 8B Instruct,0.05,hellaswag,1
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.01,hellaswag,1
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.03,hellaswag,4
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,0.05,hellaswag,4
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.01,hellaswag,3
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.03,hellaswag,1
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,0.05,mmlu,1

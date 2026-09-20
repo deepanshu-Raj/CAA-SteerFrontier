@@ -1,0 +1,42 @@
+{
+  "models": 4,
+  "behaviors": 7,
+  "model_behavior_pairs": 28,
+  "frozen_frontier_claims": 168,
+  "unique_nonzero_interventions": 109,
+  "validation_test_generalization": {
+    "pearson_r": 0.9691455781305129,
+    "spearman_r": 0.9449541284403671,
+    "mean_gain_difference": -0.0014552423933829179,
+    "mean_absolute_gain_difference": 0.019233985175551502
+  },
+  "frontier_survival": {
+    "1%": {
+      "nonzero_frontiers": 24,
+      "behavior_supported": 23,
+      "capability_holdout_pass": 9,
+      "joint_pass": 9,
+      "behavior_support_rate": 0.9583333333333334,
+      "capability_pass_rate": 0.375,
+      "joint_pass_rate": 0.375
+    },
+    "3%": {
+      "nonzero_frontiers": 55,
+      "behavior_supported": 48,
+      "capability_holdout_pass": 44,
+      "joint_pass": 40,
+      "behavior_support_rate": 0.8727272727272727,
+      "capability_pass_rate": 0.8,
+      "joint_pass_rate": 0.7272727272727273
+    },
+    "5%": {
+      "nonzero_frontiers": 56,
+      "behavior_supported": 50,
+      "capability_holdout_pass": 48,
+      "joint_pass": 43,
+      "behavior_support_rate": 0.8928571428571429,
+      "capability_pass_rate": 0.8571428571428571,
+      "joint_pass_rate": 0.7678571428571429
+    }
+  }
+}

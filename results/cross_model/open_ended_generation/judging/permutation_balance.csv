@@ -1,0 +1,7 @@
+permutation_index,permutation,count
+0,baseline/negative/positive,46
+1,baseline/positive/negative,46
+2,negative/baseline/positive,46
+3,negative/positive/baseline,46
+4,positive/baseline/negative,46
+5,positive/negative/baseline,46

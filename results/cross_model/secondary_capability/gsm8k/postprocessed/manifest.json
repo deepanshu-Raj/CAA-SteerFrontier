@@ -1,0 +1,17 @@
+{
+  "protocol": "gsm8k_secondary_postprocess_exact_marker_v1",
+  "production_protocol": "gsm8k_secondary_64_8shot_clean_v1",
+  "num_models": 4,
+  "num_conditions": 56,
+  "examples_per_condition": 64,
+  "bootstrap_samples": 10000,
+  "primary_metric_policy": "Flexible correctness is copied from saved production is_correct_flexible fields. Responses are not reparsed for the primary metric.",
+  "strict_diagnostic_policy": "The final non-empty response line must contain exactly four hash characters followed only by a numerical answer. Longer or shorter hash runs, currency symbols, commas, units, surrounding text, or non-final marker lines do not qualify.",
+  "raw_inference_files_modified": false,
+  "outputs": {
+    "summary": "results/cross_model/secondary_capability/gsm8k/postprocessed/gsm8k_summary_corrected.csv",
+    "baseline_diagnostics": "results/cross_model/secondary_capability/gsm8k/postprocessed/gsm8k_baseline_diagnostics_corrected.csv",
+    "model_summary": "results/cross_model/secondary_capability/gsm8k/postprocessed/gsm8k_model_summary_corrected.csv",
+    "overall_summary": "results/cross_model/secondary_capability/gsm8k/postprocessed/gsm8k_overall_summary_corrected.csv"
+  }
+}
