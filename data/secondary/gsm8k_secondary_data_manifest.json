@@ -1,0 +1,42 @@
+{
+  "dataset": "openai/gsm8k",
+  "config": "main",
+  "test": {
+    "split": "test",
+    "num_examples": 64,
+    "seed": 20260919,
+    "sampling": "uniform without replacement; sampled indices sorted before saving"
+  },
+  "fewshot": {
+    "split": "train",
+    "num_shots": 8,
+    "original_random_indices": [
+      7396,
+      3892,
+      6043,
+      2784,
+      693,
+      3512,
+      7083,
+      326
+    ],
+    "rejected_indices": {
+      "6043": "Source reasoning is mathematically awkward as a few-shot exemplar: the quarter-to-ounce explanation is not expressed as a clean chain."
+    },
+    "replacement_seed": 20260921,
+    "replacement_source_index": 5909,
+    "cleaning": [
+      "Remove GSM8K <<...>> calculator annotations.",
+      "Normalize horizontal whitespace.",
+      "Replace known typo 'to.school' with 'to school'."
+    ],
+    "selection_note": "No model accuracy or steering outcome was used to select or replace demonstrations."
+  },
+  "candidate_shot_counts": [
+    4,
+    5,
+    8
+  ],
+  "shot_selection_rule": "Choose the largest candidate shot count that preserves a 2048-token generation reserve for every model.",
+  "selected_shot_count": 8
+}

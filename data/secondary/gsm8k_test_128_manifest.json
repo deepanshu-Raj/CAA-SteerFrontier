@@ -1,0 +1,8 @@
+{
+  "dataset": "openai/gsm8k",
+  "configuration": "main",
+  "split": "test",
+  "num_examples": 128,
+  "subset_seed": 20260918,
+  "sampling": "without replacement; sampled indices sorted before saving"
+}

@@ -1,0 +1,13 @@
+model_slug,model_label,prompt_family,shots,context_window,generation_reserve,prompt_tokens_min,prompt_tokens_median,prompt_tokens_p95,prompt_tokens_max,headroom_after_2048_at_max_prompt,fits_with_2048_reserve
+llama2-7b-chat,Llama 2 7B Chat,auto,4,4096,2048,962,996.5,1038.55,1113,935,True
+llama2-7b-chat,Llama 2 7B Chat,auto,5,4096,2048,1070,1104.5,1146.55,1221,827,True
+llama2-7b-chat,Llama 2 7B Chat,auto,8,4096,2048,1465,1499.5,1541.55,1616,432,True
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,auto,4,131072,2048,805,836.0,870.85,933,128091,True
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,auto,5,131072,2048,890,921.0,955.85,1018,128006,True
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,auto,8,131072,2048,1221,1252.0,1286.85,1349,127675,True
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,auto,4,32768,2048,924,957.5,996.25,1065,29655,True
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,auto,5,32768,2048,1031,1064.5,1103.25,1172,29548,True
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,auto,8,32768,2048,1426,1459.5,1498.25,1567,29153,True
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,auto,4,32768,2048,857,887.0,920.0,983,29737,True
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,auto,5,32768,2048,945,975.0,1008.0,1071,29649,True
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,auto,8,32768,2048,1302,1332.0,1365.0,1428,29292,True

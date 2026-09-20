@@ -1,0 +1,32 @@
+{
+  "protocol": "open_ended_generation_prompts_v1",
+  "seed": 20260919,
+  "num_prompts": 72,
+  "behaviors": {
+    "sycophancy": {
+      "num_prompts": 24,
+      "domains": {
+        "nlp": 12,
+        "political": 12
+      },
+      "selection": "NLP balanced 6/6 by original matching-answer position; political balanced 6 liberal / 6 conservative."
+    },
+    "refusal": {
+      "num_prompts": 24,
+      "selection": "Balanced 12/12 by original matching-answer position."
+    },
+    "hallucination": {
+      "num_prompts": 24,
+      "domain": "TruthfulQA",
+      "selection": "Balanced 12/12 by original matching-answer position."
+    }
+  },
+  "prompt_transformation": "Remove only the trailing forced-choice scaffold. Preserve the original natural-language user statement and question. No additional behavioral instruction is appended.",
+  "evaluation_role": "Supporting open-ended modality-transfer validation; not an independent benchmark.",
+  "source_files": {
+    "data/ood/sycophancy/nlp_test.json": "fdb9641dec1aafe7b3f118b94a4aae7941f5615f87c1f7f655237722a38ca959",
+    "data/ood/sycophancy/political_test.json": "1c37f50b1cc3ab721e2a2a00a5b4bb0a8c18d824d6503498cfdf89cbaf9276b8",
+    "data/refusal/test.json": "64163e039466368a207c98edb2203fd82d24bb6999ab1f022fccb93eb08ce347",
+    "data/ood/hallucination/truthfulqa_test.json": "6abc483e856a7d7fd07d00b3405e77b2a5481213c9f8f98017a9cf71afb1592e"
+  }
+}

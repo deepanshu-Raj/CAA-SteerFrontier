@@ -1,0 +1,22 @@
+{
+  "dataset": "Salesforce/wikitext",
+  "configuration": "wikitext-2-raw-v1",
+  "split": "test",
+  "num_dataset_rows": 4358,
+  "corpus_construction": "Dataset text rows joined in original order with a single newline.",
+  "text_path": "data/secondary/wikitext2_test.txt",
+  "text_sha256": "aca2f46735043bcfd0a44eca981d04627b9cdf74c4c9a04bf0856d04066f58fc",
+  "utf8_bytes": 1292013,
+  "evaluation_protocol": {
+    "scored_tokens_per_model": 32768,
+    "targets_per_window": 256,
+    "input_tokens_per_window": 257,
+    "num_windows": 128,
+    "window_stride": 256,
+    "window_overlap_tokens": 1,
+    "tokenization": "Model-specific tokenizer, add_special_tokens=False.",
+    "primary_metric": "Delta mean next-token NLL relative to the unsteered baseline.",
+    "secondary_metric": "Perplexity ratio exp(delta_NLL)."
+  },
+  "interpretation_note": "Absolute perplexities should not be compared across models with different tokenizers. The experiment uses within-model changes under frozen steering interventions."
+}

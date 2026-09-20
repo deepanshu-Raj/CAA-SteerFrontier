@@ -1,0 +1,74 @@
+[
+  {
+    "demo_order": 0,
+    "source_index": 7396,
+    "was_replacement": false,
+    "question": "A 750 ml bottle of spirits costs $30.00 and has 16 servings per bottle.  Most restaurants will charge $8.00 for one serving.  How much money does a restaurant make on a bottle of spirits?",
+    "solution_raw": "There are 16 servings in 1 bottle and they charge $8.00 per serving so that's 16*8 = $<<16*8=128.00>>128.00\n1 bottle yields $128.00 and they spent $30.00 for the bottle so they make 128-30 = $<<128-30=98.00>>98.00 on each bottle\n#### 98",
+    "solution_clean": "There are 16 servings in 1 bottle and they charge $8.00 per serving so that's 16*8 = $128.00\n1 bottle yields $128.00 and they spent $30.00 for the bottle so they make 128-30 = $98.00 on each bottle\n#### 98",
+    "gold_answer": "98"
+  },
+  {
+    "demo_order": 1,
+    "source_index": 3892,
+    "was_replacement": false,
+    "question": "Gina is participating in a neighborhood clean-up filling bags with litter. She was able to collect two bags of litter herself. The rest of the neighborhood together collected 82 times as much as Gina did by herself. Each bag of litter weighs 4 pounds. How many pounds was all the litter they collected?",
+    "solution_raw": "The rest of the neighborhood collected 82 * 2 = <<82*2=164>>164 bags of litter.\nWith Gina’s bags, they had 164 + 2 = <<164+2=166>>166 bags of litter.\nThus, the litter weighed 166 * 4 = <<166*4=664>>664 pounds.\n#### 664",
+    "solution_clean": "The rest of the neighborhood collected 82 * 2 = 164 bags of litter.\nWith Gina’s bags, they had 164 + 2 = 166 bags of litter.\nThus, the litter weighed 166 * 4 = 664 pounds.\n#### 664",
+    "gold_answer": "664"
+  },
+  {
+    "demo_order": 2,
+    "source_index": 5909,
+    "was_replacement": true,
+    "question": "Jordan noticed that there are 2 cars in his driveway that each have 4 wheels.  There are 2 bikes and a trash can that each have 2 wheels.  There is also a tricycle and a pair of old roller skates.  How many wheels are there?",
+    "solution_raw": "There are 2 cars with 4 wheels each so that's 2*4 = <<2*4=8>>8 wheels\nTwo bikes and a trash can each have 2 wheels so that's 3*2 = 6 wheels\nEach roller skate has 4 wheels and there is a pair, which means 2 skates for a total of 4*2 = <<4*2=8>>8 wheels\nIncluding the 3 wheels on the tricycle, there are 8 from the car, 6 from bikes and a trashcan and 8 from roller skates for a total of 3+8+6+8 = <<3+8+6+8=25>>25 wheels\n#### 25",
+    "solution_clean": "There are 2 cars with 4 wheels each so that's 2*4 = 8 wheels\nTwo bikes and a trash can each have 2 wheels so that's 3*2 = 6 wheels\nEach roller skate has 4 wheels and there is a pair, which means 2 skates for a total of 4*2 = 8 wheels\nIncluding the 3 wheels on the tricycle, there are 8 from the car, 6 from bikes and a trashcan and 8 from roller skates for a total of 3+8+6+8 = 25 wheels\n#### 25",
+    "gold_answer": "25"
+  },
+  {
+    "demo_order": 3,
+    "source_index": 2784,
+    "was_replacement": false,
+    "question": "Rubble has $15 in his pocket and he needs to buy 2 notebooks and 2 pens. Each notebook cost $4.00 meanwhile each pen cost $1.50. How much money will be left from Rubble after the purchase?",
+    "solution_raw": "The total cost of two notebooks is $4.00 x 2 = $<<4*2=8.00>>8.00.\nThe total cost of two pen $1.50 x 2 = $<<1.5*2=3.00>>3.00.\nSo, the total amount Rubble spent for all the stuff was $8.00 + $3.00 = $<<8+3=11.00>>11.00.\nTherefore, Rubble was left off with $15.00 - $11.00 = $<<15-11=4.00>>4.00.\n#### 4",
+    "solution_clean": "The total cost of two notebooks is $4.00 x 2 = $8.00.\nThe total cost of two pen $1.50 x 2 = $3.00.\nSo, the total amount Rubble spent for all the stuff was $8.00 + $3.00 = $11.00.\nTherefore, Rubble was left off with $15.00 - $11.00 = $4.00.\n#### 4",
+    "gold_answer": "4"
+  },
+  {
+    "demo_order": 4,
+    "source_index": 693,
+    "was_replacement": false,
+    "question": "Ian had twenty roses. He gave six roses to his mother,  nine roses to his grandmother, four roses to his sister, and he kept the rest. How many roses did Ian keep?",
+    "solution_raw": "Ian gave a total of 6 + 9 + 4 = <<6+9+4=19>>19 roses.\nTherefore, Ian kept 20 - 19 = <<20-19=1>>1 rose.\n#### 1",
+    "solution_clean": "Ian gave a total of 6 + 9 + 4 = 19 roses.\nTherefore, Ian kept 20 - 19 = 1 rose.\n#### 1",
+    "gold_answer": "1"
+  },
+  {
+    "demo_order": 5,
+    "source_index": 3512,
+    "was_replacement": false,
+    "question": "Roy spends 2 hours on sports activities in school every day. He goes to school 5 days a week. If he missed 2 days within a week, how many hours did he spend on sports in school that week?",
+    "solution_raw": "He goes to.school 5 days a week so if he misses 2 days within the week he was present for 5-2 = <<5-2=3>>3 days\nHe spends 2 hours every day for a total of 2*3 = <<2*3=6>>6 hours\n#### 6",
+    "solution_clean": "He goes to school 5 days a week so if he misses 2 days within the week he was present for 5-2 = 3 days\nHe spends 2 hours every day for a total of 2*3 = 6 hours\n#### 6",
+    "gold_answer": "6"
+  },
+  {
+    "demo_order": 6,
+    "source_index": 7083,
+    "was_replacement": false,
+    "question": "Lois has 40 books. She gives a fourth of her books to her nephew. From her remaining books, she donates a third of her books to the library. Then she purchases 3 new books from the book store. How many books does Lois have now?",
+    "solution_raw": "Lois gives 40 / 4 = <<40/4=10>>10 books to her nephew\nThen Lois has 40 - 10 = <<40-10=30>>30 books\nLois donates 30 / 3 = <<30/3=10>>10 books to the library\nThen Lois has 30 - 10 = <<30-10=20>>20 books\nAfter purchasing new books, Lois has 20 + 3 = <<20+3=23>>23 books\n#### 23",
+    "solution_clean": "Lois gives 40 / 4 = 10 books to her nephew\nThen Lois has 40 - 10 = 30 books\nLois donates 30 / 3 = 10 books to the library\nThen Lois has 30 - 10 = 20 books\nAfter purchasing new books, Lois has 20 + 3 = 23 books\n#### 23",
+    "gold_answer": "23"
+  },
+  {
+    "demo_order": 7,
+    "source_index": 326,
+    "was_replacement": false,
+    "question": "Fred had 236 dollars to spend on 6 books. After buying them, he had 14 dollars. On average, how much did each book cost?",
+    "solution_raw": "Fred spent $236 - $14 = $<<236-14=222>>222 on books.\nThe cost per book is $222 / 6 books = $<<222/6=37>>37.\n#### 37",
+    "solution_clean": "Fred spent $236 - $14 = $222 on books.\nThe cost per book is $222 / 6 books = $37.\n#### 37",
+    "gold_answer": "37"
+  }
+]

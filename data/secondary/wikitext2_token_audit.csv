@@ -1,0 +1,5 @@
+model_slug,model_label,tokenizer_name,total_test_tokens,required_tokens,scored_tokens,num_windows,input_tokens_per_window,targets_per_window,enough_tokens
+llama2-7b-chat,Llama 2 7B Chat,meta-llama/Llama-2-7b-chat-hf,337111,32769,32768,128,257,256,True
+llama3.1-8b-instruct,Llama 3.1 8B Instruct,meta-llama/Llama-3.1-8B-Instruct,288937,32769,32768,128,257,256,True
+mistral-7b-instruct-v0.3,Mistral 7B Instruct v0.3,mistralai/Mistral-7B-Instruct-v0.3,330303,32769,32768,128,257,256,True
+qwen2.5-7b-instruct,Qwen2.5 7B Instruct,Qwen/Qwen2.5-7B-Instruct,298939,32769,32768,128,257,256,True

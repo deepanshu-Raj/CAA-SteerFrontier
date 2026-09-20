@@ -1,0 +1,90 @@
+{
+  "protocol": "ood_generalization_v1",
+  "seed": 20260919,
+  "frozen_before_model_evaluation": true,
+  "model_outcomes_used_for_data_selection": false,
+  "ood_validation_split_used": false,
+  "intervention_policy": {
+    "epsilon": 0.03,
+    "layer_selection": "Reuse frozen layer selected by the main experiment.",
+    "coefficient_selection": "Reuse frozen epsilon=0.03 operating-point strength; no OOD coefficient tuning.",
+    "target_test_used_for_tuning": false
+  },
+  "sycophancy": {
+    "design": "Cross-domain transfer.",
+    "domains": {
+      "nlp": "Canonical sycophancy examples without user_affiliation metadata.",
+      "political": "Canonical sycophancy examples with user_affiliation metadata."
+    },
+    "transfers": [
+      {
+        "source": "nlp",
+        "target": "political"
+      },
+      {
+        "source": "political",
+        "target": "nlp"
+      }
+    ],
+    "vector_source": "data/sycophancy/vector.json",
+    "test_source": "data/sycophancy/test.json",
+    "upstream_note": "The Anthropic PhilPapers mirror was not used as a distinct OOD domain because its 9,984 labeled records were found to be identical to the mirrored NLP source.",
+    "files": {
+      "nlp_vector": {
+        "path": "data/ood/sycophancy/nlp_vector.json",
+        "num_examples": 447,
+        "matching_answer_balance": {
+          "(A)": 229,
+          "(B)": 218
+        },
+        "sha256": "b349c2b7378295fbc26505b848ada19b48e3d5215f61e40ab14490d0af18bbee"
+      },
+      "nlp_test": {
+        "path": "data/ood/sycophancy/nlp_test.json",
+        "num_examples": 164,
+        "matching_answer_balance": {
+          "(B)": 89,
+          "(A)": 75
+        },
+        "sha256": "fdb9641dec1aafe7b3f118b94a4aae7941f5615f87c1f7f655237722a38ca959"
+      },
+      "political_vector": {
+        "path": "data/ood/sycophancy/political_vector.json",
+        "num_examples": 453,
+        "matching_answer_balance": {
+          "(B)": 232,
+          "(A)": 221
+        },
+        "sha256": "f8b1a27393dcd9fec7148eb439e4f6b1fc5348013d4b860f58a6e115e1621495"
+      },
+      "political_test": {
+        "path": "data/ood/sycophancy/political_test.json",
+        "num_examples": 136,
+        "matching_answer_balance": {
+          "(A)": 75,
+          "(B)": 61
+        },
+        "sha256": "1c37f50b1cc3ab721e2a2a00a5b4bb0a8c18d824d6503498cfdf89cbaf9276b8"
+      }
+    }
+  },
+  "hallucination": {
+    "design": "Independent-dataset generalization.",
+    "source_vector": "Existing frozen canonical CAA hallucination vector.",
+    "target_dataset": "TruthfulQA multiple-choice validation split.",
+    "target_source_size": 817,
+    "sample_size": 150,
+    "sampling": "Uniform deterministic sample without replacement.",
+    "binary_construction": "Each TruthfulQA MC1 correct answer is paired with one deterministically selected incorrect answer. The incorrect answer is defined as matching the hallucination behavior. A/B answer position is exactly balanced.",
+    "exact_prompt_overlap_with_core": 0,
+    "file": {
+      "path": "data/ood/hallucination/truthfulqa_test.json",
+      "num_examples": 150,
+      "matching_answer_balance": {
+        "(B)": 75,
+        "(A)": 75
+      },
+      "sha256": "6abc483e856a7d7fd07d00b3405e77b2a5481213c9f8f98017a9cf71afb1592e"
+    }
+  }
+}
