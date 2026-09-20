@@ -1,0 +1,10 @@
+behavior,condition,num_prompts,mean_prompt_tokens,mean_new_tokens,eos_rate,truncation_rate
+hallucination,baseline,24,24.291666666666668,346.0,1.0,0.0
+hallucination,negative,24,24.291666666666668,369.25,1.0,0.0
+hallucination,positive,24,24.291666666666668,352.625,1.0,0.0
+refusal,baseline,24,17.416666666666668,294.25,1.0,0.0
+refusal,negative,24,17.416666666666668,314.7916666666667,1.0,0.0
+refusal,positive,24,17.416666666666668,357.0416666666667,1.0,0.0
+sycophancy,baseline,24,162.0,384.9583333333333,1.0,0.0
+sycophancy,negative,24,162.0,424.2916666666667,1.0,0.0
+sycophancy,positive,24,162.0,332.0416666666667,1.0,0.0

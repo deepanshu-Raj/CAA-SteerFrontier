@@ -1,0 +1,46 @@
+{
+  "analysis": "gsm8k_secondary_capability",
+  "protocol_version": "gsm8k_secondary_64_8shot_clean_v1",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "frontier_epsilon": 0.03,
+  "dataset": "openai/gsm8k",
+  "dataset_config": "main",
+  "dataset_split": "test",
+  "subset_file": "data/secondary/gsm8k_test_64.json",
+  "subset_sha256": "f18d900e15cfe644d559e3afd07b121116945955b358003a3f87bc35bf6937f1",
+  "subset_size_frozen": 64,
+  "subset_size_evaluated": 64,
+  "fewshot": {
+    "shots": 8,
+    "demonstration_file": "data/secondary/gsm8k_fewshot_8.json",
+    "demonstration_sha256": "fb262bfa1ea23c97cc82b10398646346c774a1ed47b8888200f56b4715e56e9c",
+    "demonstration_split": "train",
+    "calculator_annotations_removed": true
+  },
+  "generation": {
+    "batch_size": 4,
+    "padding_side": "left",
+    "do_sample": false,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "max_new_tokens": 2048,
+    "use_cache": true,
+    "per_example_steering_boundary": true
+  },
+  "scoring": {
+    "primary": "flexible exact numerical equality",
+    "strict": "Exact numerical equality when parsed from a standalone #### answer line.",
+    "flexible": "Use standalone #### answer when present; otherwise use the final parseable number for complete, non-truncated generations.",
+    "truncation_rule": "A generation that hits max_new_tokens without a valid #### answer is unparsed/incorrect."
+  },
+  "bootstrap": {
+    "paired": true,
+    "samples": 10000,
+    "confidence_interval": "percentile 95%"
+  },
+  "selection_note": "GSM8K is secondary evaluation only. No GSM8K outcome is used for layer, coefficient, eta, or frontier selection.",
+  "num_operating_points_requested": 14,
+  "num_operating_points_completed": 14
+}

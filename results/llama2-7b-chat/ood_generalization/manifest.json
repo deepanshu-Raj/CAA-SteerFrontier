@@ -1,0 +1,35 @@
+{
+  "protocol": "ood_generalization_v1",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "epsilon": 0.03,
+  "bootstrap_samples": 10000,
+  "smoke_prefix": false,
+  "max_examples": null,
+  "frozen_frontier_path": "results/llama2-7b-chat/final_evaluation/frontier_test_results.csv",
+  "frozen_frontier_sha256": "49b8faf1753165cc4cb97bda1a87ea2043d21ab6664667a3773f90415367d92f",
+  "num_steered_conditions": 10,
+  "sycophancy": {
+    "selected_layer": 12,
+    "design": "Each source-domain vector evaluated both in-domain and cross-domain using the frozen epsilon=0.03 positive and negative coefficients.",
+    "nlp_vector_path": "vectors/llama2-7b-chat/ood/sycophancy/nlp/normalized_vectors.pt",
+    "political_vector_path": "vectors/llama2-7b-chat/ood/sycophancy/political/normalized_vectors.pt",
+    "nlp_test_path": "data/ood/sycophancy/nlp_test.json",
+    "political_test_path": "data/ood/sycophancy/political_test.json",
+    "full_test_sizes": {
+      "nlp": 164,
+      "political": 136
+    }
+  },
+  "hallucination": {
+    "selected_layer": 13,
+    "design": "Frozen canonical hallucination vector evaluated on untouched TruthfulQA binary OOD set.",
+    "truthfulqa_test_path": "data/ood/hallucination/truthfulqa_test.json",
+    "full_test_size": 150
+  },
+  "no_ood_tuning": true,
+  "target_data_used_for_vector_learning": false,
+  "target_data_used_for_layer_selection": false,
+  "target_data_used_for_coefficient_selection": false
+}

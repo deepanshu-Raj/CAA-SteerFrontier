@@ -1,0 +1,91 @@
+{
+  "protocol": "open_ended_generation_v1",
+  "model_name": "meta-llama/Llama-2-7b-chat-hf",
+  "model_label": "Llama 2 7B Chat",
+  "model_slug": "llama2-7b-chat",
+  "behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination"
+  ],
+  "conditions": [
+    "baseline",
+    "negative",
+    "positive"
+  ],
+  "epsilon": 0.03,
+  "generation": {
+    "do_sample": false,
+    "max_new_tokens": 2056,
+    "batch_size": 4,
+    "temperature": 1.0,
+    "top_p": 1.0
+  },
+  "prompt_policy": "Use frozen natural-language open-ended prompts exactly as stored. No additional behavioral instruction is appended.",
+  "vector_policy": "Use canonical normalized CAA vector for each behavior.",
+  "intervention_policy": "Use frozen behavior-selected layer and frozen epsilon=0.03 positive/negative coefficients. Baseline uses alpha=0.",
+  "no_generation_tuning": true,
+  "no_output_based_prompt_selection": true,
+  "smoke_prefix": false,
+  "max_prompts_per_behavior": null,
+  "full_prompt_counts": {
+    "sycophancy": 24,
+    "refusal": 24,
+    "hallucination": 24
+  },
+  "data_files": {
+    "sycophancy": {
+      "path": "data/open_ended/sycophancy.json",
+      "sha256": "4772c4a24f1639bceb1e0e4c297d1d338cd8eb2eb697141657407694326e5ed9"
+    },
+    "refusal": {
+      "path": "data/open_ended/refusal.json",
+      "sha256": "3c4d21616e31847cfb704b178a8c3c2768bbed7d024eda99122506d01c29ab9c"
+    },
+    "hallucination": {
+      "path": "data/open_ended/hallucination.json",
+      "sha256": "a2d04016c010163ada8780664692aa0930a7bac5165f498827cd2183f02cffc0"
+    }
+  },
+  "frozen_frontier_path": "results/llama2-7b-chat/final_evaluation/frontier_test_results.csv",
+  "frozen_frontier_sha256": "49b8faf1753165cc4cb97bda1a87ea2043d21ab6664667a3773f90415367d92f",
+  "frozen_specs": {
+    "sycophancy": {
+      "layer": 12,
+      "negative": {
+        "alpha": -0.5,
+        "eta": -0.203457051679878
+      },
+      "positive": {
+        "alpha": 0.5,
+        "eta": 0.203457051679878
+      }
+    },
+    "refusal": {
+      "layer": 13,
+      "negative": {
+        "alpha": -0.5,
+        "eta": -0.1705038464067446
+      },
+      "positive": {
+        "alpha": 0.5,
+        "eta": 0.1705038464067446
+      }
+    },
+    "hallucination": {
+      "layer": 13,
+      "negative": {
+        "alpha": -1.0,
+        "eta": -0.3410077376047735
+      },
+      "positive": {
+        "alpha": 1.0,
+        "eta": 0.3410077376047735
+      }
+    }
+  },
+  "outputs": {
+    "combined": "results/llama2-7b-chat/open_ended_generation/generations.csv",
+    "summary": "results/llama2-7b-chat/open_ended_generation/generation_summary.csv"
+  }
+}
