@@ -1,0 +1,90 @@
+{
+  "analysis": "ordered_cross_behavior_causal_transfer",
+  "model_name": "Qwen/Qwen2.5-7B-Instruct",
+  "model_label": "Qwen2.5 7B Instruct",
+  "model_slug": "qwen2.5-7b-instruct",
+  "source_behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "target_behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "num_layers": 28,
+  "hidden_size": 3584,
+  "eta_transfer": 0.2,
+  "eta_status": "frozen before causal-transfer outcomes were observed",
+  "eta_selection_basis": "eta=0.20 chosen conservatively from the already-completed positive-direction epsilon=0.03 frozen frontier distribution; below its first quartile.",
+  "intervention_definition": "Inject +alpha_l * normalized CAA source vector at layer l, where alpha_l = eta_transfer / perturbation_ratio_l.",
+  "eta_definition": "eta(alpha,l) = |alpha| * reference_vector_norm_l / residual_scale_l",
+  "calibration_note": "reference_vector_norm_l is shared across behaviors within a model/layer, so alpha_l depends on model/layer but not source behavior.",
+  "diagonal_policy": "Excluded. Only ordered source != target transfers are evaluated.",
+  "target_split": "behavior test",
+  "selection_policy": "No transfer-result-based tuning. Depth anchors and eta are frozen.",
+  "bootstrap_samples": 10000,
+  "base_seed": 20260918,
+  "num_depth_anchors": 7,
+  "depth_anchors": [
+    {
+      "requested_fractional_depth": 0.25,
+      "layer": 7,
+      "fractional_depth": 0.2592592592592592,
+      "depth_error": 0.0092592592592592
+    },
+    {
+      "requested_fractional_depth": 0.33,
+      "layer": 9,
+      "fractional_depth": 0.3333333333333333,
+      "depth_error": 0.0033333333333332
+    },
+    {
+      "requested_fractional_depth": 0.42,
+      "layer": 11,
+      "fractional_depth": 0.4074074074074074,
+      "depth_error": -0.0125925925925926
+    },
+    {
+      "requested_fractional_depth": 0.5,
+      "layer": 14,
+      "fractional_depth": 0.5185185185185185,
+      "depth_error": 0.0185185185185184
+    },
+    {
+      "requested_fractional_depth": 0.58,
+      "layer": 16,
+      "fractional_depth": 0.5925925925925926,
+      "depth_error": 0.0125925925925926
+    },
+    {
+      "requested_fractional_depth": 0.67,
+      "layer": 18,
+      "fractional_depth": 0.6666666666666666,
+      "depth_error": -0.0033333333333334
+    },
+    {
+      "requested_fractional_depth": 0.75,
+      "layer": 20,
+      "fractional_depth": 0.7407407407407407,
+      "depth_error": -0.0092592592592593
+    }
+  ],
+  "num_transfer_conditions": 294,
+  "num_completed_transfer_conditions": 294,
+  "geometry_file": "results/qwen2.5-7b-instruct/geometry/pairwise_cosine_anchor_layers.csv",
+  "geometry_file_sha256": "b5753e8c02936089ed592bf6ffbe822b93386280b928a00c2edb86cca21dd9e9",
+  "residual_scale_file": "vectors/qwen2.5-7b-instruct/normalization/residual_scale.pt",
+  "reference_layer_norms_file": "vectors/qwen2.5-7b-instruct/normalization/reference_layer_norms.pt",
+  "perturbation_ratio_file": "vectors/qwen2.5-7b-instruct/normalization/perturbation_ratio.pt",
+  "residual_scale_metadata_file": "vectors/qwen2.5-7b-instruct/normalization/residual_scale_metadata.json"
+}

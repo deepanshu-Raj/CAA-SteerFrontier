@@ -1,0 +1,76 @@
+{
+  "analysis": "pairwise_steering_vector_geometry",
+  "model_name": "Qwen/Qwen2.5-7B-Instruct",
+  "model_label": "Qwen2.5 7B Instruct",
+  "model_slug": "qwen2.5-7b-instruct",
+  "behaviors": [
+    "sycophancy",
+    "refusal",
+    "hallucination",
+    "corrigibility",
+    "survival_instinct",
+    "myopic_reward",
+    "ai_coordination"
+  ],
+  "num_behaviors": 7,
+  "num_layers": 28,
+  "hidden_size": 3584,
+  "pairwise_relations_per_layer": 21,
+  "num_geometry_rows": 588,
+  "requested_depth_anchors": [
+    0.25,
+    0.33,
+    0.42,
+    0.5,
+    0.58,
+    0.67,
+    0.75
+  ],
+  "actual_anchor_layers": [
+    {
+      "requested_fractional_depth": 0.25,
+      "layer": 7,
+      "fractional_depth": 0.25925925925925924,
+      "depth_error": 0.009259259259259245
+    },
+    {
+      "requested_fractional_depth": 0.33,
+      "layer": 9,
+      "fractional_depth": 0.3333333333333333,
+      "depth_error": 0.0033333333333332993
+    },
+    {
+      "requested_fractional_depth": 0.42,
+      "layer": 11,
+      "fractional_depth": 0.4074074074074074,
+      "depth_error": -0.0125925925925926
+    },
+    {
+      "requested_fractional_depth": 0.5,
+      "layer": 14,
+      "fractional_depth": 0.5185185185185185,
+      "depth_error": 0.01851851851851849
+    },
+    {
+      "requested_fractional_depth": 0.58,
+      "layer": 16,
+      "fractional_depth": 0.5925925925925926,
+      "depth_error": 0.0125925925925926
+    },
+    {
+      "requested_fractional_depth": 0.67,
+      "layer": 18,
+      "fractional_depth": 0.6666666666666666,
+      "depth_error": -0.0033333333333334103
+    },
+    {
+      "requested_fractional_depth": 0.75,
+      "layer": 20,
+      "fractional_depth": 0.7407407407407407,
+      "depth_error": -0.0092592592592593
+    }
+  ],
+  "geometry_definition": "Signed cosine similarity between normalized CAA steering vectors for each unordered behavior pair at the same transformer layer.",
+  "transfer_eta_frozen": 0.2,
+  "transfer_eta_note": "Frozen before causal-transfer outcomes were observed; chosen conservatively from the existing positive epsilon=0.03 frontier eta distribution."
+}

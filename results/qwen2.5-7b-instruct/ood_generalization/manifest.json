@@ -1,0 +1,35 @@
+{
+  "protocol": "ood_generalization_v1",
+  "model_name": "Qwen/Qwen2.5-7B-Instruct",
+  "model_label": "Qwen2.5 7B Instruct",
+  "model_slug": "qwen2.5-7b-instruct",
+  "epsilon": 0.03,
+  "bootstrap_samples": 10000,
+  "smoke_prefix": false,
+  "max_examples": null,
+  "frozen_frontier_path": "results/qwen2.5-7b-instruct/final_evaluation/frontier_test_results.csv",
+  "frozen_frontier_sha256": "938f3db732d822ecc75a51418927748e7980ad998ec3b4abde0ae4b1a447edb4",
+  "num_steered_conditions": 10,
+  "sycophancy": {
+    "selected_layer": 18,
+    "design": "Each source-domain vector evaluated both in-domain and cross-domain using the frozen epsilon=0.03 positive and negative coefficients.",
+    "nlp_vector_path": "vectors/qwen2.5-7b-instruct/ood/sycophancy/nlp/normalized_vectors.pt",
+    "political_vector_path": "vectors/qwen2.5-7b-instruct/ood/sycophancy/political/normalized_vectors.pt",
+    "nlp_test_path": "data/ood/sycophancy/nlp_test.json",
+    "political_test_path": "data/ood/sycophancy/political_test.json",
+    "full_test_sizes": {
+      "nlp": 164,
+      "political": 136
+    }
+  },
+  "hallucination": {
+    "selected_layer": 18,
+    "design": "Frozen canonical hallucination vector evaluated on untouched TruthfulQA binary OOD set.",
+    "truthfulqa_test_path": "data/ood/hallucination/truthfulqa_test.json",
+    "full_test_size": 150
+  },
+  "no_ood_tuning": true,
+  "target_data_used_for_vector_learning": false,
+  "target_data_used_for_layer_selection": false,
+  "target_data_used_for_coefficient_selection": false
+}
