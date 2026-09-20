@@ -1,6 +1,7 @@
+System
+------
 Architecture: x86_64
-
-Python: Python 3.11.11
+Python: 3.11.11
 
 Core Libraries
 --------------
@@ -18,49 +19,29 @@ CUDA / PyTorch
 PyTorch CUDA runtime: 11.8
 cuDNN: 90100
 CUDA available: True
-CUDA device count: 1
-
-GPU
----
-GPU name: NVIDIA L40S
-GPU capability: (8, 9)
-GPU total memory (GiB): 44.39
 
 NVIDIA Driver
 -------------
 Driver version: 580.65.06
 NVIDIA-SMI CUDA version: 13.0
 
-SLURM
------
-SLURM job ID: 30077
-SLURM partition: l40s
-Allocated CPUs: 8
-Allocated GPUs: 0
+GPU Hardware
+------------
+
+NVIDIA L40S
+  Compute capability: 8.9
+  Memory: 44.39 GiB
+
+NVIDIA H100 NVL
+  Compute capability: 9.0
+  Memory: 93.09 GiB
+
+Execution Environment
+---------------------
+Scheduler: SLURM
+GPUs used across experiments: NVIDIA L40S and NVIDIA H100 NVL
+Typical CPU allocation: 8 CPUs per job
 
 Project
 -------
 Package version: 0.2.0
-
-NVIDIA-SMI
----------------
-Mon Aug 31 05:48:46 2026       
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 580.65.06              Driver Version: 580.65.06      CUDA Version: 13.0     |
-+-----------------------------------------+------------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
-|                                         |                        |               MIG M. |
-|=========================================+========================+======================|
-|   0  NVIDIA L40S                    On  |   00000000:59:00.0 Off |                    0 |
-| N/A   36C    P8             37W /  350W |       0MiB /  46068MiB |      0%      Default |
-|                                         |                        |                  N/A |
-+-----------------------------------------+------------------------+----------------------+
-
-+-----------------------------------------------------------------------------------------+
-| Processes:                                                                              |
-|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
-|        ID   ID                                                               Usage      |
-|=========================================================================================|
-|  No running processes found                                                             |
-+-----------------------------------------------------------------------------------------+
