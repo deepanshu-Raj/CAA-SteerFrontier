@@ -13,6 +13,7 @@ NumPy: 1.26.4
 SciPy: 1.14.1
 Pandas: 2.2.3
 Scikit-learn: 1.5.2
+OpenAI Python SDK: 3.16.2
 
 CUDA / PyTorch
 --------------

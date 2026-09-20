@@ -22,4 +22,7 @@ tqdm
 PyYAML
 pyarrow
 
-pytest
+# API-based open-ended judging
+openai==3.16.2
+
+pytest==9.1.1
