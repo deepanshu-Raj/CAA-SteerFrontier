@@ -1,0 +1,11 @@
+metric,scope,model_slug,n,pearson_r,spearman_rho
+gsm8k_capability_loss,global,ALL,56,0.7060320559690525,0.5715049298224703
+gsm8k_capability_loss,model,llama2-7b-chat,14,0.3546965506001684,0.5023212103568717
+gsm8k_capability_loss,model,llama3.1-8b-instruct,14,0.820384654842173,0.4906080343140832
+gsm8k_capability_loss,model,mistral-7b-instruct-v0.3,14,0.6620936649668879,0.533644359562738
+gsm8k_capability_loss,model,qwen2.5-7b-instruct,14,0.3533896622356912,0.473074719513359
+delta_nll,global,ALL,56,0.6317098993683503,0.8188156243543948
+delta_nll,model,llama2-7b-chat,14,0.7106217748379964,0.5616319105342955
+delta_nll,model,llama3.1-8b-instruct,14,0.9422681216523987,0.9084944955095203
+delta_nll,model,mistral-7b-instruct-v0.3,14,0.8859337062738878,0.723895371046917
+delta_nll,model,qwen2.5-7b-instruct,14,0.727407051757937,0.707943099374987
