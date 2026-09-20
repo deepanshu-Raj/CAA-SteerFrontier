@@ -1,7 +1,17 @@
+"""Shared layer-wise normalization for behavior steering vectors.
+
+All behavior vectors at a layer are rescaled to the same reference norm, preserving
+direction while avoiding behavior-specific magnitude confounds.
+"""
+
 from typing import Dict, Tuple
 
 import torch
 
+
+# =============================================================================
+# Vector normalization
+# =============================================================================
 
 def _validate_behavior_vectors(behavior_vectors: Dict[str, torch.Tensor]):
     if not behavior_vectors:

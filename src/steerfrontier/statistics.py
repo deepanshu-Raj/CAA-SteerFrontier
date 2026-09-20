@@ -1,3 +1,9 @@
+"""Deterministic bootstrap utilities used by steering analyses.
+
+Confidence intervals are computed from explicit seeds so uncertainty estimates
+remain reproducible across reruns.
+"""
+
 from typing import Iterable, Tuple
 
 import numpy as np
@@ -6,6 +12,10 @@ DEFAULT_BOOTSTRAP_SAMPLES = 10_000
 DEFAULT_BOOTSTRAP_SEED = 42
 DEFAULT_CONFIDENCE_LEVEL = 0.95
 
+
+# =============================================================================
+# Bootstrap statistics
+# =============================================================================
 
 def bootstrap_mean_ci(
     values: Iterable[float],

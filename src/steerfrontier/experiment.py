@@ -1,3 +1,9 @@
+"""Filesystem layout and default sweep settings for one model experiment.
+
+The layout centralizes paths for vectors, normalization artifacts, results, and
+plots so scripts share a consistent artifact contract.
+"""
+
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -15,6 +21,10 @@ DEFAULT_ALPHAS = [
 
 DEFAULT_LAYER_SWEEP_ALPHAS = [-1.0, 1.0]
 
+
+# =============================================================================
+# Experiment layout
+# =============================================================================
 
 @dataclass(frozen=True)
 class ExperimentLayout:

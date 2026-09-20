@@ -1,3 +1,9 @@
+"""Shared visual styling helpers for CAA-SteerFrontier figures.
+
+The module centralizes manuscript-facing typography, labels, colormaps, and
+vector/raster figure export.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -6,9 +12,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Core visual language
-# ---------------------------------------------------------------------------
+# =============================================================================
 
 BEHAVIOR_BLUE = "#1f77b4"
 CAPABILITY_ORANGE = "#ff7f0e"
@@ -68,7 +74,12 @@ CAPABILITY_STYLES = {
 }
 
 
+# =============================================================================
+# Plot style
+# =============================================================================
+
 def configure_matplotlib():
+    """Configure the shared manuscript-facing Matplotlib defaults."""
     mpl.rcParams.update(
         {
             "font.family": "DejaVu Sans",
@@ -95,6 +106,7 @@ def configure_matplotlib():
 def get_heatmap_cmap(
     name: str,
 ):
+    """Return the configured diverging colormap for steering heatmaps."""
     if name == "diverging":
         return DIVERGING_CMAP
 
@@ -107,6 +119,7 @@ def get_heatmap_cmap(
 def pretty_behavior(
     behavior: str,
 ) -> str:
+    """Convert an internal behavior slug into a human-readable plot label."""
     return behavior.replace(
         "_",
         " ",
@@ -119,6 +132,7 @@ def save_figure(
     *,
     dpi: int = 300,
 ):
+    """Save one figure as both vector PDF and raster PNG outputs."""
     stem.parent.mkdir(
         parents=True,
         exist_ok=True,

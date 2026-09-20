@@ -1,3 +1,9 @@
+"""Residual-scale calibration utilities for comparable steering magnitudes.
+
+Layer-wise residual norms define the residual-relative perturbation quantity used
+to compare intervention strength across layers and models.
+"""
+
 from typing import Dict, List, Tuple
 
 import torch
@@ -7,6 +13,10 @@ from steerfrontier.activations import LayerActivationCapture
 from steerfrontier.models import get_decoder_layers
 from steerfrontier.prompts import PromptAdapter
 
+
+# =============================================================================
+# Calibration
+# =============================================================================
 
 @torch.no_grad()
 def measure_residual_scale(

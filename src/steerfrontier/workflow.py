@@ -1,3 +1,9 @@
+"""Reusable orchestration helpers for the core steering-analysis workflow.
+
+The module coordinates vector extraction, normalization, behavior sweeps, layer
+selection diagnostics, and manifest writing without owning CLI policy.
+"""
+
 import json
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -21,6 +27,10 @@ from steerfrontier.normalization import normalize_behavior_vectors
 from steerfrontier.prompts import PromptAdapter
 from steerfrontier.vectors import extract_all_layer_vectors
 
+
+# =============================================================================
+# Workflow utilities
+# =============================================================================
 
 def parse_layer_specs(specs: Iterable[str]) -> Dict[str, List[int]]:
     """Parse ``behavior=10-18`` or ``behavior=13`` specifications."""
@@ -50,6 +60,7 @@ def parse_layer_specs(specs: Iterable[str]) -> Dict[str, List[int]]:
 
 
 def parse_selected_layers(specs: Iterable[str]) -> Dict[str, int]:
+    """Parse ``behavior=layer`` specifications into integer layer selections."""
     parsed: Dict[str, int] = {}
     for spec in specs:
         if "=" not in spec:
@@ -68,6 +79,7 @@ def write_run_manifest(
     phase: str,
     extra: Optional[dict] = None,
 ) -> Path:
+    """Write reproducibility metadata for one completed workflow stage."""
     output = config.results_root / f"{phase}_manifest.json"
     output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -200,6 +212,7 @@ def build_shared_normalization(
 
 
 def load_normalized_vectors(config: ExperimentConfig) -> Dict[str, torch.Tensor]:
+    """Load all configured normalized behavior vectors for one model."""
     layout = config.layout
     vectors = {}
     for behavior in config.behaviors:
@@ -789,6 +802,7 @@ def compute_layer_selection_metrics(
 
 
 def print_selection_metrics(metrics: pd.DataFrame) -> None:
+    """Print the layer-selection diagnostic table for one behavior."""
     print(
         metrics.to_string(
             index=False,
@@ -810,6 +824,7 @@ def run_mmlu_sweep(
     items_path: Optional[Path],
     device: str = "cuda",
 ) -> pd.DataFrame:
+    """Evaluate an MMLU coefficient sweep at one fixed steering layer."""
     rows = []
     item_rows = []
 
@@ -889,6 +904,7 @@ def write_behavior_summary(
     mmlu_df: pd.DataFrame,
     output_path: Path,
 ) -> dict:
+    """Write a compact summary of selected behavior-analysis artifacts."""
     selected_coeff = coefficient_df[coefficient_df["layer"] == selected_layer]
     selection_rows = metrics_df[metrics_df["layer"] == selected_layer]
     if selected_coeff.empty or selection_rows.empty:
@@ -956,6 +972,7 @@ def load_saved_analysis(
     config: ExperimentConfig,
     behavior: str,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, List[int]]:
+    """Load previously saved behavior-analysis artifacts for reuse."""
     result_dir = config.layout.results_dir(behavior)
     layer_path = result_dir / "layer_sweep.csv"
     coefficient_path = result_dir / "coefficient_layer_sweep.csv"
@@ -980,12 +997,15 @@ def load_saved_analysis(
 
 
 def load_behavior_validation(config: ExperimentConfig, behavior: str):
+    """Load the frozen validation split for one behavior."""
     return load_validation_data(config.layout.validation_data_path(behavior))
 
 
 def load_behavior_test(config: ExperimentConfig, behavior: str):
+    """Load the frozen test split for one behavior."""
     return load_test_data(config.layout.test_data_path(behavior))
 
 
 def load_mmlu(config: ExperimentConfig):
+    """Load MMLU data from the configured dataset path."""
     return load_mmlu_data(config.layout.mmlu_path())

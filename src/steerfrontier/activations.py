@@ -1,9 +1,19 @@
+"""Activation-capture utilities for decoder-layer residual streams.
+
+Hooks expose the token representations required for contrastive vector extraction
+without modifying the underlying model computation.
+"""
+
 from typing import Dict, List, Optional
 
 import torch
 
 from steerfrontier.models import get_decoder_layers
 
+
+# =============================================================================
+# Activation capture
+# =============================================================================
 
 class LayerActivationCapture:
     """Capture residual-stream outputs from transformer decoder blocks."""

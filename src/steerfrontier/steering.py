@@ -1,3 +1,9 @@
+"""Residual-stream steering interventions for decoder-only language models.
+
+The intervention adds a fixed CAA direction from a specified token position while
+leaving the residual stream itself unnormalized.
+"""
+
 from typing import List, Sequence, Union
 
 import torch
@@ -10,6 +16,10 @@ PositionSpec = Union[
     torch.Tensor,
 ]
 
+
+# =============================================================================
+# Steering intervention
+# =============================================================================
 
 class SteeringIntervention:
     """

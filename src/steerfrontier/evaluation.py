@@ -1,3 +1,9 @@
+"""Forced-choice behavior and capability evaluation utilities.
+
+Scoring compares only the designated answer options and supports optional steering
+interventions at fixed decoder layers.
+"""
+
 from typing import Optional
 
 import torch
@@ -12,10 +18,9 @@ from steerfrontier.steering import (
     SteeringIntervention,
 )
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Shared helpers
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 def _validate_target(
     answer: str,
@@ -188,10 +193,9 @@ def _format_multiple_choice_question(
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Behavior evaluation
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 @torch.no_grad()
 def _score_contrastive_item(
@@ -301,6 +305,7 @@ def evaluate_behavior(
     prompt_adapter: Optional[PromptAdapter] = None,
     prompt_family: str = "auto",
 ):
+    """Evaluate one behavior dataset using designated matching and nonmatching answers."""
     if len(dataset) == 0:
         raise ValueError("Behavior evaluation dataset is empty.")
 
@@ -356,13 +361,11 @@ def evaluate_behavior(
     }
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Batched discrete multiple-choice evaluation
 #
 # MMLU / ARC-Challenge
-# ---------------------------------------------------------------------------
-
-
+# =============================================================================
 def _prepare_multiple_choice_record(
     *,
     item,
@@ -638,13 +641,11 @@ def evaluate_multiple_choice_capability(
     }
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Batched continuation ranking
 #
 # HellaSwag
-# ---------------------------------------------------------------------------
-
-
+# =============================================================================
 def _prepare_continuation_record(
     *,
     item,
@@ -934,10 +935,9 @@ def evaluate_continuation_capability(
     }
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Benchmark-specific wrappers
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 def evaluate_mmlu(
     model,
@@ -951,6 +951,7 @@ def evaluate_mmlu(
     prompt_family: str = "auto",
     batch_size: int = 1,
 ):
+    """Evaluate MMLU accuracy under an optional steering intervention."""
     return evaluate_multiple_choice_capability(
         model=model,
         tokenizer=tokenizer,
@@ -978,6 +979,7 @@ def evaluate_arc_challenge(
     prompt_family: str = "auto",
     batch_size: int = 1,
 ):
+    """Evaluate ARC-Challenge accuracy under an optional steering intervention."""
     return evaluate_multiple_choice_capability(
         model=model,
         tokenizer=tokenizer,
@@ -1005,6 +1007,7 @@ def evaluate_hellaswag(
     prompt_family: str = "auto",
     batch_size: int = 1,
 ):
+    """Evaluate HellaSwag accuracy under an optional steering intervention."""
     return evaluate_continuation_capability(
         model=model,
         tokenizer=tokenizer,
@@ -1020,13 +1023,11 @@ def evaluate_hellaswag(
     )
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Temporary compatibility hook
 #
 # Remove together with the old Phase-1 finalize path in workflow.py.
-# ---------------------------------------------------------------------------
-
-
+# =============================================================================
 def evaluate_mmlu_detailed(
     model,
     tokenizer,
@@ -1039,6 +1040,7 @@ def evaluate_mmlu_detailed(
     prompt_family: str = "auto",
     batch_size: int = 1,
 ):
+    """Evaluate MMLU and return both aggregate accuracy and item-level outputs."""
     return evaluate_mmlu(
         model=model,
         tokenizer=tokenizer,

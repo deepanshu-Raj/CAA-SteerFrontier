@@ -1,3 +1,9 @@
+"""Model-loading and decoder-layer discovery utilities.
+
+Supported Hugging Face causal language models are loaded with consistent dtype and
+device handling for activation extraction and steering.
+"""
+
 from typing import Iterable, Optional
 
 import torch
@@ -5,6 +11,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 DEFAULT_MODEL = "meta-llama/Llama-2-7b-chat-hf"
 
+
+# =============================================================================
+# Model utilities
+# =============================================================================
 
 def load_model(
     model_name: str = DEFAULT_MODEL,

@@ -1,3 +1,9 @@
+"""Dataset loading and schema validation for behavior and capability evaluation.
+
+Loaders preserve the frozen split boundaries and validate the answer labels used
+by forced-choice scoring.
+"""
+
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Union
@@ -13,9 +19,14 @@ VALID_BEHAVIOR_ANSWERS = {
 }
 
 
+# =============================================================================
+# Data loading and validation
+# =============================================================================
+
 def load_json(
     path: PathLike,
 ) -> List[Dict[str, Any]]:
+    """Load a JSON file and return its decoded Python value."""
     path = Path(path)
 
     with path.open("r") as f:
@@ -29,10 +40,9 @@ def load_json(
     return data
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Behavior datasets
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 def _validate_behavior_examples(
     data,
@@ -119,10 +129,9 @@ def load_test_data(
     return load_behavior_data(path)
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Capability datasets
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 def _validate_choice_label(
     label: str,
@@ -397,31 +406,33 @@ def load_continuation_capability_data(
 def load_mmlu_data(
     path: PathLike,
 ) -> List[Dict[str, Any]]:
+    """Load the frozen MMLU multiple-choice evaluation data."""
     return load_multiple_choice_capability_data(path)
 
 
 def load_arc_challenge_data(
     path: PathLike,
 ) -> List[Dict[str, Any]]:
+    """Load the frozen ARC-Challenge multiple-choice evaluation data."""
     return load_multiple_choice_capability_data(path)
 
 
 def load_hellaswag_data(
     path: PathLike,
 ) -> List[Dict[str, Any]]:
+    """Load the frozen HellaSwag multiple-choice evaluation data."""
     return load_continuation_capability_data(path)
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Discovery
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 def discover_behaviors(
     data_root: PathLike = "data",
 ) -> List[str]:
     """
-    Discover behavior directories containing all Phase-2 splits.
+    Discover behavior directories containing all required frozen splits.
     """
 
     root = Path(data_root)

@@ -1,3 +1,9 @@
+"""Experiment configuration loading and typed accessors.
+
+YAML configuration is resolved into model-specific paths, dtypes, behaviors, and
+steering sweep settings used throughout the project.
+"""
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List
@@ -12,8 +18,13 @@ from steerfrontier.experiment import (
 )
 
 
+# =============================================================================
+# Experiment configuration
+# =============================================================================
+
 @dataclass(frozen=True)
 class ExperimentConfig:
+    """Typed model-specific experiment configuration and artifact layout."""
     model_name: str
     model_label: str
     model_slug: str
@@ -82,6 +93,7 @@ class ExperimentConfig:
 
 
 def load_experiment_config(path: str) -> ExperimentConfig:
+    """Load and validate one YAML experiment configuration."""
     path_obj = Path(path)
     with path_obj.open("r") as f:
         payload: Dict[str, Any] = yaml.safe_load(f)

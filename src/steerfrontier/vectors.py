@@ -1,3 +1,9 @@
+"""Contrastive activation extraction for CAA steering directions.
+
+Per-layer vectors are formed from paired positive-minus-negative representations
+at model-specific contrastive answer positions.
+"""
+
 from typing import Optional
 
 import torch
@@ -7,6 +13,10 @@ from steerfrontier.activations import LayerActivationCapture
 from steerfrontier.models import get_decoder_layers
 from steerfrontier.prompts import PromptAdapter, get_prompt_adapter
 
+
+# =============================================================================
+# Vector extraction
+# =============================================================================
 
 @torch.no_grad()
 def extract_all_layer_vectors(

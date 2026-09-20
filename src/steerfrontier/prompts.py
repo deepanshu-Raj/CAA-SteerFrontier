@@ -1,3 +1,9 @@
+"""Prompt adapters for supported instruction-tuned model families.
+
+Adapters define model-specific formatting, answer-token positions, steering start
+positions, and continuation boundaries used by evaluation and generation.
+"""
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Optional
@@ -18,6 +24,10 @@ VALID_ANSWERS = {
     )
 }
 
+
+# =============================================================================
+# Prompt adapters
+# =============================================================================
 
 @dataclass(frozen=True)
 class ContrastivePrompt:
@@ -193,15 +203,15 @@ def find_last_subsequence(
     raise ValueError("Subsequence not found in token sequence.")
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Llama-2 Chat
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 def format_llama2_chat(
     question: str,
     answer: Optional[str] = None,
 ) -> str:
+    """Format one instruction with the Llama-2 chat template."""
     text = f"{B_INST} {question.strip()} {E_INST}"
 
     if answer is not None:
@@ -215,6 +225,7 @@ def tokenize_llama2_chat(
     question: str,
     answer: Optional[str] = None,
 ):
+    """Tokenize one Llama-2 chat prompt without adding duplicate special tokens."""
     text = format_llama2_chat(
         question,
         answer,
@@ -320,6 +331,7 @@ def _llama2_answer_token_ids(
 
 
 class Llama2ChatAdapter(PromptAdapter):
+    """Prompt adapter for Llama-2 chat models."""
     family = "llama2-chat"
 
     def build_contrastive_prompt(
@@ -421,12 +433,12 @@ class Llama2ChatAdapter(PromptAdapter):
         )
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Llama-3 Instruct
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 class Llama3InstructAdapter(PromptAdapter):
+    """Prompt adapter for Llama-3 instruction models."""
     family = "llama3-instruct"
 
     @staticmethod
@@ -616,12 +628,12 @@ class Llama3InstructAdapter(PromptAdapter):
         )
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Mistral Instruct
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 class MistralInstructAdapter(PromptAdapter):
+    """Prompt adapter for Mistral instruction models."""
     family = "mistral-instruct"
 
     @staticmethod
@@ -943,12 +955,12 @@ class MistralInstructAdapter(PromptAdapter):
         )
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Qwen 2.5 Instruct
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 class Qwen25InstructAdapter(PromptAdapter):
+    """Prompt adapter for Qwen2.5 instruction models."""
     family = "qwen2.5-instruct"
 
     @staticmethod
@@ -1153,10 +1165,9 @@ class Qwen25InstructAdapter(PromptAdapter):
         )
 
 
-# ---------------------------------------------------------------------------
+# =============================================================================
 # Adapter selection
-# ---------------------------------------------------------------------------
-
+# =============================================================================
 
 _ADAPTERS = {
     "llama2": Llama2ChatAdapter,
