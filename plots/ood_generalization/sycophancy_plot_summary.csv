@@ -1,0 +1,3 @@
+source_domain,target_domain,num_pairs,mean_id_gain,mean_ood_gain,mean_ood_minus_id,positive_ood_gain_count,supported_ood_gain_count
+nlp,political,8,0.06314701756535972,0.022840822282214138,-0.04030619528314559,7,4
+political,nlp,8,0.021165451696527438,0.02153286991386864,0.00036741821734120276,7,5
