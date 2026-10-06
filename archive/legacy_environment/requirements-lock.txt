@@ -249,7 +249,7 @@ typing-extensions==4.16.0
     #   torch
 tzdata==2026.3
     # via pandas
-urllib3==2.6.3
+urllib3==2.8.0
     # via requests
 wcwidth==0.8.2
     # via prompt-toolkit
