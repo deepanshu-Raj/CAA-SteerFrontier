@@ -1,6 +1,8 @@
-# CAA-SteerFrontier
+# CAA-SteerFrontier 
 
-**How Far Can You Steer? Behavior–Capability Frontiers in Contrastive Activation Addition**
+[![arXiv](https://img.shields.io/badge/arXiv-2611.06001-b31b1b.svg)](https://arxiv.org/abs/2611.06001)
+
+**How Far Can You Steer? Behavior–Capability Frontiers in Contrastive Activation Addition** 
 
 How far can Contrastive Activation Addition (CAA) change a language model's behavior before it degrades capabilities we want to preserve?
 
@@ -308,7 +310,7 @@ Model weights are not redistributed. Upstream models and source datasets remain 
 
 If you use this code or protocol, please cite:
 
-> Deepanshu Raj. *How Far Can You Steer? Behavior–Capability Frontiers in Contrastive Activation Addition.* Preprint, 2026. (arXiv identifier to be added after submission.)
+> Raj, Deepanshu. *How Far Can You Steer? Behavior–Capability Frontiers in Contrastive Activation Addition.* arXiv preprint arXiv:2611.06001, 2026. 
 
 This project builds on **Rimsky et al. (2024), *Steering Llama 2 via Contrastive Activation Addition*.**
 
