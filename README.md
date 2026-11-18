@@ -312,6 +312,15 @@ If you use this code or protocol, please cite:
 
 > Raj, Deepanshu. *How Far Can You Steer? Behavior–Capability Frontiers in Contrastive Activation Addition.* arXiv preprint arXiv:2611.06001, 2026. 
 
+BibTeX
+```
+@article{raj2026far,
+  title={How Far Can You Steer? Behavior-Capability Frontiers in Contrastive Activation Addition},
+  author={Raj, Deepanshu},
+  journal={arXiv preprint arXiv:2611.06001},
+  year={2026}
+}
+```
 This project builds on **Rimsky et al. (2024), *Steering Llama 2 via Contrastive Activation Addition*.**
 
 ## License
